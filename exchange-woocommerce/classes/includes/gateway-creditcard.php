@@ -158,6 +158,13 @@ final class WC_Payment_Gateway_Creditcard extends WC_Payment_Gateway
                 'description' => 'Shared Secret',
                 'default' => '',
             ],
+			'publicKey' => [
+                'title' => 'Public Integration Key',
+                'type' => 'text',
+                'label' => 'Integration Key',
+                'description' => 'Public Integration Key (e.g. for payment.js)',
+                'default' => '',
+            ],
         ];
     }
 
