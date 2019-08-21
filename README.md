@@ -1,4 +1,4 @@
-# exchange-woocommerce
+# AllSecure Exchange Woo™ plugin
 
 ## Installation
 
