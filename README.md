@@ -2,4 +2,4 @@
 
 ## Installation
 
-Plugin under the development
+- Plugin under the development
