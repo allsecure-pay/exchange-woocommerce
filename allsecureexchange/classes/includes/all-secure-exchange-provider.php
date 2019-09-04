@@ -21,9 +21,4 @@ final class WC_AllSecureExchange_Provider
     {
         require_once ALL_SECURE_EXCHANGE_EXTENSION_BASEDIR . 'classes/vendor/autoload.php';
     }
-
-    public static function setupClient()
-    {
-        \AllSecureExchange\Client\Client::setApiUrl(ALL_SECURE_EXCHANGE_EXTENSION_URL);
-    }
 }
