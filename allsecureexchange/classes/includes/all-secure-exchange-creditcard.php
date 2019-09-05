@@ -165,7 +165,11 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
             ],
             'apiHost' => [
                 'title' => 'API Host',
-                'type' => 'text',
+                'type' => 'select',
+				'options' => array(
+					'https://asxgw.com/' => __('LIVE', 'allsecureexchange'),
+					//'https://asxgw.paymentsandbox.cloud/' => __('TEST', 'allsecureexchange'),
+				),
                 'label' => 'API Host',
                 'description' => 'API Host',
                 'default' => ALL_SECURE_EXCHANGE_EXTENSION_URL,
