@@ -4,6 +4,9 @@ final class WC_AllSecureExchange_Provider
 {
     public static function paymentMethods()
     {
+		/**
+         * Comment/disable adapters that are not applicable
+         */
         return [
             'WC_AllSecureExchange_CreditCard',
             // 'WC_AllSecureExchange_CreditCard_Amex',

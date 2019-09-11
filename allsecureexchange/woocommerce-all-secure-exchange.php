@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WooCommerce AllSecure Exchange Extension
  * Description: AllSecure Exchange for WooCommerce
- * Version: 1.1.0
+ * Version: 1.2.0
  */
 if (!defined('ABSPATH')) {
     exit;
@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
 
 define('ALL_SECURE_EXCHANGE_EXTENSION_URL', 'https://asxgw.com/');
 define('ALL_SECURE_EXCHANGE_EXTENSION_NAME', 'AllSecure Exchange');
-define('ALL_SECURE_EXCHANGE_EXTENSION_VERSION', '1.1.0');
+define('ALL_SECURE_EXCHANGE_EXTENSION_VERSION', '1.2.0');
 define('ALL_SECURE_EXCHANGE_EXTENSION_UID_PREFIX', 'all_secure_exchange_');
 define('ALL_SECURE_EXCHANGE_EXTENSION_BASEDIR', plugin_dir_path(__FILE__));
 
