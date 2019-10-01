@@ -2,9 +2,11 @@
 Contributors: AllSecure Exchange
 Tags: Credit Card, e-commerce, payment, checkout
 Requires at least: 4.9
-Tested up to: 5.0.4
+Tested up to: 5.2.3
 Requires PHP: 7.1
-Stable tag: 1.2.0
+Stable tag: 1.3.0
+WC requires at least: 3.6.0
+WC tested up to: 3.7.0
 
 AllSecure Exchange WooCommerce Extension
 

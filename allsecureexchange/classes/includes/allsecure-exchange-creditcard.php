@@ -106,10 +106,21 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
         }
 
         /**
-         * debit
+         * transaction
          */
-        $debit = new \AllsecureExchange\Client\Transaction\Debit();
-        $debit->setTransactionId($orderId)
+        $transactionRequest = $this->get_option('transactionRequest');
+        $transaction = null;
+        switch ($transactionRequest) {
+            case 'preauthorize':
+                $transaction = new \AllsecureExchange\Client\Transaction\Preauthorize();
+                break;
+            case 'debit':
+            default:
+                $transaction = new \AllsecureExchange\Client\Transaction\Debit();
+                break;
+        }
+
+        $transaction->setTransactionId($orderId)
             ->setAmount(floatval($this->order->get_total()))
             ->setCurrency($this->order->get_currency())
             ->setCustomer($customer)
@@ -131,21 +142,29 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
                     'redirect' => $this->order->get_checkout_payment_url(false),
                 ];
             }
-            $debit->setTransactionToken($token);
+            $transaction->setTransactionToken($token);
         }
 
         /**
          * transaction
          */
-        $result = $client->debit($debit);
+        switch ($transactionRequest) {
+            case 'preauthorize':
+                $result = $client->preauthorize($transaction);
+                break;
+            case 'debit':
+            default:
+                $result = $client->debit($transaction);
+                break;
+        }
 
         if ($result->isSuccess()) {
             $woocommerce->cart->empty_cart();
 
-            $gatewayReferenceId = $result->getReferenceId();
+            // $gatewayReferenceId = $result->getReferenceId();
             if ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_ERROR) {
-                $errors = $result->getErrors();
-                $this->order->update_status('failed', __('Payment failed or was declined', 'woocommerce'));
+                // $errors = $result->getErrors();
+                return $this->paymentFailedResponse();
             } elseif ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_REDIRECT) {
                 return [
                     'result' => 'success',
@@ -166,9 +185,16 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
         /**
          * something went wrong
          */
-        wp_send_json_error([
-            'error' => $result->getFirstError()->getMessage(),
-        ]);
+        return $this->paymentFailedResponse();
+    }
+
+    private function paymentFailedResponse()
+    {
+        $this->order->update_status('failed', __('Payment failed or was declined', 'woocommerce'));
+        return [
+            'result' => 'error',
+            'redirect' => $this->get_return_url($this->order),
+        ];
     }
 
     public function process_callback()
@@ -244,6 +270,17 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
                 'label' => 'Integration Key',
                 'description' => 'Integration Key',
                 'default' => '',
+            ],
+            'transactionRequest' => [
+                'title' => 'Transaction Request',
+                'type' => 'select',
+                'label' => 'Transaction Request',
+                'description' => 'Transaction Request',
+                'default' => 'debit',
+                'options' => [
+                    'debit' => 'Debit',
+                    'preauthorize' => 'Preauthorize/Capture/Void',
+                ],
             ],
         ];
     }
