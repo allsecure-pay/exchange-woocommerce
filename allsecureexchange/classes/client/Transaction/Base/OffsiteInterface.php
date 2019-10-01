@@ -1,11 +1,11 @@
 <?php
 
 
-namespace AllSecureExchange\Client\Transaction\Base;
+namespace AllsecureExchange\Client\Transaction\Base;
 
 /**
  * Interface OffsiteInterface
- * @package AllSecureExchange\Client\Transaction
+ * @package AllsecureExchange\Client\Transaction
  */
 interface OffsiteInterface {
 

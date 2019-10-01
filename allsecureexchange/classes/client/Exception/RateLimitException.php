@@ -1,11 +1,11 @@
 <?php
 
-namespace AllSecureExchange\Client\Exception;
+namespace AllsecureExchange\Client\Exception;
 
 /**
  * Class RateLimitException
  *
- * @package AllSecureExchange\Client\Exception
+ * @package AllsecureExchange\Client\Exception
  */
 class RateLimitException extends \Exception {
 

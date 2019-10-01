@@ -1,11 +1,11 @@
 <?php
 
-namespace AllSecureExchange\Client\Data;
+namespace AllsecureExchange\Client\Data;
 
 /**
  * Class Request
  *
- * @package AllSecureExchange\Client\Data
+ * @package AllsecureExchange\Client\Data
  */
 class Request {
 

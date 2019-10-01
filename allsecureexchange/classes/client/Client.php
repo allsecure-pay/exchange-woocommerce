@@ -1,40 +1,40 @@
 <?php
 
-namespace AllSecureExchange\Client;
+namespace AllsecureExchange\Client;
 
-use AllSecureExchange\Client\CustomerProfile\CustomerData;
-use AllSecureExchange\Client\CustomerProfile\DeleteProfileResponse;
-use AllSecureExchange\Client\CustomerProfile\GetProfileResponse;
-use AllSecureExchange\Client\CustomerProfile\PaymentInstrument;
-use AllSecureExchange\Client\CustomerProfile\UpdateProfileResponse;
-use AllSecureExchange\Client\Json\ErrorResponse;
-use AllSecureExchange\Client\Exception\RateLimitException;
-use AllSecureExchange\Client\Schedule\ScheduleData;
-use AllSecureExchange\Client\Exception\ClientException;
-use AllSecureExchange\Client\Exception\InvalidValueException;
-use AllSecureExchange\Client\Exception\TimeoutException;
-use AllSecureExchange\Client\Http\CurlClient;
-use AllSecureExchange\Client\Http\Response;
-use AllSecureExchange\Client\StatusApi\StatusRequestData;
-use AllSecureExchange\Client\Transaction\Base\AbstractTransaction;
-use AllSecureExchange\Client\Transaction\Capture;
-use AllSecureExchange\Client\Transaction\Debit;
-use AllSecureExchange\Client\Transaction\Deregister;
-use AllSecureExchange\Client\Transaction\Payout;
-use AllSecureExchange\Client\Transaction\Preauthorize;
-use AllSecureExchange\Client\Transaction\Refund;
-use AllSecureExchange\Client\Transaction\Register;
-use AllSecureExchange\Client\Transaction\Result;
-use AllSecureExchange\Client\Transaction\VoidTransaction;
-use AllSecureExchange\Client\Xml\Generator;
-use AllSecureExchange\Client\Xml\Parser;
+use AllsecureExchange\Client\CustomerProfile\CustomerData;
+use AllsecureExchange\Client\CustomerProfile\DeleteProfileResponse;
+use AllsecureExchange\Client\CustomerProfile\GetProfileResponse;
+use AllsecureExchange\Client\CustomerProfile\PaymentInstrument;
+use AllsecureExchange\Client\CustomerProfile\UpdateProfileResponse;
+use AllsecureExchange\Client\Json\ErrorResponse;
+use AllsecureExchange\Client\Exception\RateLimitException;
+use AllsecureExchange\Client\Schedule\ScheduleData;
+use AllsecureExchange\Client\Exception\ClientException;
+use AllsecureExchange\Client\Exception\InvalidValueException;
+use AllsecureExchange\Client\Exception\TimeoutException;
+use AllsecureExchange\Client\Http\CurlClient;
+use AllsecureExchange\Client\Http\Response;
+use AllsecureExchange\Client\StatusApi\StatusRequestData;
+use AllsecureExchange\Client\Transaction\Base\AbstractTransaction;
+use AllsecureExchange\Client\Transaction\Capture;
+use AllsecureExchange\Client\Transaction\Debit;
+use AllsecureExchange\Client\Transaction\Deregister;
+use AllsecureExchange\Client\Transaction\Payout;
+use AllsecureExchange\Client\Transaction\Preauthorize;
+use AllsecureExchange\Client\Transaction\Refund;
+use AllsecureExchange\Client\Transaction\Register;
+use AllsecureExchange\Client\Transaction\Result;
+use AllsecureExchange\Client\Transaction\VoidTransaction;
+use AllsecureExchange\Client\Xml\Generator;
+use AllsecureExchange\Client\Xml\Parser;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
 /**
  * Class Client
  *
- * @package AllSecureExchange\Client
+ * @package AllsecureExchange\Client
  */
 class Client {
 
@@ -560,7 +560,7 @@ class Client {
     /**
      * void a previously preauthorized transaction
      *
-     * @param \AllSecureExchange\Client\Transaction\VoidTransaction $transactionData
+     * @param \AllsecureExchange\Client\Transaction\VoidTransaction $transactionData
      *
      * @return Result
      * @throws ClientException

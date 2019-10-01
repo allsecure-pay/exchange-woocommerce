@@ -1,12 +1,12 @@
 <?php
 
-namespace AllSecureExchange\Client\Transaction\Base;
-use AllSecureExchange\Client\Data\Item;
+namespace AllsecureExchange\Client\Transaction\Base;
+use AllsecureExchange\Client\Data\Item;
 
 /**
  * Interface ItemsInterface
  *
- * @package AllSecureExchange\Client\Transaction\Base
+ * @package AllsecureExchange\Client\Transaction\Base
  */
 interface ItemsInterface {
 

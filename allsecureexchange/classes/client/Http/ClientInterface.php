@@ -1,12 +1,12 @@
 <?php
 
 
-namespace AllSecureExchange\Client\Http;
+namespace AllsecureExchange\Client\Http;
 
 /**
  * Interface ClientInterface
  *
- * @package AllSecureExchange\Client\Http
+ * @package AllsecureExchange\Client\Http
  */
 interface ClientInterface {
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace AllSecureExchange\Client\CustomerProfile;
+namespace AllsecureExchange\Client\CustomerProfile;
 
-use AllSecureExchange\Client\Json\DataObject;
+use AllsecureExchange\Client\Json\DataObject;
 
 /**
  * Class CustomerData
  *
- * @package AllSecureExchange\Client\CustomerProfile
+ * @package AllsecureExchange\Client\CustomerProfile
  *
  * @property string firstName
  * @property string $lastName

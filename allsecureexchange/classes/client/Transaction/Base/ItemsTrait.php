@@ -1,13 +1,13 @@
 <?php
 
-namespace AllSecureExchange\Client\Transaction\Base;
+namespace AllsecureExchange\Client\Transaction\Base;
 
-use AllSecureExchange\Client\Data\Item;
+use AllsecureExchange\Client\Data\Item;
 
 /**
  * Class ItemsTrait
  *
- * @package AllSecureExchange\Client\Transaction\Base
+ * @package AllsecureExchange\Client\Transaction\Base
  */
 trait ItemsTrait {
 

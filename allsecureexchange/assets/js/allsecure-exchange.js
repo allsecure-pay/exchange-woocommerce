@@ -1,15 +1,15 @@
 (function($){
-    var $paymentForm = $('#all_secure_exchange_seamless').closest('form');
+    var $paymentForm = $('#allsecure_exchange_seamless').closest('form');
     var $paymentFormSubmitButton = $("#place_order");
-    var $paymentFormTokenInput = $('#all_secure_exchange_token');
-    var $allSecureExchangeErrors = $('#all_secure_exchange_errors');
+    var $paymentFormTokenInput = $('#allsecure_exchange_token');
+    var $allsecureExchangeErrors = $('#allsecure_exchange_errors');
     var integrationKey = window.integrationKey;
     var initialized = false;
 
     var init = function() {
         if (integrationKey && !initialized) {
             $paymentFormSubmitButton.prop("disabled", true);
-            allSecureExchangeSeamless.init(
+            allsecureExchangeSeamless.init(
                 integrationKey,
                 function () {
                     $paymentFormSubmitButton.prop("disabled", true);
@@ -21,34 +21,34 @@
     };
 
     $paymentFormSubmitButton.on('click', function (e) {
-        allSecureExchangeSeamless.submit(
+        allsecureExchangeSeamless.submit(
             function (token) {
                 $paymentFormTokenInput.val(token);
                 $paymentForm.submit();
             },
             function (errors) {
                 errors.forEach(function (error) {
-                    $allSecureExchange.html(error.message);
+                    $allsecureExchangeErrors.html(error.message);
                     console.error(error);
                 });
             });
         return false;
     });
 
-    var allSecureExchangeSeamless = function () {
+    var allsecureExchangeSeamless = function () {
         var payment;
         var validDetails;
         var validNumber;
         var validCvv;
         var _invalidCallback;
         var _validCallback;
-        var $seamlessForm = $('#all_secure_exchange_seamless');
-        var $seamlessCardHolderInput = $('#all_secure_exchange_seamless_card_holder', $seamlessForm);
-        var $seamlessEmailInput = $('#all_secure_exchange_seamless_email', $seamlessForm);
-        var $seamlessExpiryMonthInput = $('#all_secure_exchange_seamless_expiry_month', $seamlessForm);
-        var $seamlessExpiryYearInput = $('#all_secure_exchange_seamless_expiry_year', $seamlessForm);
-        var $seamlessCardNumberInput = $('#all_secure_exchange_seamless_card_number', $seamlessForm);
-        var $seamlessCvvInput = $('#all_secure_exchange_seamless_cvv', $seamlessForm);
+        var $seamlessForm = $('#allsecure_exchange_seamless');
+        var $seamlessCardHolderInput = $('#allsecure_exchange_seamless_card_holder', $seamlessForm);
+        var $seamlessEmailInput = $('#allsecure_exchange_seamless_email', $seamlessForm);
+        var $seamlessExpiryMonthInput = $('#allsecure_exchange_seamless_expiry_month', $seamlessForm);
+        var $seamlessExpiryYearInput = $('#allsecure_exchange_seamless_expiry_year', $seamlessForm);
+        var $seamlessCardNumberInput = $('#allsecure_exchange_seamless_card_number', $seamlessForm);
+        var $seamlessCvvInput = $('#allsecure_exchange_seamless_cvv', $seamlessForm);
 
         var init = function (integrationKey, invalidCallback, validCallback) {
             _invalidCallback = invalidCallback;
@@ -89,7 +89,7 @@
         };
 
         var validate = function () {
-            $allSecureExchangeErrors.html('');
+            $allsecureExchangeErrors.html('');
             $('.form-group', $seamlessForm).removeClass('has-error');
             $seamlessCardNumberInput.closest('.form-group').toggleClass('has-error', !validNumber);
             $seamlessCvvInput.closest('.form-group').toggleClass('has-error', !validCvv);

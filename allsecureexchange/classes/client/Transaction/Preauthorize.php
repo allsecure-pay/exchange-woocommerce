@@ -1,23 +1,23 @@
 <?php
 
-namespace AllSecureExchange\Client\Transaction;
+namespace AllsecureExchange\Client\Transaction;
 
-use AllSecureExchange\Client\Transaction\Base\AbstractTransactionWithReference;
-use AllSecureExchange\Client\Transaction\Base\AddToCustomerProfileInterface;
-use AllSecureExchange\Client\Transaction\Base\AddToCustomerProfileTrait;
-use AllSecureExchange\Client\Transaction\Base\AmountableInterface;
-use AllSecureExchange\Client\Transaction\Base\AmountableTrait;
-use AllSecureExchange\Client\Transaction\Base\ItemsInterface;
-use AllSecureExchange\Client\Transaction\Base\ItemsTrait;
-use AllSecureExchange\Client\Transaction\Base\OffsiteInterface;
-use AllSecureExchange\Client\Transaction\Base\OffsiteTrait;
-use AllSecureExchange\Client\Transaction\Base\ScheduleInterface;
-use AllSecureExchange\Client\Transaction\Base\ScheduleTrait;
+use AllsecureExchange\Client\Transaction\Base\AbstractTransactionWithReference;
+use AllsecureExchange\Client\Transaction\Base\AddToCustomerProfileInterface;
+use AllsecureExchange\Client\Transaction\Base\AddToCustomerProfileTrait;
+use AllsecureExchange\Client\Transaction\Base\AmountableInterface;
+use AllsecureExchange\Client\Transaction\Base\AmountableTrait;
+use AllsecureExchange\Client\Transaction\Base\ItemsInterface;
+use AllsecureExchange\Client\Transaction\Base\ItemsTrait;
+use AllsecureExchange\Client\Transaction\Base\OffsiteInterface;
+use AllsecureExchange\Client\Transaction\Base\OffsiteTrait;
+use AllsecureExchange\Client\Transaction\Base\ScheduleInterface;
+use AllsecureExchange\Client\Transaction\Base\ScheduleTrait;
 
 /**
  * Preauthorize: Reserve a certain amount, which can be captured (=charging) or voided (=revert) later on.
  *
- * @package AllSecureExchange\Client\Transaction
+ * @package AllsecureExchange\Client\Transaction
  */
 class Preauthorize extends AbstractTransactionWithReference implements AmountableInterface, OffsiteInterface, ItemsInterface, ScheduleInterface, AddToCustomerProfileInterface {
     use OffsiteTrait;

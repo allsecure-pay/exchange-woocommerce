@@ -1,11 +1,11 @@
 <?php
 
-namespace AllSecureExchange\Client\Data;
+namespace AllsecureExchange\Client\Data;
 
 /**
  * Represents a generic customer without any specific data.
  *
- * @package AllSecureExchange\Client\Data
+ * @package AllsecureExchange\Client\Data
  */
 class Customer extends Data {
 

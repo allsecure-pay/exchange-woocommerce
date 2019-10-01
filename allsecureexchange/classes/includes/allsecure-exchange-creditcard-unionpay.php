@@ -1,6 +1,6 @@
 <?php
 
-final class WC_AllSecureExchange_CreditCard_UnionPay extends WC_AllSecureExchange_CreditCard
+final class WC_AllsecureExchange_CreditCard_UnionPay extends WC_AllsecureExchange_CreditCard
 {
     public $id = 'creditcard_unionpay';
 

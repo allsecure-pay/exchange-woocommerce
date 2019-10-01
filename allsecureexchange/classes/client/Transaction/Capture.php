@@ -1,17 +1,17 @@
 <?php
 
-namespace AllSecureExchange\Client\Transaction;
+namespace AllsecureExchange\Client\Transaction;
 
-use AllSecureExchange\Client\Transaction\Base\AbstractTransactionWithReference;
-use AllSecureExchange\Client\Transaction\Base\AmountableInterface;
-use AllSecureExchange\Client\Transaction\Base\AmountableTrait;
-use AllSecureExchange\Client\Transaction\Base\ItemsInterface;
-use AllSecureExchange\Client\Transaction\Base\ItemsTrait;
+use AllsecureExchange\Client\Transaction\Base\AbstractTransactionWithReference;
+use AllsecureExchange\Client\Transaction\Base\AmountableInterface;
+use AllsecureExchange\Client\Transaction\Base\AmountableTrait;
+use AllsecureExchange\Client\Transaction\Base\ItemsInterface;
+use AllsecureExchange\Client\Transaction\Base\ItemsTrait;
 
 /**
  * Capture: Charge a previously preauthorized transaction.
  *
- * @package AllSecureExchange\Client\Transaction
+ * @package AllsecureExchange\Client\Transaction
  */
 class Capture extends AbstractTransactionWithReference implements AmountableInterface, ItemsInterface {
     use AmountableTrait;

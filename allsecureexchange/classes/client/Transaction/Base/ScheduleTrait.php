@@ -1,13 +1,13 @@
 <?php
 
-namespace AllSecureExchange\Client\Transaction\Base;
+namespace AllsecureExchange\Client\Transaction\Base;
 
-use AllSecureExchange\Client\Schedule\ScheduleData;
+use AllsecureExchange\Client\Schedule\ScheduleData;
 
 /**
  * Trait ScheduleTrait
  *
- * @package AllSecureExchange\Client\Transaction\Base
+ * @package AllsecureExchange\Client\Transaction\Base
  */
 trait ScheduleTrait {
 

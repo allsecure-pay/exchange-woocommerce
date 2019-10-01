@@ -1,11 +1,11 @@
 <?php
 
-namespace AllSecureExchange\Client\Transaction\Base;
+namespace AllsecureExchange\Client\Transaction\Base;
 
 /**
  * Class AbstractReferenced
  *
- * @package AllSecureExchange\Client\Transaction
+ * @package AllsecureExchange\Client\Transaction
  */
 abstract class AbstractTransactionWithReference extends AbstractTransaction {
 

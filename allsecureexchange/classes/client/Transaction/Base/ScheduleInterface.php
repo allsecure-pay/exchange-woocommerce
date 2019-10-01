@@ -1,8 +1,8 @@
 <?php
 
-namespace AllSecureExchange\Client\Transaction\Base;
+namespace AllsecureExchange\Client\Transaction\Base;
 
-use AllSecureExchange\Client\Schedule\ScheduleData;
+use AllsecureExchange\Client\Schedule\ScheduleData;
 
 interface ScheduleInterface {
 

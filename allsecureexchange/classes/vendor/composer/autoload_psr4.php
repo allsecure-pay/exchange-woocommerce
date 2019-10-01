@@ -7,5 +7,5 @@ $baseDir = dirname(dirname($vendorDir));
 
 return array(
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
-    'AllSecureExchange\\Client\\' => array($baseDir . '/classes/client'),
+    'AllsecureExchange\\Client\\' => array($baseDir . '/classes/client'),
 );

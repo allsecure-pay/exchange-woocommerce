@@ -1,11 +1,11 @@
 <?php
 
-namespace AllSecureExchange\Client\Callback;
+namespace AllsecureExchange\Client\Callback;
 
 /**
  * Class ChargebackData
  *
- * @package AllSecureExchange\Client\Callback
+ * @package AllsecureExchange\Client\Callback
  */
 class ChargebackData {
 

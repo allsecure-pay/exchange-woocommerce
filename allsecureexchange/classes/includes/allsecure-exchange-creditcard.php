@@ -1,6 +1,6 @@
 <?php
 
-class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
+class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 {
     public $id = 'creditcard';
 
@@ -23,8 +23,8 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
 
     public function __construct()
     {
-        $this->id = ALL_SECURE_EXCHANGE_EXTENSION_UID_PREFIX . $this->id;
-        $this->method_description = ALL_SECURE_EXCHANGE_EXTENSION_NAME . ' ' . $this->method_title . ' payments.';
+        $this->id = ALLSECURE_EXCHANGE_EXTENSION_UID_PREFIX . $this->id;
+        $this->method_description = ALLSECURE_EXCHANGE_EXTENSION_NAME . ' ' . $this->method_title . ' payments.';
 
         $this->has_fields = isset($_GET['pay_for_order']);
 
@@ -32,12 +32,12 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
         $this->init_settings();
 
         $this->title = $this->get_option('title');
-        $this->callbackUrl = str_replace('https:', 'https:', add_query_arg('wc-api', 'wc_' . $this->id, home_url('/')));
+        $this->callbackUrl = str_replace('https:', 'http:', add_query_arg('wc-api', 'wc_' . $this->id, home_url('/')));
 
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, [$this, 'process_admin_options']);
         add_action('wp_enqueue_scripts', function () {
-            wp_register_script('payment_js', $this->get_option('apiHost') . 'js/integrated/payment.min.js', [], ALL_SECURE_EXCHANGE_EXTENSION_VERSION, false);
-			wp_register_script('all_secure_exchange_js', plugins_url('/allsecureexchange/assets/js/all-secure-exchange.js'), [], ALL_SECURE_EXCHANGE_EXTENSION_VERSION, false);
+            wp_register_script('payment_js', $this->get_option('apiHost') . 'js/integrated/payment.min.js', [], ALLSECURE_EXCHANGE_EXTENSION_VERSION, false);
+            wp_register_script('allsecure_exchange_js', plugins_url('/allsecureexchange/assets/js/allsecure-exchange.js'), [], ALLSECURE_EXCHANGE_EXTENSION_VERSION, false);
         }, 999);
         add_action('woocommerce_api_wc_' . $this->id, [$this, 'process_callback']);
         add_filter('script_loader_tag', function ($tag, $handle) {
@@ -51,30 +51,30 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     public function process_payment($orderId)
     {
         global $woocommerce;
-		
-		/**
+
+        /**
          * order & user
-        **/
+         */
         $this->order = new WC_Order($orderId);
         $this->order->update_status('pending', __('Awaiting payment', 'woocommerce'));
         $this->user = $this->order->get_user();
 
-		/**
+        /**
          * gateway client
-        **/
-        WC_AllSecureExchange_Provider::autoloadClient();
-        AllSecureExchange\Client\Client::setApiUrl($this->get_option('apiHost'));
-        $client = new AllSecureExchange\Client\Client(
+         */
+        WC_AllsecureExchange_Provider::autoloadClient();
+        AllsecureExchange\Client\Client::setApiUrl($this->get_option('apiHost'));
+        $client = new AllsecureExchange\Client\Client(
             $this->get_option('apiUser'),
             $this->get_option('apiPassword'),
             $this->get_option('apiKey'),
             $this->get_option('sharedSecret')
         );
 
-		/**
+        /**
          * gateway customer
-        **/
-        $customer = new AllSecureExchange\Client\Data\Customer();
+         */
+        $customer = new AllsecureExchange\Client\Data\Customer();
         $customer
             ->setBillingAddress1($this->order->get_billing_address_1())
             ->setBillingAddress2($this->order->get_billing_address_2())
@@ -91,7 +91,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
 
         /**
          * add shipping data for non-digital goods
-        **/
+         */
         if ($this->order->get_shipping_country()) {
             $customer
                 ->setShippingAddress1($this->order->get_shipping_address_1())
@@ -105,25 +105,25 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
                 ->setShippingState($this->order->get_shipping_state());
         }
 
-		/**
+        /**
          * debit
-        **/
-        $debit = new \AllSecureExchange\Client\Transaction\Debit();
+         */
+        $debit = new \AllsecureExchange\Client\Transaction\Debit();
         $debit->setTransactionId($orderId)
             ->setAmount(floatval($this->order->get_total()))
             ->setCurrency($this->order->get_currency())
-			->setCustomer($customer)
+            ->setCustomer($customer)
             ->setExtraData($this->extraData3DS())
             ->setCallbackUrl($this->callbackUrl)
             ->setCancelUrl(wc_get_checkout_url())
             ->setSuccessUrl($this->get_return_url($this->order))
             ->setErrorUrl($this->get_return_url($this->order));
 
-		/**
+        /**
          * integration key is set -> seamless
          * proceed to pay now page or apply submitted transaction token
-        **/
-		if ($this->get_option('integrationKey')) {
+         */
+        if ($this->get_option('integrationKey')) {
             $token = !empty($this->get_post_data()['token']) ? $this->get_post_data()['token'] : null;
             if (!$token) {
                 return [
@@ -133,30 +133,30 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
             }
             $debit->setTransactionToken($token);
         }
-		
+
         /**
          * transaction
-        **/
+         */
         $result = $client->debit($debit);
-		
+
         if ($result->isSuccess()) {
             $woocommerce->cart->empty_cart();
 
-        $gatewayReferenceId = $result->getReferenceId();
-            if ($result->getReturnType() == AllSecureExchange\Client\Transaction\Result::RETURN_TYPE_ERROR) {
+            $gatewayReferenceId = $result->getReferenceId();
+            if ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_ERROR) {
                 $errors = $result->getErrors();
                 $this->order->update_status('failed', __('Payment failed or was declined', 'woocommerce'));
-            } elseif ($result->getReturnType() == AllSecureExchange\Client\Transaction\Result::RETURN_TYPE_REDIRECT) {
+            } elseif ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_REDIRECT) {
                 return [
                     'result' => 'success',
                     'redirect' => $result->getRedirectUrl(),
                 ];
-            } elseif ($result->getReturnType() == AllSecureExchange\Client\Transaction\Result::RETURN_TYPE_PENDING) {
+            } elseif ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_PENDING) {
                 // payment is pending, wait for callback to complete
-            } elseif ($result->getReturnType() == AllSecureExchange\Client\Transaction\Result::RETURN_TYPE_FINISHED) {
+            } elseif ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_FINISHED) {
                 // seamless will finish here
                 $this->order->payment_complete();
-			}
+            }
             return [
                 'result' => 'success',
                 'redirect' => $this->get_return_url($this->order),
@@ -173,10 +173,10 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
 
     public function process_callback()
     {
-        WC_AllSecureExchange_Provider::autoloadClient();
+        WC_AllsecureExchange_Provider::autoloadClient();
 
-        AllSecureExchange\Client\Client::setApiUrl($this->get_option('apiHost'));
-        $client = new AllSecureExchange\Client\Client(
+        AllsecureExchange\Client\Client::setApiUrl($this->get_option('apiHost'));
+        $client = new AllsecureExchange\Client\Client(
             $this->get_option('apiUser'),
             $this->get_option('apiPassword'),
             $this->get_option('apiKey'),
@@ -186,7 +186,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
         $client->validateCallbackWithGlobals();
         $callbackResult = $client->readCallback(file_get_contents('php://input'));
         $this->order = new WC_Order($callbackResult->getTransactionId());
-        if ($callbackResult->getResult() == \AllSecureExchange\Client\Callback\Result::RESULT_OK) {
+        if ($callbackResult->getResult() == \AllsecureExchange\Client\Callback\Result::RESULT_OK) {
             $this->order->payment_complete();
         }
 
@@ -205,14 +205,10 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
             ],
             'apiHost' => [
                 'title' => 'API Host',
-                'type' => 'select',
-				'options' => array(
-					'https://asxgw.com/' => __('LIVE', 'allsecureexchange'),
-					//'https://asxgw.paymentsandbox.cloud/' => __('TEST', 'allsecureexchange'),
-				),
+                'type' => 'text',
                 'label' => 'API Host',
                 'description' => 'API Host',
-                'default' => ALL_SECURE_EXCHANGE_EXTENSION_URL,
+                'default' => ALLSECURE_EXCHANGE_EXTENSION_URL,
             ],
             'apiUser' => [
                 'title' => 'API User',
@@ -242,7 +238,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
                 'description' => 'Shared Secret',
                 'default' => '',
             ],
-			'integrationKey' => [
+            'integrationKey' => [
                 'title' => 'Integration Key',
                 'type' => 'text',
                 'label' => 'Integration Key',
@@ -255,39 +251,39 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     public function payment_fields()
     {
         wp_enqueue_script('payment_js');
-        wp_enqueue_script('all_secure_exchange_js');
+        wp_enqueue_script('allsecure_exchange_js');
         $years = range(date('Y'), date('Y') + 50);
         $yearSelect = '';
         foreach ($years as $year) {
             $yearSelect .= '<option>' . $year . '</option>';
         }
         echo '<script>window.integrationKey="' . $this->get_option('integrationKey') . '";</script>
-        <div id="all_secure_exchange_seamless">
-        <div id="all_secure_exchange_errors"></div>
-        <input type="hidden" id="all_secure_exchange_token" name="token">
+        <div id="allsecure_exchange_seamless">
+        <div id="allsecure_exchange_errors"></div>
+        <input type="hidden" id="allsecure_exchange_token" name="token">
         
         <div class="form-row form-row-wide">
-            <label for="all_secure_exchange_seamless_card_holder">Card holder</label>
+            <label for="allsecure_exchange_seamless_card_holder">Card holder</label>
             <div class="woocommerce-input-wrapper">
-            <input type="text" class="input-text " id="all_secure_exchange_seamless_card_holder">
+            <input type="text" class="input-text " id="allsecure_exchange_seamless_card_holder">
             </div>
         </div>
         <div class="form-row form-row-wide">
-            <label for="all_secure_exchange_seamless_card_number">Card number</label>
+            <label for="allsecure_exchange_seamless_card_number">Card number</label>
             <div class="woocommerce-input-wrapper" style="">
-            <div id="all_secure_exchange_seamless_card_number" class="input-text" style="padding: 0; width: 100%;"></div>
+            <div id="allsecure_exchange_seamless_card_number" class="input-text" style="padding: 0; width: 100%;"></div>
             </div>
         </div>
         <div class="form-row form-row-wide">
-            <label for="all_secure_exchange_seamless_cvv">CVV</label>
+            <label for="allsecure_exchange_seamless_cvv">CVV</label>
             <div class="woocommerce-input-wrapper" style="">
-            <div id="all_secure_exchange_seamless_cvv" class="input-text " style="padding: 0; width: 100%;"></div>
+            <div id="allsecure_exchange_seamless_cvv" class="input-text " style="padding: 0; width: 100%;"></div>
             </div>
         </div>
         <div class="form-row form-row-wide">
-            <label for="all_secure_exchange_seamless_expiry_month">Month</label>
+            <label for="allsecure_exchange_seamless_expiry_month">Month</label>
             <div class="woocommerce-input-wrapper">
-            <select type="text" class="input-text " id="all_secure_exchange_seamless_expiry_month">
+            <select type="text" class="input-text " id="allsecure_exchange_seamless_expiry_month">
               <option>01</option>
               <option>02</option>
               <option>03</option>
@@ -304,9 +300,9 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
             </div>
         </div>
         <div class="form-row form-row-wide">
-            <label for="all_secure_exchange_seamless_expiry_year">Year</label>
+            <label for="allsecure_exchange_seamless_expiry_year">Year</label>
             <div class="woocommerce-input-wrapper">
-            <select type="text" class="input-text " id="all_secure_exchange_seamless_expiry_year">' . $yearSelect . '</select>
+            <select type="text" class="input-text " id="allsecure_exchange_seamless_expiry_year">' . $yearSelect . '</select>
             </div>
         </div>
         </div>';
@@ -595,7 +591,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
 
     /**
      * 3ds:cardholderAuthenticationMethod
-    ** Mechanism used by the Cardholder to authenticate to the 3DS Requestor.
+     * Mechanism used by the Cardholder to authenticate to the 3DS Requestor.
      * 01 -> No 3DS Requestor authentication occurred (i.e. cardholder "logged in" as guest)
      * 02 -> Login to the cardholder account at the 3DS Requestor system using 3DS Requestor's own credentials
      * 03 -> Login to the cardholder account at the 3DS Requestor system using federated ID
@@ -612,12 +608,11 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
 
     /**
      * 3ds:challengeIndicator
-	 * Indicates whether a challenge is requested for this transaction. For example: For 01-PA, a 3DS Requestor may have concerns about the transaction, and request a challenge.
+     * Indicates whether a challenge is requested for this transaction. For example: For 01-PA, a 3DS Requestor may have concerns about the transaction, and request a challenge.
      * 01 -> No preference
      * 02 -> No challenge requested
      * 03 -> Challenge requested: 3DS Requestor Preference
      * 04 -> Challenge requested: Mandate
-
      *
      * @return string|null
      */
@@ -628,11 +623,10 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
 
     /**
      * 3ds:channel
-	 * Indicates the type of channel interface being used to initiate the transaction
+     * Indicates the type of channel interface being used to initiate the transaction
      * 01 -> App-based
      * 02 -> Browser
      * 03 -> 3DS Requestor Initiated
-
      *
      * @return string|null
      */
@@ -671,7 +665,6 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
      * 3ds:giftCardAmount
      * For prepaid or gift card purchase, the purchase amount total of prepaid or gift card(s) in major units (for example, USD 123.45 is 123).
      *
-     *
      * @return string|null
      */
     private function giftCardAmount()
@@ -703,7 +696,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
 
     /**
      * 3ds:homePhoneCountryPrefix
-     *Country Code of the home phone, limited to 1-3 characters
+     * Country Code of the home phone, limited to 1-3 characters
      *
      * @return string|null
      */
@@ -713,7 +706,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:homePhoneNumber
+     * 3ds:homePhoneNumber
      * subscriber section of the number, limited to maximum 15 characters.
      *
      * @return string|null
@@ -724,7 +717,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:mobilePhoneCountryPrefix
+     * 3ds:mobilePhoneCountryPrefix
      * Country Code of the mobile phone, limited to 1-3 characters
      *
      * @return string|null
@@ -735,7 +728,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:mobilePhoneNumber
+     * 3ds:mobilePhoneNumber
      * subscriber section of the number, limited to maximum 15 characters.
      *
      * @return string|null
@@ -746,7 +739,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:paymentAccountAgeDate
+     * 3ds:paymentAccountAgeDate
      * Date that the payment account was enrolled in the cardholder’s account with the 3DS Requestor. Format: YYYY-MM-DD
      * Example: 2019-05-12
      *
@@ -758,7 +751,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:paymentAccountAgeIndicator
+     * 3ds:paymentAccountAgeIndicator
      * Indicates the length of time that the payment account was enrolled in the cardholder’s account with the 3DS Requestor.
      * 01 -> No account (guest check-out)
      * 02 -> During this transaction
@@ -774,7 +767,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:preOrderDate
+     * 3ds:preOrderDate
      * For a pre-ordered purchase, the expected date that the merchandise will be available.
      * Format: YYYY-MM-DD
      *
@@ -786,7 +779,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:preOrderPurchaseIndicator
+     * 3ds:preOrderPurchaseIndicator
      * Indicates whether Cardholder is placing an order for merchandise with a future availability or release date.
      * 01 -> Merchandise available
      * 02 -> Future availability
@@ -799,7 +792,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:priorAuthenticationData
+     * 3ds:priorAuthenticationData
      * Data that documents and supports a specfic authentication porcess. In the current version of the specification this data element is not defined in detail, however the intention is that for each 3DS Requestor Authentication Method, this field carry data that the ACS can use to verify the authentication process. In future versionsof the application, these details are expected to be included. Field is limited to maximum 2048 characters.
      *
      * @return string|null
@@ -810,7 +803,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:priorAuthenticationDateTime
+     * 3ds:priorAuthenticationDateTime
      * Date and time in UTC of the prior authentication. Format: YYYY-MM-DD HH:mm
      * Example: 2019-05-12 18:34
      *
@@ -822,7 +815,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:priorAuthenticationMethod
+     * 3ds:priorAuthenticationMethod
      * Mechanism used by the Cardholder to previously authenticate to the 3DS Requestor.
      * 01 -> Frictionless authentication occurred by ACS
      * 02 -> Cardholder challenge occurred by ACS
@@ -837,7 +830,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:priorReference
+     * 3ds:priorReference
      * This data element provides additional information to the ACS to determine the best approach for handling a request. The field is limited to 36 characters containing ACS Transaction ID for a prior authenticated transaction (for example, the first recurring transaction that was authenticated with the cardholder).
      *
      * @return string|null
@@ -873,7 +866,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:purchaseDate
+     * 3ds:purchaseDate
      * Date and time of the purchase, expressed in UTC. Format: YYYY-MM-DD
      **Note: if omitted we put in today's date
      *
@@ -885,7 +878,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:purchaseInstalData
+     * 3ds:purchaseInstalData
      * Indicates the maximum number of authorisations permitted for instalment payments. The field is limited to maximum 3 characters and value shall be greater than 1. The fields is required if the Merchant and Cardholder have agreed to installment payments, i.e. if 3DS Requestor Authentication Indicator = 03. Omitted if not an installment payment authentication.
      *
      * @return string|null
@@ -896,7 +889,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:recurringExpiry
+     * 3ds:recurringExpiry
      * Date after which no further authorizations shall be performed. This field is required for 01-PA and for 02-NPA, if 3DS Requestor Authentication Indicator = 02 or 03.
      * Format: YYYY-MM-DD
      *
@@ -908,7 +901,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:recurringFrequency
+     * 3ds:recurringFrequency
      * Indicates the minimum number of days between authorizations. The field is limited to maximum 4 characters. This field is required if 3DS Requestor Authentication Indicator = 02 or 03.
      *
      * @return string|null
@@ -919,7 +912,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:reorderItemsIndicator
+     * 3ds:reorderItemsIndicator
      * Indicates whether the cardholder is reoreding previously purchased merchandise.
      * 01 -> First time ordered
      * 02 -> Reordered
@@ -932,7 +925,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	  * 3ds:shipIndicator
+     * 3ds:shipIndicator
      * Indicates shipping method chosen for the transaction. Merchants must choose the Shipping Indicator code that most accurately describes the cardholder's specific transaction. If one or more items are included in the sale, use the Shipping Indicator code for the physical goods, or if all digital goods, use the code that describes the most expensive item.
      * 01 -> Ship to cardholder's billing address
      * 02 -> Ship to another verified address on file with merchant
@@ -950,7 +943,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:shippingAddressFirstUsage
+     * 3ds:shippingAddressFirstUsage
      * Date when the shipping address used for this transaction was first used with the 3DS Requestor. Format: YYYY-MM-DD
      * Example: 2019-05-12
      *
@@ -979,7 +972,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:shippingAddressLine3
+     * 3ds:shippingAddressLine3
      * Line 3 of customer's shipping address
      *
      * @return string|null
@@ -990,7 +983,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:shippingAddressUsageIndicator
+     * 3ds:shippingAddressUsageIndicator
      * Indicates when the shipping address used for this transaction was first used with the 3DS Requestor.
      * 01 -> This transaction
      * 02 -> Less than 30 days
@@ -1005,7 +998,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:shippingNameEqualIndicator
+     * 3ds:shippingNameEqualIndicator
      * Indicates if the Cardholder Name on the account is identical to the shipping Name used for this transaction.
      * 01 -> Account Name identical to shipping Name
      * 02 -> Account Name different than shipping Name
@@ -1018,7 +1011,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:suspiciousAccountActivityIndicator
+     * 3ds:suspiciousAccountActivityIndicator
      * Indicates whether the 3DS Requestor has experienced suspicious activity (including previous fraud) on the cardholder account.
      * 01 -> No suspicious activity has been observed
      * 02 -> Suspicious activity has been observed
@@ -1031,7 +1024,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:transactionActivityDay
+     * 3ds:transactionActivityDay
      * Number of transactions (successful and abandoned) for this cardholder account with the 3DS Requestor across all payment accounts in the previous 24 hours.
      *
      * @return string|null
@@ -1042,7 +1035,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:transactionActivityYear
+     * 3ds:transactionActivityYear
      * Number of transactions (successful and abandoned) for this cardholder account with the 3DS Requestor across all payment accounts in the previous year.
      *
      * @return string|null
@@ -1053,7 +1046,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:transType
+     * 3ds:transType
      * Identifies the type of transaction being authenticated. The values are derived from ISO 8583.
      * 01 -> Goods / Service purchase
      * 03 -> Check Acceptance
@@ -1069,7 +1062,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:workPhoneCountryPrefix
+     * 3ds:workPhoneCountryPrefix
      * Country Code of the work phone, limited to 1-3 characters
      *
      * @return string|null
@@ -1080,7 +1073,7 @@ class WC_AllSecureExchange_CreditCard extends WC_Payment_Gateway
     }
 
     /**
-	 * 3ds:workPhoneNumber
+     * 3ds:workPhoneNumber
      * subscriber section of the number, limited to maximum 15 characters.
      *
      * @return string|null

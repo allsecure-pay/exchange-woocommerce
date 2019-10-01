@@ -1,14 +1,14 @@
 <?php
 
-namespace AllSecureExchange\Client\Transaction;
+namespace AllsecureExchange\Client\Transaction;
 
-use AllSecureExchange\Client\Data\Customer;
-use AllSecureExchange\Client\Data\Result\ResultData;
+use AllsecureExchange\Client\Data\Customer;
+use AllsecureExchange\Client\Data\Result\ResultData;
 
 /**
  * Class Result
  *
- * @package AllSecureExchange\Client\Transaction
+ * @package AllsecureExchange\Client\Transaction
  */
 class Result {
 
@@ -385,14 +385,14 @@ class Result {
     /**
      * contains additional data for your purpose (e.g. credit card information)
      *
-     * @return \AllSecureExchange\Client\Data\Result\ResultData
+     * @return \AllsecureExchange\Client\Data\Result\ResultData
      */
     public function getReturnData() {
         return $this->returnData;
     }
 
     /**
-     * @param \AllSecureExchange\Client\Data\Result\ResultData $returnData
+     * @param \AllsecureExchange\Client\Data\Result\ResultData $returnData
      *
      * @return $this
      */

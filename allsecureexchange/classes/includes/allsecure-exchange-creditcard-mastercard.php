@@ -1,6 +1,6 @@
 <?php
 
-final class WC_AllSecureExchange_CreditCard_Mastercard extends WC_AllSecureExchange_CreditCard
+final class WC_AllsecureExchange_CreditCard_Mastercard extends WC_AllsecureExchange_CreditCard
 {
     public $id = 'creditcard_mastercard';
 

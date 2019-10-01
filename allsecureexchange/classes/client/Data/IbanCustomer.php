@@ -1,14 +1,14 @@
 <?php
 
-namespace AllSecureExchange\Client\Data;
+namespace AllsecureExchange\Client\Data;
 
 
-use AllSecureExchange\Client\Exception\InvalidValueException;
+use AllsecureExchange\Client\Exception\InvalidValueException;
 
 /**
  * Class IbanCustomer
  *
- * @package AllSecureExchange\Client\Data
+ * @package AllsecureExchange\Client\Data
  */
 class IbanCustomer extends Customer {
 

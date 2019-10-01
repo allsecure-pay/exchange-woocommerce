@@ -1,14 +1,14 @@
 <?php
 
-namespace AllSecureExchange\Client\Transaction\Base;
+namespace AllsecureExchange\Client\Transaction\Base;
 
-use AllSecureExchange\Client\Data\Customer;
-use AllSecureExchange\Client\Data\Request;
+use AllsecureExchange\Client\Data\Customer;
+use AllsecureExchange\Client\Data\Request;
 
 /**
  * Class AbstractTransaction
  *
- * @package AllSecureExchange\Client\Transaction
+ * @package AllsecureExchange\Client\Transaction
  */
 class AbstractTransaction {
 

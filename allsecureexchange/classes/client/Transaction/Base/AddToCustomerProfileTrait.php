@@ -1,10 +1,10 @@
 <?php
 
-namespace AllSecureExchange\Client\Transaction\Base;
+namespace AllsecureExchange\Client\Transaction\Base;
 
 /**
  * Trait AddToCustomerProfileTrait
- * @package AllSecureExchange\Client\Transaction\Base
+ * @package AllsecureExchange\Client\Transaction\Base
  */
 trait AddToCustomerProfileTrait {
 

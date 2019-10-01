@@ -4,7 +4,7 @@ Tags: Credit Card, e-commerce, payment, checkout
 Requires at least: 4.9
 Tested up to: 5.0.4
 Requires PHP: 7.1
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 
 AllSecure Exchange WooCommerce Extension
 
@@ -12,7 +12,7 @@ AllSecure Exchange WooCommerce Extension
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/exchange-woocommerce` directory, or install the plugin through the WordPress plugins screen directly.
+1. Upload the plugin files to the `/wp-content/plugins/allsecureexchange` directory, or install the plugin through the WordPress plugins screen directly.
 1. Activate the plugin through the 'Plugins' screen in WordPress
 
 **Configuration**

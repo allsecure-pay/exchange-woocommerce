@@ -1,10 +1,10 @@
 <?php
 
-namespace AllSecureExchange\Client\Transaction;
+namespace AllsecureExchange\Client\Transaction;
 
 /**
  * Class Error
- * @package AllSecureExchange\Client\Transaction
+ * @package AllsecureExchange\Client\Transaction
  */
 class Error {
 

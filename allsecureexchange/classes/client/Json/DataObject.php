@@ -1,11 +1,11 @@
 <?php
 
-namespace AllSecureExchange\Client\Json;
+namespace AllsecureExchange\Client\Json;
 
 /**
  * Class DataObject
  *
- * @package AllSecureExchange\Client\Json
+ * @package AllsecureExchange\Client\Json
  */
 class DataObject implements \ArrayAccess, \JsonSerializable {
 
@@ -15,11 +15,11 @@ class DataObject implements \ArrayAccess, \JsonSerializable {
     protected $_data = array();
 
     protected static $_typeMap = array(
-        'customerData' => \AllSecureExchange\Client\CustomerProfile\CustomerData::class,
-        'paymentInstrument' => \AllSecureExchange\Client\CustomerProfile\PaymentInstrument::class,
-        'paymentData.card' => \AllSecureExchange\Client\CustomerProfile\PaymentData\CardData::class,
-        'paymentData.iban' => \AllSecureExchange\Client\CustomerProfile\PaymentData\IbanData::class,
-        'paymentData.wallet' => \AllSecureExchange\Client\CustomerProfile\PaymentData\WalletData::class,
+        'customerData' => \AllsecureExchange\Client\CustomerProfile\CustomerData::class,
+        'paymentInstrument' => \AllsecureExchange\Client\CustomerProfile\PaymentInstrument::class,
+        'paymentData.card' => \AllsecureExchange\Client\CustomerProfile\PaymentData\CardData::class,
+        'paymentData.iban' => \AllsecureExchange\Client\CustomerProfile\PaymentData\IbanData::class,
+        'paymentData.wallet' => \AllsecureExchange\Client\CustomerProfile\PaymentData\WalletData::class,
     );
 
     /**

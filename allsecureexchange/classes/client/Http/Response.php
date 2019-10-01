@@ -1,13 +1,13 @@
 <?php
 
-namespace AllSecureExchange\Client\Http;
+namespace AllsecureExchange\Client\Http;
 
-use AllSecureExchange\Client\Http\Exception\ResponseException;
+use AllsecureExchange\Client\Http\Exception\ResponseException;
 
 /**
  * Class Response
  *
- * @package AllSecureExchange\Client\Http
+ * @package AllsecureExchange\Client\Http
  */
 class Response implements ResponseInterface {
 

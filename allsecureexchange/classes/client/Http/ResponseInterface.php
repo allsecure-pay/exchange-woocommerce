@@ -1,11 +1,11 @@
 <?php
 
-namespace AllSecureExchange\Client\Http;
+namespace AllsecureExchange\Client\Http;
 
 /**
  * Interface ResponseInterface
  *
- * @package AllSecureExchange\Client\Http
+ * @package AllsecureExchange\Client\Http
  */
 interface ResponseInterface {
 

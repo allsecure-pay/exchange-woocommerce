@@ -1,11 +1,11 @@
 <?php
 
-namespace AllSecureExchange\Client\Schedule;
+namespace AllsecureExchange\Client\Schedule;
 
 /**
  * Class ScheduleError
  *
- * @package AllSecureExchange\Client\Schedule
+ * @package AllsecureExchange\Client\Schedule
  */
 class ScheduleError {
 

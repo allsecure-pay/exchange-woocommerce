@@ -1,16 +1,16 @@
 <?php
 
-namespace AllSecureExchange\Client\Callback;
+namespace AllsecureExchange\Client\Callback;
 
-use AllSecureExchange\Client\Data\Customer;
-use AllSecureExchange\Client\Data\Result\ResultData;
-use AllSecureExchange\Client\Transaction\Error;
+use AllsecureExchange\Client\Data\Customer;
+use AllsecureExchange\Client\Data\Result\ResultData;
+use AllsecureExchange\Client\Transaction\Error;
 
 /**
  * Callback result, which is produced by processing a callback request's body.
  * Reports the status of an asynchronous transaction.
  *
- * @package AllSecureExchange\Client\Callback
+ * @package AllsecureExchange\Client\Callback
  */
 class Result {
     /** The callback reports, that the transaction finished successfully. */
