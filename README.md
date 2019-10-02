@@ -6,6 +6,8 @@ Tested up to: 5.0.4
 Requires PHP: 7.1
 Stable tag: 1.1.0
 
+Accept payments in your WooCommerce store using AllSecure OPEN Platform. See a fully functional WooCommerce demo store with AllSecure EXCHANGE as a payment gateway.
+
 ## Installation
 - Upload the plugin files to the `/wp-content/plugins/allsecureexchange` directory, or install the plugin through the WordPress plugins screen directly.
 - Activate the plugin through the 'Plugins' screen in WordPress
