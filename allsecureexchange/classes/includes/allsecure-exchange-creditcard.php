@@ -32,7 +32,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
         $this->init_settings();
 
         $this->title = $this->get_option('title');
-        $this->callbackUrl = str_replace('https:', 'http:', add_query_arg('wc-api', 'wc_' . $this->id, home_url('/')));
+        $this->callbackUrl = add_query_arg('wc-api', 'wc_' . $this->id, home_url('/'));
 
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, [$this, 'process_admin_options']);
         add_action('wp_enqueue_scripts', function () {
