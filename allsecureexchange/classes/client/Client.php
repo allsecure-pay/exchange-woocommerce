@@ -1117,7 +1117,7 @@ class Client {
             throw new InvalidValueException('The URL to the Gateway can not be empty!');
         }
 
-        if (!\filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED)) {
+        if (!\filter_var($url, FILTER_VALIDATE_URL)) {
             throw new InvalidValueException('The URL to the Gateway should be a valid URL!');
         }
 

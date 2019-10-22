@@ -46,6 +46,22 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
             }
             return str_replace(' src', ' data-main="payment-js" src', $tag);
         }, 10, 2);
+        add_filter('woocommerce_available_payment_gateways', [$this, 'hide_payment_gateways_on_pay_for_order_page'], 100, 1);
+    }
+
+    public function hide_payment_gateways_on_pay_for_order_page($available_gateways)
+    {
+        if (is_checkout_pay_page()) {
+            global $wp;
+            $this->order = new WC_Order($wp->query_vars['order-pay']);
+            foreach ($available_gateways as $gateways_id => $gateways) {
+                if ($gateways_id !== $this->order->get_payment_method()) {
+                    unset($available_gateways[$gateways_id]);
+                }
+            }
+        }
+
+        return $available_gateways;
     }
 
     public function process_payment($orderId)
@@ -174,7 +190,6 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
                 // payment is pending, wait for callback to complete
             } elseif ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_FINISHED) {
                 // seamless will finish here
-                $this->order->payment_complete();
             }
             return [
                 'result' => 'success',
@@ -205,7 +220,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
         AllsecureExchange\Client\Client::setApiUrl($this->get_option('apiHost'));
         $client = new AllsecureExchange\Client\Client(
             $this->get_option('apiUser'),
-            $this->get_option('apiPassword'),
+            htmlspecialchars_decode($this->get_option('apiPassword')),
             $this->get_option('apiKey'),
             $this->get_option('sharedSecret')
         );
