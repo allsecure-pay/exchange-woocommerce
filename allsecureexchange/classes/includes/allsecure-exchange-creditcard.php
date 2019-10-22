@@ -64,6 +64,33 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
         return $available_gateways;
     }
 
+    private function encodeOrderId($orderId)
+    {
+        return $orderId . '-' . date('YmdHis') . substr(sha1(uniqid()), 0, 10);
+    }
+
+    private function decodeOrderId($orderId)
+    {
+        if (strpos($orderId, '-') === false) {
+            return $orderId;
+        }
+
+        $orderIdParts = explode('-', $orderId);
+
+        if(count($orderIdParts) === 2) {
+            $orderId = $orderIdParts[0];
+        }
+
+        /**
+         * void/capture will prefix the transaction id
+         */
+        if(count($orderIdParts) === 3) {
+            $orderId = $orderIdParts[1];
+        }
+
+        return $orderId;
+    }
+
     public function process_payment($orderId)
     {
         global $woocommerce;
@@ -136,7 +163,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
                 break;
         }
 
-        $transaction->setTransactionId($orderId)
+        $transaction->setTransactionId($this->encodeOrderId($orderId))
             ->setAmount(floatval($this->order->get_total()))
             ->setCurrency($this->order->get_currency())
             ->setCustomer($customer)
@@ -144,7 +171,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
             ->setCallbackUrl($this->callbackUrl)
             ->setCancelUrl(wc_get_checkout_url())
             ->setSuccessUrl($this->get_return_url($this->order))
-            ->setErrorUrl($this->get_return_url($this->order));
+            ->setErrorUrl(add_query_arg(['gateway_return_result' => 'error'], $this->order->get_checkout_payment_url(false)));
 
         /**
          * integration key is set -> seamless
@@ -227,9 +254,28 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 
         $client->validateCallbackWithGlobals();
         $callbackResult = $client->readCallback(file_get_contents('php://input'));
-        $this->order = new WC_Order($callbackResult->getTransactionId());
+        $this->order = new WC_Order($this->decodeOrderId($callbackResult->getTransactionId()));
         if ($callbackResult->getResult() == \AllsecureExchange\Client\Callback\Result::RESULT_OK) {
-            $this->order->payment_complete();
+            switch ($callbackResult->getTransactionType()) {
+                case \AllsecureExchange\Client\Callback\Result::TYPE_DEBIT:
+                case \AllsecureExchange\Client\Callback\Result::TYPE_CAPTURE:
+                    $this->order->payment_complete();
+                    break;
+                case \AllsecureExchange\Client\Callback\Result::TYPE_VOID:
+                    $this->order->update_status('cancelled', __('Void', 'woocommerce'));
+                    break;
+                case \AllsecureExchange\Client\Callback\Result::TYPE_PREAUTHORIZE:
+                    $this->order->update_status('on-hold', __('Awaiting capture/void', 'woocommerce'));
+                    break;
+            }
+        } elseif ($callbackResult->getResult() == \AllsecureExchange\Client\Callback\Result::RESULT_ERROR) {
+            switch ($callbackResult->getTransactionType()) {
+                case \AllsecureExchange\Client\Callback\Result::TYPE_DEBIT:
+                case \AllsecureExchange\Client\Callback\Result::TYPE_CAPTURE:
+                case \AllsecureExchange\Client\Callback\Result::TYPE_VOID:
+                    $this->order->update_status('failed', __('Error', 'woocommerce'));
+                    break;
+            }
         }
 
         die("OK");
@@ -380,6 +426,11 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
             // 3ds:browserScreenWidth
             // 3ds:browserTimezone
             // 3ds:browserUserAgent
+
+            /**
+             * force 3ds flow
+             */
+            // '3dsecure' => 'mandatory',
 
             /**
              * Additional 3ds 2.0 data

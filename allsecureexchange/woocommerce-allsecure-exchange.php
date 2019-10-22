@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WooCommerce AllSecure Exchange Extension
  * Description: AllSecure Exchange for WooCommerce
- * Version: 1.5.0
+ * Version: 1.6.0
  * Author: AllSecure Exchange
  * WC requires at least: 3.6.0
  * WC tested up to: 3.7.0
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 define('ALLSECURE_EXCHANGE_EXTENSION_URL', 'https://asxgw.com/');
 define('ALLSECURE_EXCHANGE_EXTENSION_NAME', 'AllSecure Exchange');
-define('ALLSECURE_EXCHANGE_EXTENSION_VERSION', '1.5.0');
+define('ALLSECURE_EXCHANGE_EXTENSION_VERSION', '1.6.0');
 define('ALLSECURE_EXCHANGE_EXTENSION_UID_PREFIX', 'allsecure_exchange_');
 define('ALLSECURE_EXCHANGE_EXTENSION_BASEDIR', plugin_dir_path(__FILE__));
 
@@ -35,4 +35,14 @@ add_action('plugins_loaded', function () {
         }
         return $methods;
     }, 0);
+
+    // add_filter('woocommerce_before_checkout_form', function(){
+    add_filter('the_content', function($content){
+        if(is_checkout_pay_page()) {
+            if(!empty($_GET['gateway_return_result']) && $_GET['gateway_return_result'] == 'error') {
+                wc_print_notice(__('Payment failed or was declined', 'woocommerce'), 'error');
+            }
+        }
+        return $content;
+    }, 0, 1);
 });
