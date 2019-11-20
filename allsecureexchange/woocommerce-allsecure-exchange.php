@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WooCommerce AllSecure Exchange Extension
  * Description: AllSecure Exchange for WooCommerce
- * Version: 1.6.1
+ * Version: 1.7.0
  * Author: AllSecure Exchange
  * WC requires at least: 3.6.0
  * WC tested up to: 3.7.0
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 define('ALLSECURE_EXCHANGE_EXTENSION_URL', 'https://asxgw.com/');
 define('ALLSECURE_EXCHANGE_EXTENSION_NAME', 'AllSecure Exchange');
-define('ALLSECURE_EXCHANGE_EXTENSION_VERSION', '1.6.1');
+define('ALLSECURE_EXCHANGE_EXTENSION_VERSION', '1.7.0');
 define('ALLSECURE_EXCHANGE_EXTENSION_UID_PREFIX', 'allsecure_exchange_');
 define('ALLSECURE_EXCHANGE_EXTENSION_BASEDIR', plugin_dir_path(__FILE__));
 
@@ -45,4 +45,13 @@ add_action('plugins_loaded', function () {
         }
         return $content;
     }, 0, 1);
+
+    add_action( 'init', 'woocommerce_clear_cart_url' );
+    function woocommerce_clear_cart_url() {
+        if (isset( $_GET['clear-cart']) && is_order_received_page()) {
+            global $woocommerce;
+
+            $woocommerce->cart->empty_cart();
+        }
+    }
 });

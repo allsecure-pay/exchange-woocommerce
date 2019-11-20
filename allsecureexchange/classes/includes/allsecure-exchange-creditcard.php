@@ -170,7 +170,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
             ->setExtraData($this->extraData3DS())
             ->setCallbackUrl($this->callbackUrl)
             ->setCancelUrl(wc_get_checkout_url())
-            ->setSuccessUrl($this->get_return_url($this->order))
+            ->setSuccessUrl($this->paymentSuccessUrl($this->order))
             ->setErrorUrl(add_query_arg(['gateway_return_result' => 'error'], $this->order->get_checkout_payment_url(false)));
 
         /**
@@ -202,13 +202,12 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
         }
 
         if ($result->isSuccess()) {
-            $woocommerce->cart->empty_cart();
-
             // $gatewayReferenceId = $result->getReferenceId();
             if ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_ERROR) {
                 // $errors = $result->getErrors();
                 return $this->paymentFailedResponse();
             } elseif ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_REDIRECT) {
+                // HOSTED PAYMENT PAGE OR SEAMLESS+3DS
                 return [
                     'result' => 'success',
                     'redirect' => $result->getRedirectUrl(),
@@ -216,11 +215,14 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
             } elseif ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_PENDING) {
                 // payment is pending, wait for callback to complete
             } elseif ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_FINISHED) {
-                // seamless will finish here
+
+                //seamless will finish here ONLY FOR NON-3DS SEAMLESS
             }
+            $woocommerce->cart->empty_cart();
+
             return [
                 'result' => 'success',
-                'redirect' => $this->get_return_url($this->order),
+                'redirect' => $this->paymentSuccessUrl($this->order),
             ];
         }
 
@@ -228,6 +230,13 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
          * something went wrong
          */
         return $this->paymentFailedResponse();
+    }
+
+    private function paymentSuccessUrl($order)
+    {
+        $url = $this->get_return_url($order);
+
+        return $url . '&empty-cart';
     }
 
     private function paymentFailedResponse()
@@ -252,7 +261,13 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
             $this->get_option('sharedSecret')
         );
 
-        $client->validateCallbackWithGlobals();
+        if (!$client->validateCallbackWithGlobals()) {
+            if (!headers_sent()) {
+                http_response_code(400);
+            }
+            die("OK");
+        }
+
         $callbackResult = $client->readCallback(file_get_contents('php://input'));
         $this->order = new WC_Order($this->decodeOrderId($callbackResult->getTransactionId()));
         if ($callbackResult->getResult() == \AllsecureExchange\Client\Callback\Result::RESULT_OK) {
@@ -278,7 +293,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
             }
         }
 
-        die("OK");
+
     }
 
     public function init_form_fields()

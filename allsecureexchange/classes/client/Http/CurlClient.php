@@ -232,7 +232,8 @@ class CurlClient implements ClientInterface {
             'X-Date' => $timestamp,
             'Authorization' => $authHeader,
             'X-Authorization' => $authHeader,
-            'Content-Type' => $contentType
+            'Content-Type' => $contentType,
+            'X-Source-Platform' => 'woocommerce',
         );
 
         return $this;
@@ -268,7 +269,8 @@ class CurlClient implements ClientInterface {
             'Date' => $timestamp,
             'X-Date' => $timestamp,
             'X-Signature' => $signature,
-            'Content-Type' => $contentType
+            'Content-Type' => $contentType,
+            'X-Source-Platform' => 'woocommerce',
         );
 
         return $this;
@@ -280,7 +282,7 @@ class CurlClient implements ClientInterface {
      * @param string $body
      * @param string $contentType
      * @param string $timestamp
-     * @param string $requestUri
+     * @param string $requechstUri
      *
      * @return string
      */

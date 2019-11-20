@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v1.7.0 (2019-11-19)
+### Added
+- Explicit check of callback
+- Clear cart filter
+- Source platform header
+
 ## v1.6.1 (2019-10-21)
 ### Fixed
 - Do not force http on callback URL
