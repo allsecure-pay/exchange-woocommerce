@@ -1,6 +1,12 @@
 # Release Notes
 
-## Unreleased
+## v1.7.2 (2019-12-29)
+### Added
+- ETest / Live Host configuration
+
+## v1.7.1 (2019-11-21)
+### Added
+- Added error translation 
 
 ## v1.7.0 (2019-11-19)
 ### Added

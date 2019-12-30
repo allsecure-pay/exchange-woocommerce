@@ -40,6 +40,10 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
             wp_register_script('allsecure_exchange_js', plugins_url('/allsecureexchange/assets/js/allsecure-exchange.js'), [], ALLSECURE_EXCHANGE_EXTENSION_VERSION, false);
         }, 999);
         add_action('woocommerce_api_wc_' . $this->id, [$this, 'process_callback']);
+		/* add_action to parse values when success */
+		add_action( 'woocommerce_thankyou', array( $this,'parse_value_allsecureexchange_success') );
+		/* add_action to parse values when error */
+		add_action( 'woocommerce_before_checkout_form', array( $this,'parse_value_allsecureexchange_error'), 10 );
         add_filter('script_loader_tag', function ($tag, $handle) {
             if ($handle !== 'payment_js') {
                 return $tag;
@@ -111,7 +115,8 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
             $this->get_option('apiUser'),
             htmlspecialchars_decode($this->get_option('apiPassword')),
             $this->get_option('apiKey'),
-            $this->get_option('sharedSecret')
+            $this->get_option('sharedSecret'),
+			strtolower(substr(get_bloginfo('language'), 0, 2 ))
         );
 
         /**
@@ -162,16 +167,18 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
                 $transaction = new \AllsecureExchange\Client\Transaction\Debit();
                 break;
         }
-
-        $transaction->setTransactionId($this->encodeOrderId($orderId))
-            ->setAmount(floatval($this->order->get_total()))
+		$merchantTransactionId = $this->encodeOrderId($orderId);
+        // $transaction->setTransactionId($this->encodeOrderId($orderId))
+		$transaction->setTransactionId($merchantTransactionId)
+			->setAmount(floatval($this->order->get_total()))
             ->setCurrency($this->order->get_currency())
             ->setCustomer($customer)
             ->setExtraData($this->extraData3DS())
             ->setCallbackUrl($this->callbackUrl)
             ->setCancelUrl(wc_get_checkout_url())
-            ->setSuccessUrl($this->paymentSuccessUrl($this->order))
-            ->setErrorUrl(add_query_arg(['gateway_return_result' => 'error'], $this->order->get_checkout_payment_url(false)));
+            ->setSuccessUrl(add_query_arg(['astrxId' => $merchantTransactionId], $this->paymentSuccessUrl($this->order)))
+            // ->setErrorUrl(add_query_arg(['gateway_return_result' => 'error'], $this->order->get_checkout_payment_url(false)));
+			->setErrorUrl  (add_query_arg(['astrxId' => $merchantTransactionId], wc_get_checkout_url($this->order)));
 
         /**
          * integration key is set -> seamless
@@ -234,10 +241,9 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 
     private function paymentSuccessUrl($order)
     {
-        $url = $this->get_return_url($order);
-
-        return $url . '&empty-cart';
-    }
+		$url = $this->get_return_url($order) ;
+		return $url . '&empty-cart';
+	}
 
     private function paymentFailedResponse()
     {
@@ -245,7 +251,8 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
         wc_add_notice(__('Payment failed or was declined', 'woocommerce'), 'error');
         return [
             'result' => 'error',
-            'redirect' => $this->get_return_url($this->order),
+            // 'redirect' => $this->get_return_url($this->order),
+			'redirect' => wc_get_checkout_url($this->order),
         ];
     }
 
@@ -258,7 +265,8 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
             $this->get_option('apiUser'),
             htmlspecialchars_decode($this->get_option('apiPassword')),
             $this->get_option('apiKey'),
-            $this->get_option('sharedSecret')
+            $this->get_option('sharedSecret'),
+			strtolower(substr(get_bloginfo('language'), 0, 2 ))
         );
 
         if (!$client->validateCallbackWithGlobals()) {
@@ -300,63 +308,67 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
     {
         $this->form_fields = [
             'title' => [
-                'title' => 'Title',
+                'title' => __('Title', 'allsecureexchange'),
                 'type' => 'text',
-                'label' => 'Title',
-                'description' => 'Title',
+                'label' => __('Title', 'allsecureexchange'),
+                'description' => __('Title', 'allsecureexchange'),
                 'default' => $this->method_title,
             ],
             'apiHost' => [
-                'title' => 'API Host',
-                'type' => 'text',
-                'label' => 'API Host',
-                'description' => 'API Host',
+                'title' => __('API Host', 'allsecureexchange'),
+                'type' => 'select',
+                'label' => __('API Host', 'allsecureexchange'),
+                'description' => __('API Host', 'allsecureexchange'),
                 'default' => ALLSECURE_EXCHANGE_EXTENSION_URL,
+				'options' => [
+                    'https://asxgw.paymentsandbox.cloud/' => 'Test Host',
+                    ALLSECURE_EXCHANGE_EXTENSION_URL => 'Live Host',
+                ],
             ],
-            'apiUser' => [
-                'title' => 'API User',
+			'apiUser' => [
+                'title' => __('API User', 'allsecureexchange'), 
                 'type' => 'text',
-                'label' => 'API User',
-                'description' => 'API User',
+                'title' => __('API User', 'allsecureexchange'), 
+                'title' => __('API User', 'allsecureexchange'), 
                 'default' => '',
             ],
             'apiPassword' => [
-                'title' => 'API Password',
+                'title' => 	__('API Password', 'allsecureexchange'), 
                 'type' => 'text',
-                'label' => 'API Password',
-                'description' => 'API Password',
+                'label' => __('API Password', 'allsecureexchange'), 
+                'description' => __('API Password', 'allsecureexchange'), 
                 'default' => '',
             ],
             'apiKey' => [
-                'title' => 'API Key',
+                'title' => __('API Key', 'allsecureexchange'), 
                 'type' => 'text',
-                'label' => 'API Key',
-                'description' => 'API Key',
+                'label' => __('API Key', 'allsecureexchange'), 
+                'description' => __('API Key', 'allsecureexchange'), 
                 'default' => '',
             ],
             'sharedSecret' => [
-                'title' => 'Shared Secret',
+                'title' => __('Shared Secret', 'allsecureexchange'), 
                 'type' => 'text',
-                'label' => 'Shared Secret',
-                'description' => 'Shared Secret',
+                'label' => __('Shared Secret', 'allsecureexchange'), 
+                'description' => __('Shared Secret', 'allsecureexchange'), 
                 'default' => '',
             ],
             'integrationKey' => [
-                'title' => 'Integration Key',
+                'title' => __('Integration Key', 'allsecureexchange'), 
                 'type' => 'text',
-                'label' => 'Integration Key',
-                'description' => 'Integration Key',
+                'label' => __('Integration Key', 'allsecureexchange'),
+                'description' => __('Integration Key', 'allsecureexchange'),
                 'default' => '',
             ],
             'transactionRequest' => [
-                'title' => 'Transaction Request',
+                'title' => __('Transaction Request', 'allsecureexchange'), 
                 'type' => 'select',
-                'label' => 'Transaction Request',
-                'description' => 'Transaction Request',
+                'label' => __('Transaction Request', 'allsecureexchange'), 
+                'description' => __('Transaction Request', 'allsecureexchange'), 
                 'default' => 'debit',
                 'options' => [
-                    'debit' => 'Debit',
-                    'preauthorize' => 'Preauthorize/Capture/Void',
+                    'debit' => __('Debit', 'allsecureexchange'),
+                    'preauthorize' => __('Preauthorize', 'allsecureexchange'),
                 ],
             ],
         ];
@@ -1201,4 +1213,75 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
     {
         return null;
     }
+	// gateway transaction details on declined trx
+	function parse_value_allsecureexchange_error($order_id){
+		if ( isset($_REQUEST['astrxId']) ) {
+			$astrxId = $_REQUEST['astrxId'];
+			$statusResult = $this->report_payment($order_id);
+			$errors = $statusResult->getFirstError();
+			include_once( dirname( __FILE__ ) . '/allsecure-exchange-error-list.php' );
+			$resp_code_translated = array_key_exists($errors->getCode(), $errormsgtranslate) ? $errormsgtranslate[$errors->getCode()] :  $errors->getMessage() ;
+			echo "<div class='woocommerce'><ul class='woocommerce-error' role='alert'>
+			<li>" . sprintf(__('Transaction Unsuccessful. The status message <b>%s</b>', 'allsecureexchange'), $resp_code_translated ) ." * </li>
+			</ul>
+			</div>";
+		}
+	}
+	
+	// gateway transaction details on a thankyou page
+	function parse_value_allsecureexchange_success($order_id){
+		if ( isset($_REQUEST['astrxId']) ) {
+			$astrxId = $_REQUEST['astrxId'];
+			$statusResult = $this->report_payment($order_id);
+			$result = $statusResult -> getTransactionStatus();
+			$amount = $statusResult -> getAmount();
+			$currency = $statusResult -> getCurrency();
+			$cardData = $statusResult->getreturnData();
+			$cardHolder = $cardData->getcardHolder();
+			$binBrand = $cardData->getbinBrand();
+			$expiryMonth = $cardData->getexpiryMonth();
+			$expiryYear = $cardData->getexpiryYear();
+			$firstSixDigits = $cardData->getfirstSixDigits();
+			$lastFourDigits = $cardData->getlastFourDigits();
+			$extraData = $statusResult-> getExtraData();
+			$transactionType = $statusResult-> getTransactionType();
+			$timestamp = date("Y-m-d H:i:s");
+			echo "<div class='woocommerce-order'>
+			<h2>". __('Transaction details', 'allsecure_woo').": </h2>
+			<ul class='woocommerce-order-overview woocommerce-thankyou-order-details order_details'>
+				<li class='woocommerce-order-overview__email email'>" . __('Transaction Codes', 'allsecureexchange' );
+					echo('<strong>'. $extraData .'</strong>');
+		   echo "</li>
+					<li class='woocommerce-order-overview__email email'>". __('Card Type', 'allsecureexchange' ) .
+					"<strong>". $binBrand ." *** ".$lastFourDigits."</strong>
+					</li>
+					<li class='woocommerce-order-overview__email email'>" . __('Payment Type', 'allsecureexchange' ) .
+					"<strong>".$transactionType."</strong>
+					</li>
+					<li class='woocommerce-order-overview__email email'>".  __('Transaction Time', 'allsecureexchange' ) .
+					"<strong>".$timestamp."</strong>
+					</li>
+				</ul>
+			</div>";
+		}
+	}
+	
+	function report_payment($order_id) {
+		/**
+		 * gateway client
+		 */
+		WC_AllsecureExchange_Provider::autoloadClient();
+		AllsecureExchange\Client\Client::setApiUrl($this->get_option('apiHost'));
+		$client = new AllsecureExchange\Client\Client(
+			$this->get_option('apiUser'),
+			htmlspecialchars_decode($this->get_option('apiPassword')),
+			$this->get_option('apiKey'),
+			$this->get_option('sharedSecret'),
+			strtolower(substr(get_bloginfo('language'), 0, 2 ))
+		);
+		$statusRequestData = new \AllsecureExchange\Client\StatusApi\StatusRequestData();
+		$statusRequestData->setMerchantTransactionId($_REQUEST['astrxId']);
+		$statusResult = $client->sendStatusRequest($statusRequestData);
+		return $statusResult;
+	}
 }

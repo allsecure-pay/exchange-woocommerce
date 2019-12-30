@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WooCommerce AllSecure Exchange Extension
  * Description: AllSecure Exchange for WooCommerce
- * Version: 1.7.0
+ * Version: 1.7.2
  * Author: AllSecure Exchange
  * WC requires at least: 3.6.0
  * WC tested up to: 3.7.0
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 define('ALLSECURE_EXCHANGE_EXTENSION_URL', 'https://asxgw.com/');
 define('ALLSECURE_EXCHANGE_EXTENSION_NAME', 'AllSecure Exchange');
-define('ALLSECURE_EXCHANGE_EXTENSION_VERSION', '1.7.0');
+define('ALLSECURE_EXCHANGE_EXTENSION_VERSION', '1.7.2');
 define('ALLSECURE_EXCHANGE_EXTENSION_UID_PREFIX', 'allsecure_exchange_');
 define('ALLSECURE_EXCHANGE_EXTENSION_BASEDIR', plugin_dir_path(__FILE__));
 
@@ -54,4 +54,11 @@ add_action('plugins_loaded', function () {
             $woocommerce->cart->empty_cart();
         }
     }
+	
+	
+	add_action( 'init', 'allsecureexchange_load_plugin_textdomain' );
+	function allsecureexchange_load_plugin_textdomain() {
+		load_plugin_textdomain( 'allsecureexchange', FALSE, dirname(plugin_basename(__FILE__))."/languages");
+	}
+
 });

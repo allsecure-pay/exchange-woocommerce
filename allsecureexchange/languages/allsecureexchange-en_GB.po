@@ -1,0 +1,288 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2019-11-21 17:10+0100\n"
+"PO-Revision-Date: 2019-11-21 17:31+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.4\n"
+"X-Poedit-Basepath: ../classes/includes\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Flags-xgettext: --add-comments=__()\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-SearchPath-0: allsecure-exchange-creditcard.php\n"
+"X-Poedit-SearchPath-1: allsecure-exchange-error-list.php\n"
+
+#: allsecure-exchange-creditcard.php:104
+msgid "Awaiting payment"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:249 allsecure-exchange-creditcard.php:250
+msgid "Payment failed or was declined"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:287
+msgid "Void"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:290
+msgid "Awaiting capture/void"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:298
+msgid "Error"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:310 allsecure-exchange-creditcard.php:312
+#: allsecure-exchange-creditcard.php:313
+msgid "Title"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:317 allsecure-exchange-creditcard.php:319
+#: allsecure-exchange-creditcard.php:320
+msgid "API Host"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:324 allsecure-exchange-creditcard.php:326
+#: allsecure-exchange-creditcard.php:327
+msgid "API User"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:331 allsecure-exchange-creditcard.php:333
+#: allsecure-exchange-creditcard.php:334
+msgid "API Password"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:338 allsecure-exchange-creditcard.php:340
+#: allsecure-exchange-creditcard.php:341
+msgid "API Key"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:345 allsecure-exchange-creditcard.php:347
+#: allsecure-exchange-creditcard.php:348
+msgid "Shared Secret"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:352 allsecure-exchange-creditcard.php:354
+#: allsecure-exchange-creditcard.php:355
+msgid "Integration Key"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:359 allsecure-exchange-creditcard.php:361
+#: allsecure-exchange-creditcard.php:362
+msgid "Transaction Request"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:365
+msgid "Debit"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:366
+msgid "Preauthorize"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:1233
+#, php-format
+msgid "Transaction Unsuccessful. The status message <b>%s</b>"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:6
+msgid "CONFIG ERROR. Some fundamental error in your request"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:7
+msgid "CONFIG ERROR. The upstream system responded with an unknown response"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:8
+msgid "CONFIG ERROR. Request data are malformed or missing"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:9
+msgid "CONFIG ERROR. Transaction could not be processed"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:10
+msgid "CONFIG ERROR. The request signature you provided was wrong"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:11
+msgid "CONFIG ERROR. The XML you provided was malformed or invalid"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:12
+msgid "CONFIG ERROR. Preconditions failed, e.g. capture on a failed authorize"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:13
+msgid ""
+"CONFIG ERROR. Something is wrong your configuration, please contact your "
+"integration engineer"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:14
+msgid "CONFIG ERROR. Unexpected system error"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:15
+msgid ""
+"CONFIG ERROR. We received an error which is not (yet) mapped to a better "
+"error code"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:16
+msgid ""
+"Account closed. The customer cancelled permission for his payment instrument "
+"externally"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:17
+msgid "User cancelled. Transaction was cancelled by customer"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:18
+msgid "Transaction declined. Please try again later or change the card"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:19
+msgid "Quota regulation. Card limit reached"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:20
+msgid "Transaction expired. Customer took to long to submit his payment info"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:21
+msgid "Insufficient funds. Card limit reached"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:22
+msgid "Incorrect payment info. Double check and try again"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:23
+msgid "Invalid card. Try with some other card"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:24
+msgid "Expired card. Try with some other card"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:25
+msgid "Invalid card. Call your bank immediately"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:26
+msgid "Unsupported card. Try with some other card"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:27
+msgid "Transaction cancelled"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:28 allsecure-exchange-error-list.php:29
+#: allsecure-exchange-error-list.php:30 allsecure-exchange-error-list.php:31
+msgid "Transaction declined. Please try again later or call your bank"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:32
+msgid "Invalid IBAN. Double check and try again"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:33
+msgid "Invalid BIC. Double check and try again"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:34
+msgid "Customer data invalid. Double check and try again"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:35
+msgid "CVV required. Double check and try again"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:36
+msgid ""
+"3D-Secure Verification failed. Please call your bank or try with a non 3-D "
+"Secure card"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:37
+msgid "COMMUNICATION PROBLEM. Timeout. Try again after a short pause"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:38
+msgid "COMMUNICATION PROBLEM. Transaction not allowed"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:39
+msgid ""
+"COMMUNICATION PROBLEM. System temporary unavailable. Try again after a short "
+"pause"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:40
+msgid "Duplicate transaction ID"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:41
+msgid "COMMUNICATION PROBLEM. Try again after a short pause"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:42
+msgid "Schedule request is invalid"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:43
+msgid "Schedule request failed"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:44
+msgid "Schedule action is not valid"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:45
+msgid "RegistrationId is required"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:46
+msgid "RegistrationId is not valid"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:47
+msgid ""
+"The registrationId must point to a \"register\", \"debit+register\" or "
+"\"preuth+register\""
+msgstr ""
+
+#: allsecure-exchange-error-list.php:48
+msgid ""
+"Initial transaction is not a \"register\", \"debit+register\" or \"preuth"
+"+register\""
+msgstr ""
+
+#: allsecure-exchange-error-list.php:49
+msgid ""
+"The period between the initial and second transaction must be greater than "
+"24 hours"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:50
+msgid "The scheduleId is not valid or does not match to the connector"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:51
+msgid "The startDateTime is invalid or older than 24 hours"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:52
+msgid "The continueDateTime is invalid or older than 24 hours"
+msgstr ""
+
+#: allsecure-exchange-error-list.php:53
+msgid "The status of the schedule is not valid for the requested operation"
+msgstr ""

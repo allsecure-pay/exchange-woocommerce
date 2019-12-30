@@ -1,0 +1,328 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2019-11-21 17:09+0100\n"
+"PO-Revision-Date: 2019-11-21 17:31+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: sr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.4\n"
+"X-Poedit-Basepath: ../classes/includes\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Poedit-Flags-xgettext: --add-comments=__()\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-SearchPath-0: allsecure-exchange-creditcard.php\n"
+"X-Poedit-SearchPath-1: allsecure-exchange-error-list.php\n"
+
+#: allsecure-exchange-creditcard.php:104
+msgid "Awaiting payment"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:249 allsecure-exchange-creditcard.php:250
+msgid "Payment failed or was declined"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:287
+msgid "Void"
+msgstr "Reversal"
+
+#: allsecure-exchange-creditcard.php:290
+msgid "Awaiting capture/void"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:298
+msgid "Error"
+msgstr "Greška"
+
+#: allsecure-exchange-creditcard.php:310 allsecure-exchange-creditcard.php:312
+#: allsecure-exchange-creditcard.php:313
+msgid "Title"
+msgstr "Naziv"
+
+#: allsecure-exchange-creditcard.php:317 allsecure-exchange-creditcard.php:319
+#: allsecure-exchange-creditcard.php:320
+msgid "API Host"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:324 allsecure-exchange-creditcard.php:326
+#: allsecure-exchange-creditcard.php:327
+msgid "API User"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:331 allsecure-exchange-creditcard.php:333
+#: allsecure-exchange-creditcard.php:334
+msgid "API Password"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:338 allsecure-exchange-creditcard.php:340
+#: allsecure-exchange-creditcard.php:341
+msgid "API Key"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:345 allsecure-exchange-creditcard.php:347
+#: allsecure-exchange-creditcard.php:348
+msgid "Shared Secret"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:352 allsecure-exchange-creditcard.php:354
+#: allsecure-exchange-creditcard.php:355
+msgid "Integration Key"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:359 allsecure-exchange-creditcard.php:361
+#: allsecure-exchange-creditcard.php:362
+msgid "Transaction Request"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:365
+msgid "Debit"
+msgstr "Naplata"
+
+#: allsecure-exchange-creditcard.php:366
+msgid "Preauthorize"
+msgstr "Preautorizacija"
+
+#: allsecure-exchange-creditcard.php:1233
+#, php-format
+msgid "Transaction Unsuccessful. The status message <b>%s</b>"
+msgstr "Transakcija neuspešna. Odgovor <b>%s</b>"
+
+#: allsecure-exchange-error-list.php:6
+msgid "CONFIG ERROR. Some fundamental error in your request"
+msgstr "KONFIGURACIONA GREŠKA. Some fundamental error in your request"
+
+#: allsecure-exchange-error-list.php:7
+msgid "CONFIG ERROR. The upstream system responded with an unknown response"
+msgstr ""
+"KONFIGURACIONA GREŠKA. The upstream system responded with an unknown response"
+
+#: allsecure-exchange-error-list.php:8
+msgid "CONFIG ERROR. Request data are malformed or missing"
+msgstr "KONFIGURACIONA GREŠKA. Request data are malformed or missing"
+
+#: allsecure-exchange-error-list.php:9
+msgid "CONFIG ERROR. Transaction could not be processed"
+msgstr "KONFIGURACIONA GREŠKA. Transaction could not be processed"
+
+#: allsecure-exchange-error-list.php:10
+msgid "CONFIG ERROR. The request signature you provided was wrong"
+msgstr "KONFIGURACIONA GREŠKA. The request signature you provided was wrong"
+
+#: allsecure-exchange-error-list.php:11
+msgid "CONFIG ERROR. The XML you provided was malformed or invalid"
+msgstr "KONFIGURACIONA GREŠKA. The XML you provided was malformed or invalid"
+
+#: allsecure-exchange-error-list.php:12
+msgid "CONFIG ERROR. Preconditions failed, e.g. capture on a failed authorize"
+msgstr ""
+"KONFIGURACIONA GREŠKA. Preconditions failed, e.g. capture on a failed "
+"authorize"
+
+#: allsecure-exchange-error-list.php:13
+msgid ""
+"CONFIG ERROR. Something is wrong your configuration, please contact your "
+"integration engineer"
+msgstr ""
+"KONFIGURACIONA GREŠKA. Something is wrong your configuration, please contact "
+"your integration engineer"
+
+#: allsecure-exchange-error-list.php:14
+msgid "CONFIG ERROR. Unexpected system error"
+msgstr "KONFIGURACIONA GREŠKA. Unexpected system error"
+
+#: allsecure-exchange-error-list.php:15
+msgid ""
+"CONFIG ERROR. We received an error which is not (yet) mapped to a better "
+"error code"
+msgstr ""
+"KONFIGURACIONA GREŠKA. We received an error which is not (yet) mapped to a "
+"better error code"
+
+#: allsecure-exchange-error-list.php:16
+msgid ""
+"Account closed. The customer cancelled permission for his payment instrument "
+"externally"
+msgstr ""
+"Kartica koju ste uneli ne može biti prihvacena. Molimo pokušajte drugom "
+"karticom"
+
+#: allsecure-exchange-error-list.php:17
+msgid "User cancelled. Transaction was cancelled by customer"
+msgstr "Transakcija je otkazana od strane kupca"
+
+#: allsecure-exchange-error-list.php:18
+msgid "Transaction declined. Please try again later or change the card"
+msgstr "Vaša transakcija nije odobrena. Pokušajte ponovo ili promenite karticu"
+
+#: allsecure-exchange-error-list.php:19
+msgid "Quota regulation. Card limit reached"
+msgstr ""
+"Kartica koju ste uneli je premašila limit. Molimo izaberite drugu karticu"
+
+#: allsecure-exchange-error-list.php:20
+msgid "Transaction expired. Customer took to long to submit his payment info"
+msgstr "Korisnik nije u predviđenom roku završio transakciju"
+
+#: allsecure-exchange-error-list.php:21
+msgid "Insufficient funds. Card limit reached"
+msgstr ""
+"Kartica koju ste uneli je premašila limit. Molimo izaberite drugu karticu"
+
+#: allsecure-exchange-error-list.php:22
+msgid "Incorrect payment info. Double check and try again"
+msgstr ""
+"Uneti podaci o platnoj kartici nisu tacni. Proverite podatke i pokušajte "
+"ponovo"
+
+#: allsecure-exchange-error-list.php:23
+msgid "Invalid card. Try with some other card"
+msgstr ""
+"Kartica koju ste uneli ne može biti prihvacena. Molimo pokušajte drugom "
+"karticom"
+
+#: allsecure-exchange-error-list.php:24
+msgid "Expired card. Try with some other card"
+msgstr "Kartica koju ste uneli je istekla. Molimo izaberite drugu karticu"
+
+#: allsecure-exchange-error-list.php:25
+msgid "Invalid card. Call your bank immediately"
+msgstr ""
+"Vaša transakcija nije odobrena. Molimo proverite sa bankom koja vam je "
+"izdala karticu"
+
+#: allsecure-exchange-error-list.php:26
+msgid "Unsupported card. Try with some other card"
+msgstr ""
+"Kartica koju ste uneli ne može biti prihvacena. Molimo pokušajte drugom "
+"karticom"
+
+#: allsecure-exchange-error-list.php:27
+msgid "Transaction cancelled"
+msgstr "Transakcija je otkazana"
+
+#: allsecure-exchange-error-list.php:28 allsecure-exchange-error-list.php:29
+#: allsecure-exchange-error-list.php:30 allsecure-exchange-error-list.php:31
+msgid "Transaction declined. Please try again later or call your bank"
+msgstr ""
+"Vaša transakcija nije odobrena. Molimo izaberite drugu karticu ili proverite "
+"sa bankom koja vam je izdala karticu"
+
+#: allsecure-exchange-error-list.php:32
+msgid "Invalid IBAN. Double check and try again"
+msgstr "IBAN nije validan. Proverite podatke i pokušajte ponovo"
+
+#: allsecure-exchange-error-list.php:33
+msgid "Invalid BIC. Double check and try again"
+msgstr "BIC nije validan. Proverite podatke i pokušajte ponovo"
+
+#: allsecure-exchange-error-list.php:34
+msgid "Customer data invalid. Double check and try again"
+msgstr "Podaci o korisniku nisu validni. Proverite podatke i pokušajte ponovo"
+
+#: allsecure-exchange-error-list.php:35
+msgid "CVV required. Double check and try again"
+msgstr "CVV kod je obavezan. Proverite podatke i pokušajte ponovo"
+
+#: allsecure-exchange-error-list.php:36
+msgid ""
+"3D-Secure Verification failed. Please call your bank or try with a non 3-D "
+"Secure card"
+msgstr ""
+"Vaša 3D Secure autentifikacija nije uspela. Molimo pozovite banku koja vam "
+"je izdala karticu ili koristite karticu koja nije 3D-Secure"
+
+#: allsecure-exchange-error-list.php:37
+msgid "COMMUNICATION PROBLEM. Timeout. Try again after a short pause"
+msgstr ""
+"KOMUNIKACIJA: Transakcija je istekla. Napravite pauzu i pokušajte nešto "
+"kasnije"
+
+#: allsecure-exchange-error-list.php:38
+msgid "COMMUNICATION PROBLEM. Transaction not allowed"
+msgstr "KOMUNIKACIJA: Transakcija nije dozvoljena"
+
+#: allsecure-exchange-error-list.php:39
+msgid ""
+"COMMUNICATION PROBLEM. System temporary unavailable. Try again after a short "
+"pause"
+msgstr ""
+"KOMUNIKACIJA: Sistem privremeno nedostupan. Napravite pauzu i pokušajte "
+"nešto kasnije"
+
+#: allsecure-exchange-error-list.php:40
+msgid "Duplicate transaction ID"
+msgstr "ID Transakcije već korišćen"
+
+#: allsecure-exchange-error-list.php:41
+msgid "COMMUNICATION PROBLEM. Try again after a short pause"
+msgstr ""
+"KOMUNIKACIJA: Problem u konekciji sa bankom. Napravite pauzu i pokušajte "
+"nešto kasnije"
+
+#: allsecure-exchange-error-list.php:42
+msgid "Schedule request is invalid"
+msgstr "Zahtev za planiranjem transakcije nije validan"
+
+#: allsecure-exchange-error-list.php:43
+msgid "Schedule request failed"
+msgstr "Zahtev za planiranjem transakcije nije prihvaćen"
+
+#: allsecure-exchange-error-list.php:44
+msgid "Schedule action is not valid"
+msgstr "Planirana transakcija nije validna"
+
+#: allsecure-exchange-error-list.php:45
+msgid "RegistrationId is required"
+msgstr "RegistrationId je neophodan"
+
+#: allsecure-exchange-error-list.php:46
+msgid "RegistrationId is not valid"
+msgstr "RegistrationId nije validan"
+
+#: allsecure-exchange-error-list.php:47
+msgid ""
+"The registrationId must point to a \"register\", \"debit+register\" or "
+"\"preuth+register\""
+msgstr "RegistrationId nema odgovarajuću referencu"
+
+#: allsecure-exchange-error-list.php:48
+msgid ""
+"Initial transaction is not a \"register\", \"debit+register\" or \"preuth"
+"+register\""
+msgstr ""
+"Inicijalna transakcija kojom započinju planirana ponavljajuća plaćanja mora "
+"biti \"register\", \"debit+register\" ili \"preuth+register\""
+
+#: allsecure-exchange-error-list.php:49
+msgid ""
+"The period between the initial and second transaction must be greater than "
+"24 hours"
+msgstr ""
+"Period između inicijalne i sledeće transakcije mora biti duži od 24 sata"
+
+#: allsecure-exchange-error-list.php:50
+msgid "The scheduleId is not valid or does not match to the connector"
+msgstr ""
+"ScheduleId (id planirane transakcije) nije validan ili nije povezan na ovaj "
+"kanal plaćanja"
+
+#: allsecure-exchange-error-list.php:51
+msgid "The startDateTime is invalid or older than 24 hours"
+msgstr ""
+"Planirana početna transakcija (startDateTime) nije validnog formata ili je "
+"starija od 24h"
+
+#: allsecure-exchange-error-list.php:52
+msgid "The continueDateTime is invalid or older than 24 hours"
+msgstr ""
+"Planirana naredna transakcija (continueDateTime ) nije validnog formata ili "
+"je starija od 24h"
+
+#: allsecure-exchange-error-list.php:53
+msgid "The status of the schedule is not valid for the requested operation"
+msgstr ""
+"Status planirane transakcije nije validnog formata za zahtevanu operaciju"
