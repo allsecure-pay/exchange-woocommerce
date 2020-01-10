@@ -1,8 +1,12 @@
 # Release Notes
 
+## v1.7.32 (2020-01-10)
+### Added
+- Test / Live Host configuration
+
 ## v1.7.2 (2019-12-29)
 ### Added
-- ETest / Live Host configuration
+- Test / Live Host configuration
 
 ## v1.7.1 (2019-11-21)
 ### Added
