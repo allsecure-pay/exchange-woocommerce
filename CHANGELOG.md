@@ -1,6 +1,6 @@
 # Release Notes
 
-## v1.7.32 (2020-01-10)
+## v1.7.3 (2020-01-10)
 ### Added
 - Bosnian Translation
 
