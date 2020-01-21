@@ -1,6 +1,14 @@
 # Release Notes
 
-## v1.7.32 (2020-01-10)
+## v1.7.4 (2020-01-30)
+### Added
+- Footer banner added including a backend configuration
+- Version checker added
+
+### Fixed
+- Callback missing OK response
+
+## v1.7.3 (2020-01-10)
 ### Added
 - Test / Live Host configuration
 

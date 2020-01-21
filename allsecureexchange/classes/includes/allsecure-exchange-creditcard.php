@@ -32,6 +32,9 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
         $this->init_settings();
 
         $this->title = $this->get_option('title');
+		if ($this->get_option('card_supported') !== NULL) {
+			$this->cards = implode(' ', $this->get_option('card_supported'));
+		}
         $this->callbackUrl = add_query_arg('wc-api', 'wc_' . $this->id, home_url('/'));
 
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, [$this, 'process_admin_options']);
@@ -265,15 +268,15 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
             $this->get_option('apiUser'),
             htmlspecialchars_decode($this->get_option('apiPassword')),
             $this->get_option('apiKey'),
-            $this->get_option('sharedSecret'),
-			strtolower(substr(get_bloginfo('language'), 0, 2 ))
+            $this->get_option('sharedSecret')
+			// strtolower(substr(get_bloginfo('language'), 0, 2 ))
         );
 
         if (!$client->validateCallbackWithGlobals()) {
             if (!headers_sent()) {
                 http_response_code(400);
             }
-            die("OK");
+			die("OK");
         }
 
         $callbackResult = $client->readCallback(file_get_contents('php://input'));
@@ -300,80 +303,187 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
                     break;
             }
         }
-
-
+		
+		die("OK");
     }
 
     public function init_form_fields()
     {
         $this->form_fields = [
             'title' => [
-                'title' => __('Title', 'allsecureexchange'),
+                'title' => __('Description', 'allsecureexchange'),
                 'type' => 'text',
-                'label' => __('Title', 'allsecureexchange'),
-                'description' => __('Title', 'allsecureexchange'),
+                'label' => __('Description', 'allsecureexchange'),
+                'description' => __('This controls the description which the user sees during checkout', 'allsecureexchange'),
                 'default' => $this->method_title,
+				'desc_tip'    => true,
             ],
             'apiHost' => [
-                'title' => __('API Host', 'allsecureexchange'),
+                'title' => __('Operation Mode', 'allsecureexchange'),
                 'type' => 'select',
-                'label' => __('API Host', 'allsecureexchange'),
-                'description' => __('API Host', 'allsecureexchange'),
+                'label' => __('Operation Mode', 'allsecureexchange'),
+                'description' => __('You can switch between different environments, by selecting the corresponding operation mode', 'allsecureexchange'),
                 'default' => ALLSECURE_EXCHANGE_EXTENSION_URL,
 				'options' => [
-                    'https://asxgw.paymentsandbox.cloud/' => 'Test Host',
+                    ALLSECURE_EXCHANGE_EXTENSION_TEST_URL => 'Test Host',
                     ALLSECURE_EXCHANGE_EXTENSION_URL => 'Live Host',
                 ],
+				'desc_tip'    => true,
             ],
+			
+			'apiCredentials' => [
+					'title'       => __('API Credentials', 'allsecureexchange' ),
+					'type'        => 'title',
+					'description' => __('Enter your Exchange API Credentials to process transactions via AllSecure. You can get your Exchange Credentials via <a href="mailto:support@allsecpay.com">AllSecure Support</a>', 'allsecureexchange' ),
+			],
+			
 			'apiUser' => [
                 'title' => __('API User', 'allsecureexchange'), 
                 'type' => 'text',
-                'title' => __('API User', 'allsecureexchange'), 
-                'title' => __('API User', 'allsecureexchange'), 
+                'description' => __('Please enter your Exchange API User. This is needed in order to take the payment', 'allsecureexchange'), 
                 'default' => '',
+				'desc_tip'    => true,
             ],
             'apiPassword' => [
                 'title' => 	__('API Password', 'allsecureexchange'), 
                 'type' => 'text',
-                'label' => __('API Password', 'allsecureexchange'), 
-                'description' => __('API Password', 'allsecureexchange'), 
+                'description' => __('Please enter your Exchange API Password. This is needed in order to take the payment', 'allsecureexchange'), 
                 'default' => '',
+				'desc_tip'    => true,
             ],
             'apiKey' => [
                 'title' => __('API Key', 'allsecureexchange'), 
                 'type' => 'text',
-                'label' => __('API Key', 'allsecureexchange'), 
-                'description' => __('API Key', 'allsecureexchange'), 
+                'description' => __('Please enter your Exchange API Key. This is needed in order to take the payment', 'allsecureexchange'), 
                 'default' => '',
+				'desc_tip'    => true,
             ],
             'sharedSecret' => [
                 'title' => __('Shared Secret', 'allsecureexchange'), 
                 'type' => 'text',
-                'label' => __('Shared Secret', 'allsecureexchange'), 
-                'description' => __('Shared Secret', 'allsecureexchange'), 
+                'description' => __('Please enter your Exchange Shared Secret. This is needed in order to take the payment', 'allsecureexchange'), 
                 'default' => '',
+				'desc_tip'    => true,
             ],
             'integrationKey' => [
                 'title' => __('Integration Key', 'allsecureexchange'), 
                 'type' => 'text',
-                'label' => __('Integration Key', 'allsecureexchange'),
-                'description' => __('Integration Key', 'allsecureexchange'),
+                'description' => __('Public Integration Key required only if seamless integration required', 'allsecureexchange'),
                 'default' => '',
+				'desc_tip'    => true,
             ],
+			
+			'hr' => [
+				'title' => __( '<hr>', 'allsecureexchange' ),
+				'type' => 'title', 
+			],
+			'merchant_name' => [
+				'title' => __('Merchant Info', 'allsecureexchange' ),
+				'type' => 'text',
+				'description' => __('Please enter your Merchant Info to be displayed near the payment form', 'allsecureexchange' ),
+				'default' => '',
+				'desc_tip'    => true,
+			],
+			'merchant_email' => [
+				'title' => __('Merchant Email', 'allsecureexchange' ),
+				'type' => 'text',
+				'description' => __( 'Please enter your Merchant Email', 'allsecureexchange' ),
+				'default' => '',
+				'desc_tip'    => true,
+			],
+			'shop_url' => [
+				'title' => __( 'Shop URL', 'allsecureexchange' ),
+				'type' => 'text',
+				'description' => __( 'Please enter your Shop URL', 'allsecureexchange' ),
+				'default' => '',
+				'desc_tip'    => true,
+			],
+			'allsecure_id' => [
+				'title' => __( 'Allsecure ID', 'allsecureexchange' ),
+				'type' => 'text',
+				'description' => __( 'Please enter your ID as displayed on your invoice from AllSecure', 'allsecureexchange' ),
+				'default' => '',
+				'desc_tip'    => true,
+			],
+			'version_tracker' => [
+				'title'	=> __( 'Version Tracker', 'allsecureexchange' ),
+				'type' 	=> 'checkbox',
+				'label' => __( 'Enable Version Tracker', 'allsecureexchange' ),
+				'description' => __( 'When enabled, you accept to share your IP, email address, etc with us', 'allsecureexchange' ),
+				'default' => 'yes',
+				'desc_tip'    => true,
+			],
+			'banner_type' => [
+				'title' => __('Banner Type', 'allsecureexchange'),
+				'default' => 'none',
+				'description' => __('Choose type of banner you wish to use', 'allsecureexchange'),
+				'type' => 'select',
+				'options' => [
+					'none' => __('No Banner', 'allsecureexchange'),
+					'light' => __('Light Background', 'allsecureexchange'),
+					'dark' => __('Dark Background', 'allsecureexchange'),
+				],
+				'desc_tip'    => true,
+			],
+			
+			'hr' => [
+				'title' => __( '<hr>', 'allsecureexchange' ),
+				'type' => 'title', 
+			],
+			
             'transactionRequest' => [
-                'title' => __('Transaction Request', 'allsecureexchange'), 
+                'title' => __('Transaction Type', 'allsecureexchange'), 
                 'type' => 'select',
-                'label' => __('Transaction Request', 'allsecureexchange'), 
-                'description' => __('Transaction Request', 'allsecureexchange'), 
+                'description' => __('Choose type of Payment you wish to use', 'allsecureexchange'), 
                 'default' => 'debit',
                 'options' => [
                     'debit' => __('Debit', 'allsecureexchange'),
                     'preauthorize' => __('Preauthorize', 'allsecureexchange'),
                 ],
+				'desc_tip'    => true,
             ],
-        ];
-    }
+			
+			'card_supported' => [
+				'title' => __('Accepted Cards', 'allsecureexchange'),
+				'default' => [
+					'VISA',
+					'MASTER',
+					'MAESTRO'
+				],
+				'description' => __( 'Contact support at <a href="support@allsecpay.com">support@allsecpay.com</a> if you want to accept AMEX transactions', 'allsecureexchange' ),
+				'css'   => 'height: 100%;',
+				'type' => 'multiselect',
+				'options' => [
+					'VISA' => __('VISA', 'allsecureexchange'),
+					'MASTER' => __('MASTER', 'allsecureexchange'),
+					'MAESTRO' => __('MAESTRO', 'allsecureexchange'),
+					'AMEX' => __('AMEX', 'allsecureexchange'),
+					'DINERS' => __('DINERS', 'allsecureexchange'),
+					'JCB'  => __('JCB', 'allsecureexchange'),
+				],
+			],
+			
+			'merchant_bank' => [
+				'title' => __('Acquiring Partner', 'allsecureexchange'),
+				'default' => 'hbm',
+				'description' => __('Acquirer where holding Merchant Account', 'allsecureexchange'),
+				'type' => 'select',
+				'options' => [
+					'null' => __('No Show', 'allsecureexchange'),
+					'hbm' => __('Hipotekarna Banka', 'allsecureexchange'),
+					// 'aik' => __('AIK Banka', 'allsecureexchange'),
+					'pxp' => __('PXP', 'allsecureexchange'),
+					'wcd' => __('WireCard', 'allsecureexchange'),
+				],
+				'desc_tip'    => true,
+			],
 
+		];
+    }
+	
+	/**
+     * Adding AllSecure Payment Button on checkout page. 
+	**/
     public function payment_fields()
     {
         wp_enqueue_script('payment_js');
@@ -1284,4 +1394,14 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 		$statusResult = $client->sendStatusRequest($statusRequestData);
 		return $statusResult;
 	}
+	public function get_selected_cards (){
+		return $this->cards;
+	}
+	public function get_selected_banner (){
+		return $this->get_option('banner_type');
+	}
+	public function get_merchant_bank (){
+		return $this->get_option('merchant_bank');
+	}
+	
 }

@@ -4,7 +4,9 @@ Tags: Credit Card, e-commerce, payment, checkout
 Requires at least: 4.9
 Tested up to: 5.0.4
 Requires PHP: 7.1
-Stable tag: 1.1.0
+Stable tag: 1.7.4
+WC requires at least: 3.6.0
+WC tested up to: 3.7.0
 
 Accept payments in your WooCommerce store using AllSecure **EXCHANGE** Platform. See a fully functional WooCommerce <a href="http://demo.allsecpay.xyz/cart/exchange/woo" target="_new">demo store</a> with AllSecure **EXCHANGE** as a payment gateway.
 
