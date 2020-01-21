@@ -10,7 +10,7 @@
 
 ## v1.7.3 (2020-01-10)
 ### Added
-- Test / Live Host configuration
+- Bosnian Translation
 
 ## v1.7.2 (2019-12-29)
 ### Added
