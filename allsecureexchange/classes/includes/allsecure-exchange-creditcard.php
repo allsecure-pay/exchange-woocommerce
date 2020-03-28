@@ -40,7 +40,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, [$this, 'process_admin_options']);
         add_action('wp_enqueue_scripts', function () {
             wp_register_script('payment_js', $this->get_option('apiHost') . 'js/integrated/payment.min.js', [], ALLSECURE_EXCHANGE_EXTENSION_VERSION, false);
-            wp_register_script('allsecure_exchange_js', plugins_url('/allsecureexchange/assets/js/allsecure-exchange.js'), [], ALLSECURE_EXCHANGE_EXTENSION_VERSION, false);
+            wp_register_script('allsecure_exchange_js_' . $this->id, plugins_url('/allsecureexchange/assets/js/allsecure-exchange.js'), [], ALLSECURE_EXCHANGE_EXTENSION_VERSION, false);
         }, 999);
         add_action('woocommerce_api_wc_' . $this->id, [$this, 'process_callback']);
 		/* add_action to parse values when success */
@@ -487,7 +487,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
     public function payment_fields()
     {
         wp_enqueue_script('payment_js');
-        wp_enqueue_script('allsecure_exchange_js');
+        wp_enqueue_script('allsecure_exchange_js_' . $this->id);
         $years = range(date('Y'), date('Y') + 50);
         $yearSelect = '';
         foreach ($years as $year) {
@@ -1344,23 +1344,24 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			$astrxId = $_REQUEST['astrxId'];
 			$statusResult = $this->report_payment($order_id);
 			$result = $statusResult -> getTransactionStatus();
+			$transactionType = $statusResult -> getTransactionType();
 			$amount = $statusResult -> getAmount();
 			$currency = $statusResult -> getCurrency();
-			$cardData = $statusResult->getreturnData();
-			$cardHolder = $cardData->getcardHolder();
-			$binBrand = $cardData->getbinBrand();
-			$expiryMonth = $cardData->getexpiryMonth();
-			$expiryYear = $cardData->getexpiryYear();
-			$firstSixDigits = $cardData->getfirstSixDigits();
-			$lastFourDigits = $cardData->getlastFourDigits();
-			$extraData = $statusResult-> getExtraData();
-			$transactionType = $statusResult-> getTransactionType();
+			$cardData = $statusResult -> getreturnData();
+			$cardHolder = $cardData -> getcardHolder();
+			$binBrand = $cardData -> getbinBrand();
+			$expiryMonth = $cardData -> getexpiryMonth();
+			$expiryYear = $cardData -> getexpiryYear();
+			$firstSixDigits = $cardData -> getfirstSixDigits();
+			$lastFourDigits = $cardData -> getlastFourDigits();
+			$extraData = $statusResult -> getextraData();
+			$authCode = $extraData -> getauthCode();
 			$timestamp = date("Y-m-d H:i:s");
 			echo "<div class='woocommerce-order'>
 			<h2>". __('Transaction details', 'allsecure_woo').": </h2>
 			<ul class='woocommerce-order-overview woocommerce-thankyou-order-details order_details'>
 				<li class='woocommerce-order-overview__email email'>" . __('Transaction Codes', 'allsecureexchange' );
-					echo('<strong>'. $extraData .'</strong>');
+					echo('<strong>'. $authCode .'</strong>');
 		   echo "</li>
 					<li class='woocommerce-order-overview__email email'>". __('Card Type', 'allsecureexchange' ) .
 					"<strong>". $binBrand ." *** ".$lastFourDigits."</strong>
