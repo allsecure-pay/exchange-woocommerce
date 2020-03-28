@@ -28,10 +28,12 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 
         $this->has_fields = isset($_GET['pay_for_order']);
 
+		$icon_html			= $icon_html = $this->get_icon();
+		$this->icon			= $icon_html;											
         $this->init_form_fields();
         $this->init_settings();
 
-        $this->title = $this->get_option('title');
+        $this->title = __('Cards (AllSecure)', 'allsecureexchange');
 		if ($this->get_option('card_supported') !== NULL) {
 			$this->cards = implode(' ', $this->get_option('card_supported'));
 		}
@@ -455,7 +457,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 				'type' => 'multiselect',
 				'options' => [
 					'VISA' => __('VISA', 'allsecureexchange'),
-					'MASTER' => __('MASTER', 'allsecureexchange'),
+					'MASTERCARD' => __('MASTERCARD', 'allsecureexchange'),
 					'MAESTRO' => __('MAESTRO', 'allsecureexchange'),
 					'AMEX' => __('AMEX', 'allsecureexchange'),
 					'DINERS' => __('DINERS', 'allsecureexchange'),
@@ -481,6 +483,26 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 		];
     }
 	
+	/** 
+	 * Custom Credit Card Icons on a checkout page 
+	**/
+		public function get_icon() {
+			$icon_html = $this->allsecure_get_icon();
+			return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id );
+		}
+		
+		function allsecure_get_icon() {
+			$selectedcards = $this->settings['card_supported'];
+			$icon_html = '';
+					
+			if ( isset( $selectedcards ) && '' !== $selectedcards ) {
+				foreach ( $selectedcards as $card ) {
+					$icons = plugins_url(). '/allsecureexchange/assets/images/light/' .strtolower( $card ) . '.svg';
+					$icon_html .= '<img src="' . $icons . '" alt="' . strtolower( $card ) . '" title="' . strtolower( $card ) . '" style="" />';
+				}
+			}
+			return $icon_html;
+		}
 	/**
      * Adding AllSecure Payment Button on checkout page. 
 	**/
