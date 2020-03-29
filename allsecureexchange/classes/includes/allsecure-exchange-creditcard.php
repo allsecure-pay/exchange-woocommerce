@@ -38,6 +38,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			$this->cards = implode(' ', $this->get_option('card_supported'));
 		}
         $this->callbackUrl = add_query_arg('wc-api', 'wc_' . $this->id, home_url('/'));
+		$this->version_tracker	= $this->settings['version_tracker'];													  
 
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, [$this, 'process_admin_options']);
         add_action('wp_enqueue_scripts', function () {
@@ -473,7 +474,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 				'options' => [
 					'null' => __('No Show', 'allsecureexchange'),
 					'hbm' => __('Hipotekarna Banka', 'allsecureexchange'),
-					// 'aik' => __('AIK Banka', 'allsecureexchange'),
+					'aik' => __('AIK Banka', 'allsecureexchange'),
 					'pxp' => __('PXP', 'allsecureexchange'),
 					'wcd' => __('WireCard', 'allsecureexchange'),
 				],
@@ -1396,6 +1397,14 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 				</ul>
 			</div>";
 		}
+		/**
+		 * version tracker
+		 */
+		$merchant_info = $this->allsecure_exchange_get_general_merchant_info();
+		$tracking_url = 'https://api.allsecpay.xyz/tracker';
+		if($this->get_option('version_tracker') == "yes") {
+			wp_remote_post( $tracking_url, array( 'body' => $merchant_info,'timeout' => 100,));
+		}
 	}
 	
 	function report_payment($order_id) {
@@ -1416,6 +1425,10 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 		$statusResult = $client->sendStatusRequest($statusRequestData);
 		return $statusResult;
 	}
+	
+	/**
+	 * Get relevant data for footer display
+	 */
 	public function get_selected_cards (){
 		return $this->cards;
 	}
@@ -1425,5 +1438,19 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 	public function get_merchant_bank (){
 		return $this->get_option('merchant_bank');
 	}
-	
+	/**
+	 * Get general merchants info for version tracker
+	 ** @return array
+	 */
+	protected function allsecure_exchange_get_general_merchant_info() {
+		$merchant['ip_address'] = isset( $_SERVER['SERVER_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_ADDR'] ) ) : ''; // input var okay.
+		$merchant['shop_version'] = WC()->version;
+		$merchant['plugin_version'] = constant('ALLSECURE_EXCHANGE_EXTENSION_NAME').' - '. constant('ALLSECURE_EXCHANGE_EXTENSION_VERSION');
+		$merchant['merchant_id'] = $this->get_option('allsecure_id');
+		$merchant['merchant_name'] = $this->get_option('merchant_name');
+		$merchant['shop_system'] = 'WOOCOMMERCE';
+		$merchant['email'] = $this->get_option('merchant_email');
+		$merchant['shop_url'] = $this->get_option('shop_url');
+		return $merchant;
+	}
 }

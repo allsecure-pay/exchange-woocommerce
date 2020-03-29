@@ -1,0 +1,121 @@
+#allsecure_exchange_sandbox {
+	margin: 0 auto 10px auto!important;
+	padding: 3px 0 3px 0;
+	width: 100%;
+	font-size: 13px!important;
+	font-weight: 700;
+	color: red!important;
+	background-color: #fba;
+	text-align: center;
+	border-bottom: red solid 3px;
+}
+
+#allsecure_exchange_errors {
+    color: red;
+    line-height: 1em;
+    width: 100%;
+}
+
+#allsecure_exchange_banner {
+	max-width: 1074px;
+	display: flex;
+	margin: 10px auto;
+	padding-bottom: 20px
+}
+
+#allsecure_exchange_banner .allsecure {
+	width: 20%;
+	border-right: solid #ccc 2px
+}
+
+#allsecure_exchange_banner .allsecure_threeds {
+	width: 15%;
+	display: flex;
+	border-right: solid #ccc 2px
+}
+
+#allsecure_exchange_banner .allsecure_cards {
+	width: 45%;
+	display: flex;
+	border-right: solid #ccc 2px
+}
+
+#allsecure_exchange_banner .allsecure_bank {
+	width: 20%
+}
+
+.allsecure img {
+	height: 30px!important;
+	display: block;
+	margin: auto
+}
+
+.allsecure_threeds img {
+	width: 40%;
+	height: 25px!important;
+	display: block;
+	margin: auto;
+	margin-top: 3px
+}
+
+.allsecure_cards img {
+	height: 30px!important;
+	display: block;
+	margin: auto
+}
+
+.allsecure_bank img {
+	height: 30px!important;
+	display: block;
+	margin: auto;
+	max-width: 80%
+}
+
+@media (max-width:480px) {
+	#allsecure_exchange_banner {
+		flex-flow: row wrap;
+		display: flex
+	}
+	#allsecure_exchange_banner .allsecure {
+		order: 2;
+		width: 35%;
+		padding-left: 10px;
+		border: none
+	}
+	#allsecure_exchange_banner .allsecure_threeds {
+		order: 3;
+		width: 30%;
+		padding-left: 5px;
+		padding-right: 5px;
+		display: inline-flex;
+		border: none
+	}
+	#allsecure_exchange_banner .allsecure_cards {
+		order: 1;
+		width: 100%;
+		border: none;
+		padding: 0 5px 10px 5px
+	}
+	#allsecure_exchange_banner .allsecure_bank {
+		order: 4;
+		width: 35%;
+		display: block
+	}
+	.allsecure img {
+		width: unset;
+		height: 20px!important;
+		display: block
+	}
+	.allsecure_cards img {
+		height: 25px!important
+	}
+	.allsecure_threeds img {
+		width: 40%;
+		height: 20px!important
+	}
+	.allsecure_bank img {
+		width: unset;
+		height: 20px!important;
+		display: block
+	}
+}
