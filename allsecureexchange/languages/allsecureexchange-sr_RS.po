@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2019-11-21 17:09+0100\n"
-"PO-Revision-Date: 2019-11-21 17:31+0100\n"
+"POT-Creation-Date: 2020-04-24 07:59+0200\n"
+"PO-Revision-Date: 2020-04-24 08:34+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sr\n"
@@ -18,78 +18,355 @@ msgstr ""
 "X-Poedit-SearchPath-0: allsecure-exchange-creditcard.php\n"
 "X-Poedit-SearchPath-1: allsecure-exchange-error-list.php\n"
 
-#: allsecure-exchange-creditcard.php:104
+#: allsecure-exchange-creditcard.php:37
+msgid "Cards (AllSecure)"
+msgstr "Platne kartice"
+
+#: allsecure-exchange-creditcard.php:113
 msgid "Awaiting payment"
 msgstr ""
 
-#: allsecure-exchange-creditcard.php:249 allsecure-exchange-creditcard.php:250
+#: allsecure-exchange-creditcard.php:257 allsecure-exchange-creditcard.php:258
 msgid "Payment failed or was declined"
-msgstr ""
+msgstr "Plaćanje neuspešno"
 
-#: allsecure-exchange-creditcard.php:287
+#: allsecure-exchange-creditcard.php:295
 msgid "Void"
-msgstr "Reversal"
+msgstr "Otkazivanje"
 
-#: allsecure-exchange-creditcard.php:290
+#: allsecure-exchange-creditcard.php:298
 msgid "Awaiting capture/void"
 msgstr ""
 
-#: allsecure-exchange-creditcard.php:298
+#: allsecure-exchange-creditcard.php:306
 msgid "Error"
 msgstr "Greška"
 
-#: allsecure-exchange-creditcard.php:310 allsecure-exchange-creditcard.php:312
-#: allsecure-exchange-creditcard.php:313
-msgid "Title"
-msgstr "Naziv"
+#: allsecure-exchange-creditcard.php:318 allsecure-exchange-creditcard.php:320
+msgid "Description"
+msgstr "Opis"
 
-#: allsecure-exchange-creditcard.php:317 allsecure-exchange-creditcard.php:319
-#: allsecure-exchange-creditcard.php:320
-msgid "API Host"
-msgstr ""
+#: allsecure-exchange-creditcard.php:321
+msgid "This controls the description which the user sees during checkout"
+msgstr "Opis metoda plaćanja"
 
-#: allsecure-exchange-creditcard.php:324 allsecure-exchange-creditcard.php:326
 #: allsecure-exchange-creditcard.php:327
+msgid "API Credentials"
+msgstr "Parametri za povezivanje"
+
+#: allsecure-exchange-creditcard.php:329
+msgid ""
+"Enter your Exchange API Credentials to process transactions via AllSecure. "
+"You can get your Exchange Credentials via <a href=\"mailto:support@allsecpay."
+"com\">AllSecure Support</a>"
+msgstr ""
+"Unesite Exchange API parametre kako bi mogli procesirati transakcije kroz "
+"AllSecure. Ukoliko ste već korisnik, kontaktirajte našu službu podrške. "
+"Ukoliko to još uvek niste postali, kontaktirajte <a href=\"mailto:"
+"prodaja@allsecure.rs\">službu prodaje</a>"
+
+#: allsecure-exchange-creditcard.php:333 allsecure-exchange-creditcard.php:335
+msgid "Operation Mode"
+msgstr "Operativno okruženje"
+
+#: allsecure-exchange-creditcard.php:336
+msgid ""
+"You can switch between different environments, by selecting the "
+"corresponding operation mode"
+msgstr ""
+"Izaberite okruženje zavisno od toga da li testirate ili ste prešli u "
+"produkciju"
+
+#: allsecure-exchange-creditcard.php:346
 msgid "API User"
 msgstr ""
 
-#: allsecure-exchange-creditcard.php:331 allsecure-exchange-creditcard.php:333
-#: allsecure-exchange-creditcard.php:334
+#: allsecure-exchange-creditcard.php:348
+msgid ""
+"Please enter your Exchange API User. This is needed in order to take the "
+"payment"
+msgstr ""
+"Molimo pažljivo unesite Exchange API User koji ste dobili od AllSecure. Ovaj "
+"podatak je neophodan kako bi procesirali plaćanja"
+
+#: allsecure-exchange-creditcard.php:354
 msgid "API Password"
 msgstr ""
 
-#: allsecure-exchange-creditcard.php:338 allsecure-exchange-creditcard.php:340
-#: allsecure-exchange-creditcard.php:341
+#: allsecure-exchange-creditcard.php:356
+msgid ""
+"Please enter your Exchange API Password. This is needed in order to take the "
+"payment"
+msgstr ""
+"Molimo pažljivo unesite Exchange API Lozinku koju ste dobili od AllSecure. "
+"Ovaj podatak je neophodan kako bi procesirali plaćanja"
+
+#: allsecure-exchange-creditcard.php:362
 msgid "API Key"
 msgstr ""
 
-#: allsecure-exchange-creditcard.php:345 allsecure-exchange-creditcard.php:347
-#: allsecure-exchange-creditcard.php:348
+#: allsecure-exchange-creditcard.php:364
+msgid ""
+"Please enter your Exchange API Key. This is needed in order to take the "
+"payment"
+msgstr ""
+"Molimo pažljivo unesite Exchange API Ključ koji ste dobili od AllSecure. "
+"Ovaj podatak je neophodan kako bi procesirali plaćanja"
+
+#: allsecure-exchange-creditcard.php:370
 msgid "Shared Secret"
 msgstr ""
 
-#: allsecure-exchange-creditcard.php:352 allsecure-exchange-creditcard.php:354
-#: allsecure-exchange-creditcard.php:355
+#: allsecure-exchange-creditcard.php:372
+msgid ""
+"Please enter your Exchange Shared Secret. This is needed in order to take "
+"the payment"
+msgstr ""
+"Molimo pažljivo unesite Exchange API Secret koji ste dobili od AllSecure. "
+"Ovaj podatak je neophodan kako bi procesirali plaćanja"
+
+#: allsecure-exchange-creditcard.php:378
 msgid "Integration Key"
 msgstr ""
 
-#: allsecure-exchange-creditcard.php:359 allsecure-exchange-creditcard.php:361
-#: allsecure-exchange-creditcard.php:362
-msgid "Transaction Request"
+#: allsecure-exchange-creditcard.php:380
+msgid "Public Integration Key required only if seamless integration required"
 msgstr ""
+"Public Integration Key koji ste dobili od AllSecure je neophodan samo "
+"ukoliko želite integraciju bez redirekcije"
 
-#: allsecure-exchange-creditcard.php:365
+#: allsecure-exchange-creditcard.php:386
+msgid "Payment Details"
+msgstr "Podaci o platnim transakcijama"
+
+#: allsecure-exchange-creditcard.php:391
+msgid "Transaction Type"
+msgstr "Vrsta Transakcije"
+
+#: allsecure-exchange-creditcard.php:393
+msgid "Choose type of Payment you wish to use"
+msgstr "Izaberite tip naplate koji želite da koristite"
+
+#: allsecure-exchange-creditcard.php:396
 msgid "Debit"
 msgstr "Naplata"
 
-#: allsecure-exchange-creditcard.php:366
+#: allsecure-exchange-creditcard.php:397
 msgid "Preauthorize"
 msgstr "Preautorizacija"
 
-#: allsecure-exchange-creditcard.php:1233
+#: allsecure-exchange-creditcard.php:403
+msgid "Accepted Cards"
+msgstr "Kartice koje prihvatate"
+
+#: allsecure-exchange-creditcard.php:409
+msgid ""
+"Contact support at <a href=\"support@allsecpay.com\">support@allsecpay.com</"
+"a> if you want to accept AMEX transactions"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:413
+msgid "VISA"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:414
+msgid "MASTERCARD"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:415
+msgid "MAESTRO"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:416
+msgid "AMEX"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:417
+msgid "DINERS"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:418
+msgid "JCB"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:423
+msgid "Acquiring Partner"
+msgstr "Banka partner"
+
+#: allsecure-exchange-creditcard.php:425
+msgid "Acquirer where holding Merchant Account"
+msgstr "Prihvatilac gde je otvoren namenski račun"
+
+#: allsecure-exchange-creditcard.php:428
+msgid "Select"
+msgstr "Izaberite"
+
+#: allsecure-exchange-creditcard.php:429
+msgid "Hipotekarna Banka"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:430
+msgid "AIK Banka"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:431
+msgid "PXP"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:432
+msgid "WireCard"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:438
+msgid "Banner Type"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:440
+msgid "Choose type of banner you wish to use"
+msgstr "Izaberite tip banera koji ćete prikazati u podnožju sajta"
+
+#: allsecure-exchange-creditcard.php:443
+msgid "No Banner"
+msgstr "Bez banera"
+
+#: allsecure-exchange-creditcard.php:444
+msgid "Light Background"
+msgstr "Svetla pozadina"
+
+#: allsecure-exchange-creditcard.php:445
+msgid "Dark Background"
+msgstr "Tamna pozadina"
+
+#: allsecure-exchange-creditcard.php:451
+msgid "Merchant Details"
+msgstr "Detalji o prodavcu"
+
+#: allsecure-exchange-creditcard.php:456
+msgid "Merchant Info"
+msgstr "Naziv i lokacija"
+
+#: allsecure-exchange-creditcard.php:458
+msgid "Please enter your Merchant Info to be displayed near the payment form"
+msgstr "Molimo unesite naziv i adresu pravnog lica koje vrši naplatu"
+
+#: allsecure-exchange-creditcard.php:464
+msgid "Merchant Email"
+msgstr "Email adresa"
+
+#: allsecure-exchange-creditcard.php:466
+msgid "Please enter your Merchant Email"
+msgstr "Molimo unesite email adresu prodavca"
+
+#: allsecure-exchange-creditcard.php:472
+msgid "Shop URL"
+msgstr "URL prodavnice"
+
+#: allsecure-exchange-creditcard.php:474
+msgid "Please enter your Shop URL"
+msgstr "Molimo unesite Url adresu prodavnice"
+
+#: allsecure-exchange-creditcard.php:480
+msgid "Other Details"
+msgstr "Ostali detalji"
+
+#: allsecure-exchange-creditcard.php:482
+msgid "Enter the following details to allow for plugin updates."
+msgstr ""
+"Unesite sledeće podatke kako bi bili obaveštavani o novim verzijama ovog "
+"modula"
+
+#: allsecure-exchange-creditcard.php:486
+msgid "Allsecure ID"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:488
+msgid "Please enter your ID as displayed on your invoice from AllSecure"
+msgstr ""
+"Molimo unesite ID koji vam je dodeljen prilikom potpisa ugovora sa AllSecure "
+"(samo za produkciju)"
+
+#: allsecure-exchange-creditcard.php:494
+msgid "Version Tracker"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:496
+msgid "Enable Version Tracker"
+msgstr "Omogućite proveru verzije"
+
+#: allsecure-exchange-creditcard.php:497
+msgid "When enabled, you accept to share your IP, email address, etc with us"
+msgstr ""
+"Kada je omogućeno, razmenjivaćete podatke sa nama u cilju ažuriranja verzija "
+"modula"
+
+#: allsecure-exchange-creditcard.php:543
+msgid "THIS IS THE TEST MODE"
+msgstr "OVO JE TEST. NOVAC NEĆE BITI NAPLAĆEN"
+
+#: allsecure-exchange-creditcard.php:548
+msgid "Cardholder not valid"
+msgstr "Korisnik kartice nije validan"
+
+#: allsecure-exchange-creditcard.php:549
+msgid "Card number not valid"
+msgstr "Broj kartice nije validan"
+
+#: allsecure-exchange-creditcard.php:550
+msgid "CVV not valid"
+msgstr "CVV nije validan"
+
+#: allsecure-exchange-creditcard.php:551
+msgid "Expiry date not valid"
+msgstr "Datum važenja kartice nije validan"
+
+#: allsecure-exchange-creditcard.php:554
+msgid "Payee"
+msgstr "Naplaćuje"
+
+#: allsecure-exchange-creditcard.php:559
+msgid "Card number"
+msgstr "Broj kartice"
+
+#: allsecure-exchange-creditcard.php:566
+msgid "Month"
+msgstr "Mesec"
+
+#: allsecure-exchange-creditcard.php:586
+msgid "Year"
+msgstr "Godina"
+
+#: allsecure-exchange-creditcard.php:593
+msgid "CVV"
+msgstr ""
+
+#: allsecure-exchange-creditcard.php:600
+msgid "Card holder"
+msgstr "Korisnik kartice"
+
+#: allsecure-exchange-creditcard.php:1397
 #, php-format
 msgid "Transaction Unsuccessful. The status message <b>%s</b>"
 msgstr "Transakcija neuspešna. Odgovor <b>%s</b>"
+
+#: allsecure-exchange-creditcard.php:1422
+msgid "Transaction details"
+msgstr "Detalji transakcije"
+
+#: allsecure-exchange-creditcard.php:1424
+msgid "Transaction Codes"
+msgstr "Broj autorizacije"
+
+#: allsecure-exchange-creditcard.php:1427
+msgid "Card Type"
+msgstr "Tip kartice"
+
+#: allsecure-exchange-creditcard.php:1430
+msgid "Payment Type"
+msgstr "Vrsta plaćanja"
+
+#: allsecure-exchange-creditcard.php:1433
+msgid "Transaction Time"
+msgstr "Vreme transakcije"
 
 #: allsecure-exchange-error-list.php:6
 msgid "CONFIG ERROR. Some fundamental error in your request"
@@ -326,3 +603,6 @@ msgstr ""
 msgid "The status of the schedule is not valid for the requested operation"
 msgstr ""
 "Status planirane transakcije nije validnog formata za zahtevanu operaciju"
+
+#~ msgid "Title"
+#~ msgstr "Naziv"

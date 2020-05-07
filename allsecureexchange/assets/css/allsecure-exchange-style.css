@@ -10,10 +10,26 @@
 	border-bottom: red solid 3px;
 }
 
+#allsecure_exchange_payee {
+    margin: 0 auto 10px auto!important;
+    font-size: small;
+}
+
 #allsecure_exchange_errors {
     color: red;
     line-height: 1em;
     width: 100%;
+	font-size: 0.8em;
+	clear: both;
+}
+
+
+.allsecure_exchange_visible{
+    display: block!important;
+	line-height: 130%;
+}
+
+.has-error {
 }
 
 #allsecure_exchange_banner {

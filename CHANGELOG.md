@@ -1,11 +1,16 @@
 # Release Notes
 
+## v1.7.6 (2020-04-24)
+### Added
+- Seamless integration method upgraded
+- Languages fix
+
 ## v1.7.5 (2020-03-29)
 ### Added
 - Card type to script handle for js asset
 - Custom Credit Card Icons on a checkout page
 - Ongoing AuthCode implementation
-- General merchants info tp comply with VISA requirements
+- General merchants info to comply with VISA requirements
 ### Fixed
 - Footer Fix
 

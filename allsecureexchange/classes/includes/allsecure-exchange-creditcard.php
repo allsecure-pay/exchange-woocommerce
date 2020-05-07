@@ -25,14 +25,15 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
     {
         $this->id = ALLSECURE_EXCHANGE_EXTENSION_UID_PREFIX . $this->id;
         $this->method_description = ALLSECURE_EXCHANGE_EXTENSION_NAME . ' ' . $this->method_title . ' payments.';
-
-        $this->has_fields = isset($_GET['pay_for_order']);
-
+        if ($this->get_option('integrationKey')) {
+			$this->has_fields = true;
+		} else {
+			$this->has_fields = false;
+		}
 		$icon_html			= $icon_html = $this->get_icon();
 		$this->icon			= $icon_html;											
         $this->init_form_fields();
         $this->init_settings();
-
         $this->title = __('Cards (AllSecure)', 'allsecureexchange');
 		if ($this->get_option('card_supported') !== NULL) {
 			$this->cards = implode(' ', $this->get_option('card_supported'));
@@ -321,6 +322,13 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
                 'default' => $this->method_title,
 				'desc_tip'    => true,
             ],
+			
+			'apiCredentials' => [
+					'title'       => __('API Credentials', 'allsecureexchange' ),
+					'type'        => 'title',
+					'description' => __('Enter your Exchange API Credentials to process transactions via AllSecure. You can get your Exchange Credentials via <a href="mailto:support@allsecpay.com">AllSecure Support</a>', 'allsecureexchange' ),
+			],
+			
             'apiHost' => [
                 'title' => __('Operation Mode', 'allsecureexchange'),
                 'type' => 'select',
@@ -334,12 +342,6 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 				'desc_tip'    => true,
             ],
 			
-			'apiCredentials' => [
-					'title'       => __('API Credentials', 'allsecureexchange' ),
-					'type'        => 'title',
-					'description' => __('Enter your Exchange API Credentials to process transactions via AllSecure. You can get your Exchange Credentials via <a href="mailto:support@allsecpay.com">AllSecure Support</a>', 'allsecureexchange' ),
-			],
-			
 			'apiUser' => [
                 'title' => __('API User', 'allsecureexchange'), 
                 'type' => 'text',
@@ -347,6 +349,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
                 'default' => '',
 				'desc_tip'    => true,
             ],
+			
             'apiPassword' => [
                 'title' => 	__('API Password', 'allsecureexchange'), 
                 'type' => 'text',
@@ -354,6 +357,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
                 'default' => '',
 				'desc_tip'    => true,
             ],
+			
             'apiKey' => [
                 'title' => __('API Key', 'allsecureexchange'), 
                 'type' => 'text',
@@ -361,6 +365,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
                 'default' => '',
 				'desc_tip'    => true,
             ],
+			
             'sharedSecret' => [
                 'title' => __('Shared Secret', 'allsecureexchange'), 
                 'type' => 'text',
@@ -368,6 +373,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
                 'default' => '',
 				'desc_tip'    => true,
             ],
+			
             'integrationKey' => [
                 'title' => __('Integration Key', 'allsecureexchange'), 
                 'type' => 'text',
@@ -376,65 +382,12 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 				'desc_tip'    => true,
             ],
 			
-			'hr' => [
-				'title' => __( '<hr>', 'allsecureexchange' ),
-				'type' => 'title', 
-			],
-			'merchant_name' => [
-				'title' => __('Merchant Info', 'allsecureexchange' ),
-				'type' => 'text',
-				'description' => __('Please enter your Merchant Info to be displayed near the payment form', 'allsecureexchange' ),
-				'default' => '',
-				'desc_tip'    => true,
-			],
-			'merchant_email' => [
-				'title' => __('Merchant Email', 'allsecureexchange' ),
-				'type' => 'text',
-				'description' => __( 'Please enter your Merchant Email', 'allsecureexchange' ),
-				'default' => '',
-				'desc_tip'    => true,
-			],
-			'shop_url' => [
-				'title' => __( 'Shop URL', 'allsecureexchange' ),
-				'type' => 'text',
-				'description' => __( 'Please enter your Shop URL', 'allsecureexchange' ),
-				'default' => '',
-				'desc_tip'    => true,
-			],
-			'allsecure_id' => [
-				'title' => __( 'Allsecure ID', 'allsecureexchange' ),
-				'type' => 'text',
-				'description' => __( 'Please enter your ID as displayed on your invoice from AllSecure', 'allsecureexchange' ),
-				'default' => '',
-				'desc_tip'    => true,
-			],
-			'version_tracker' => [
-				'title'	=> __( 'Version Tracker', 'allsecureexchange' ),
-				'type' 	=> 'checkbox',
-				'label' => __( 'Enable Version Tracker', 'allsecureexchange' ),
-				'description' => __( 'When enabled, you accept to share your IP, email address, etc with us', 'allsecureexchange' ),
-				'default' => 'yes',
-				'desc_tip'    => true,
-			],
-			'banner_type' => [
-				'title' => __('Banner Type', 'allsecureexchange'),
-				'default' => 'none',
-				'description' => __('Choose type of banner you wish to use', 'allsecureexchange'),
-				'type' => 'select',
-				'options' => [
-					'none' => __('No Banner', 'allsecureexchange'),
-					'light' => __('Light Background', 'allsecureexchange'),
-					'dark' => __('Dark Background', 'allsecureexchange'),
-				],
-				'desc_tip'    => true,
+			'paymentDetails' => [
+				'title'       => __('Payment Details', 'allsecureexchange' ),
+				'type'        => 'title',
 			],
 			
-			'hr' => [
-				'title' => __( '<hr>', 'allsecureexchange' ),
-				'type' => 'title', 
-			],
-			
-            'transactionRequest' => [
+			'transactionRequest' => [
                 'title' => __('Transaction Type', 'allsecureexchange'), 
                 'type' => 'select',
                 'description' => __('Choose type of Payment you wish to use', 'allsecureexchange'), 
@@ -468,16 +421,81 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			
 			'merchant_bank' => [
 				'title' => __('Acquiring Partner', 'allsecureexchange'),
-				'default' => 'hbm',
+				'default' => 'null',
 				'description' => __('Acquirer where holding Merchant Account', 'allsecureexchange'),
 				'type' => 'select',
 				'options' => [
-					'null' => __('No Show', 'allsecureexchange'),
+					'null' => __('Select', 'allsecureexchange'),
 					'hbm' => __('Hipotekarna Banka', 'allsecureexchange'),
 					'aik' => __('AIK Banka', 'allsecureexchange'),
 					'pxp' => __('PXP', 'allsecureexchange'),
 					'wcd' => __('WireCard', 'allsecureexchange'),
 				],
+				'desc_tip'    => true,
+			],
+			
+			'banner_type' => [
+				'title' => __('Banner Type', 'allsecureexchange'),
+				'default' => 'none',
+				'description' => __('Choose type of banner you wish to use', 'allsecureexchange'),
+				'type' => 'select',
+				'options' => [
+					'none' => __('No Banner', 'allsecureexchange'),
+					'light' => __('Light Background', 'allsecureexchange'),
+					'dark' => __('Dark Background', 'allsecureexchange'),
+				],
+				'desc_tip'    => true,
+			],
+			
+			'merchantDetails' => [
+				'title'       => __('Merchant Details', 'allsecureexchange' ),
+				'type'        => 'title',
+			],
+			
+			'merchant_name' => [
+				'title' => __('Merchant Info', 'allsecureexchange' ),
+				'type' => 'text',
+				'description' => __('Please enter your Merchant Info to be displayed near the payment form', 'allsecureexchange' ),
+				'default' => '',
+				'desc_tip'    => true,
+			],
+			
+			'merchant_email' => [
+				'title' => __('Merchant Email', 'allsecureexchange' ),
+				'type' => 'text',
+				'description' => __( 'Please enter your Merchant Email', 'allsecureexchange' ),
+				'default' => '',
+				'desc_tip'    => true,
+			],
+			
+			'shop_url' => [
+				'title' => __( 'Shop URL', 'allsecureexchange' ),
+				'type' => 'text',
+				'description' => __( 'Please enter your Shop URL', 'allsecureexchange' ),
+				'default' => '',
+				'desc_tip'    => true,
+			],
+			
+			'miscDetails' => [
+				'title'       => __('Other Details', 'allsecureexchange' ),
+				'type'        => 'title',
+				'description' => __('Enter the following details to allow for plugin updates.', 'allsecureexchange' ),
+			],
+
+			'allsecure_id' => [
+				'title' => __( 'Allsecure ID', 'allsecureexchange' ),
+				'type' => 'text',
+				'description' => __( 'Please enter your ID as displayed on your invoice from AllSecure', 'allsecureexchange' ),
+				'default' => '',
+				'desc_tip'    => true,
+			],
+			
+			'version_tracker' => [
+				'title'	=> __( 'Version Tracker', 'allsecureexchange' ),
+				'type' 	=> 'checkbox',
+				'label' => __( 'Enable Version Tracker', 'allsecureexchange' ),
+				'description' => __( 'When enabled, you accept to share your IP, email address, etc with us', 'allsecureexchange' ),
+				'default' => 'yes',
 				'desc_tip'    => true,
 			],
 
@@ -516,55 +534,78 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
         foreach ($years as $year) {
             $yearSelect .= '<option>' . $year . '</option>';
         }
-        echo '<script>window.integrationKey="' . $this->get_option('integrationKey') . '";</script>
-        <div id="allsecure_exchange_seamless">
-        <div id="allsecure_exchange_errors"></div>
+		$selectedCards = $this->settings['card_supported'];
+		foreach ($selectedCards as $selectedCard) {
+			$allowedCards .= $selectedCard .' ';
+		}
+		
+		if ($this->get_option('apiHost') !== ALLSECURE_EXCHANGE_EXTENSION_URL) {
+			echo '<div id="allsecure_exchange_sandbox" >'.__('THIS IS THE TEST MODE', 'allsecureexchange').'</div>';
+		}
+        echo '<script>
+			window.integrationKey="' . $this->get_option('integrationKey') . '";
+			window.allowedCards="' . strtolower($allowedCards) . '";
+			window.errorName="' . __('Cardholder not valid', 'allsecureexchange') . '";
+			window.errorNumber="' . __('Card number not valid', 'allsecureexchange') . '";
+			window.errorCvv="' . __('CVV not valid', 'allsecureexchange') . '";
+			window.errorExpiry="' . __('Expiry date not valid', 'allsecureexchange') . '";
+			</script>
+		<script type="text/javascript" src="' . plugins_url(). '/allsecureexchange/assets/js/allsecure-exchange.js?ver=' . ALLSECURE_EXCHANGE_EXTENSION_VERSION . '"></script>
+        <div id="allsecure_exchange_payee"><b>'.__('Payee', 'allsecureexchange') . '</b>: ' . $this->get_option('merchant_name').'</div>
+		<div id="allsecure_exchange_seamless">
         <input type="hidden" id="allsecure_exchange_token" name="token">
-        
         <div class="form-row form-row-wide">
-            <label for="allsecure_exchange_seamless_card_holder">Card holder</label>
-            <div class="woocommerce-input-wrapper">
-            <input type="text" class="input-text " id="allsecure_exchange_seamless_card_holder">
-            </div>
-        </div>
-        <div class="form-row form-row-wide">
-            <label for="allsecure_exchange_seamless_card_number">Card number</label>
-            <div class="woocommerce-input-wrapper" style="">
-            <div id="allsecure_exchange_seamless_card_number" class="input-text" style="padding: 0; width: 100%;"></div>
-            </div>
-        </div>
-        <div class="form-row form-row-wide">
-            <label for="allsecure_exchange_seamless_cvv">CVV</label>
-            <div class="woocommerce-input-wrapper" style="">
-            <div id="allsecure_exchange_seamless_cvv" class="input-text " style="padding: 0; width: 100%;"></div>
-            </div>
-        </div>
-        <div class="form-row form-row-wide">
-            <label for="allsecure_exchange_seamless_expiry_month">Month</label>
-            <div class="woocommerce-input-wrapper">
-            <select type="text" class="input-text " id="allsecure_exchange_seamless_expiry_month">
-              <option>01</option>
-              <option>02</option>
-              <option>03</option>
-              <option>04</option>
-              <option>05</option>
-              <option>06</option>
-              <option>07</option>
-              <option>08</option>
-              <option>09</option>
-              <option>10</option>
-              <option>11</option>
-              <option>12</option>
-            </select>
-            </div>
-        </div>
-        <div class="form-row form-row-wide">
-            <label for="allsecure_exchange_seamless_expiry_year">Year</label>
-            <div class="woocommerce-input-wrapper">
-            <select type="text" class="input-text " id="allsecure_exchange_seamless_expiry_year">' . $yearSelect . '</select>
-            </div>
-        </div>
-        </div>';
+				<label for="allsecure_exchange_seamless_card_number">'.
+				__('Card number', 'allsecureexchange').'</label>
+				<div class="woocommerce-input-wrapper" style="">
+					<div id="allsecure_exchange_seamless_card_number" class="input-text" style="padding: 0; width: 100%;"></div>
+				</div>
+			</div>
+			<div class="form-row form-row-wide" style="margin: 0 2% 0 0; width: 32%; float: left; clear: none;"> 
+				<label for="allsecure_exchange_seamless_expiry_month">'.
+				__('Month', 'allsecureexchange').'</label>
+				<div class="woocommerce-input-wrapper" >
+					<select type="text" class="input-text " id="allsecure_exchange_seamless_expiry_month">
+						<option>01</option>
+						<option>02</option>
+						<option>03</option>
+						<option>04</option>
+						<option>05</option>
+						<option>06</option>
+						<option>07</option>
+						<option>08</option>
+						<option>09</option>
+						<option>10</option>
+						<option>11</option>
+						<option>12</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-row form-row-wide" style="margin: 0; width: 32%; float: left; clear: none;">
+				<label for="allsecure_exchange_seamless_expiry_year">'.
+				__('Year', 'allsecureexchange').'</label>
+				<div class="woocommerce-input-wrapper">
+					<select type="text" class="input-text " id="allsecure_exchange_seamless_expiry_year">' . $yearSelect . '</select>
+				</div>
+			</div>
+			<div class="form-row form-row-wide " style="margin: 0 0 0 2%; width: 32%; float: left; clear: none;">
+				<label for="allsecure_exchange_seamless_cvv">'.
+				__('CVV', 'allsecureexchange').'</label>
+				<div class="woocommerce-input-wrapper" style="">
+					<div id="allsecure_exchange_seamless_cvv" class="input-text " style="padding: 0; width: 100%;"></div>
+				</div>
+			</div>
+			<div class="form-row form-row-wide">
+				<label for="allsecure_exchange_seamless_card_holder">'.
+				__('Card holder', 'allsecureexchange').'</label>
+				<div class="woocommerce-input-wrapper" style="">
+					<input type="text" id="allsecure_exchange_seamless_card_holder" autocomplete="off">
+				</div>
+			</div>
+			<div id="allsecure_exchange_errors" tabindex="-1">
+				
+			</div>
+		</div>';
     }
 
     /**
