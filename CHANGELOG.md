@@ -1,5 +1,9 @@
 # Release Notes
 
+## v1.7.7 (2020-05-08)
+## Fixed
+- AuthCode display
+
 ## v1.7.6 (2020-04-24)
 ### Added
 - Seamless integration method upgraded

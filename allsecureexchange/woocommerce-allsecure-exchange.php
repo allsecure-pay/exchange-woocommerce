@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WooCommerce AllSecure Exchange Extension
  * Description: AllSecure Exchange for WooCommerce
- * Version: 1.7.6
+ * Version: 1.7.7
  * Author: AllSecure Exchange
  * WC requires at least: 3.6.0
  * WC tested up to: 4.0.0
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 define('ALLSECURE_EXCHANGE_EXTENSION_URL', 'https://asxgw.com/');
 define('ALLSECURE_EXCHANGE_EXTENSION_TEST_URL', 'https://asxgw.paymentsandbox.cloud/');
 define('ALLSECURE_EXCHANGE_EXTENSION_NAME', 'AllSecure Exchange');
-define('ALLSECURE_EXCHANGE_EXTENSION_VERSION', '1.7.6');
+define('ALLSECURE_EXCHANGE_EXTENSION_VERSION', '1.7.7');
 define('ALLSECURE_EXCHANGE_EXTENSION_UID_PREFIX', 'allsecure_exchange_');
 define('ALLSECURE_EXCHANGE_EXTENSION_BASEDIR', plugin_dir_path(__FILE__));
 
