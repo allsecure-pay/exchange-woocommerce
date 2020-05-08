@@ -1424,8 +1424,9 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			<h2>". __('Transaction details', 'allsecure_woo').": </h2>
 			<ul class='woocommerce-order-overview woocommerce-thankyou-order-details order_details'>
 				<li class='woocommerce-order-overview__email email'>" . __('Transaction Codes', 'allsecureexchange' );
-					echo('<strong>'. $extraData .'</strong>');
-		   echo "</li>
+					echo('<strong>'. $extraData['authCode'] .'</strong>');
+
+				echo "</li>
 					<li class='woocommerce-order-overview__email email'>". __('Card Type', 'allsecureexchange' ) .
 					"<strong>". $binBrand ." *** ".$lastFourDigits."</strong>
 					</li>
