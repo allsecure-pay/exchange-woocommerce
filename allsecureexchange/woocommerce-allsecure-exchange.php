@@ -39,7 +39,7 @@ add_action('plugins_loaded', function () {
 
     // add_filter('woocommerce_before_checkout_form', function(){
     add_filter('the_content', function($content){
-        if(is_checkout_pay_page()) {
+        if(is_checkout_pay_page() || is_checkout()) {
             if(!empty($_GET['gateway_return_result']) && $_GET['gateway_return_result'] == 'error') {
                 wc_print_notice(__('Payment failed or was declined', 'woocommerce'), 'error');
             }

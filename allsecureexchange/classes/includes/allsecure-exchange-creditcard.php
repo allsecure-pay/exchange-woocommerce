@@ -175,7 +175,9 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
                 break;
         }
 		$merchantTransactionId = $this->encodeOrderId($orderId);
-        // $transaction->setTransactionId($this->encodeOrderId($orderId))
+		// keep track of last tx id 
+        $this->order->add_meta_data('merchantTransactionId', $merchantTransactionId, true); 
+        $this->order->save_meta_data();
 		$transaction->setTransactionId($merchantTransactionId)
 			->setAmount(floatval($this->order->get_total()))
             ->setCurrency($this->order->get_currency())
@@ -184,7 +186,6 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
             ->setCallbackUrl($this->callbackUrl)
             ->setCancelUrl(wc_get_checkout_url())
             ->setSuccessUrl(add_query_arg(['astrxId' => $merchantTransactionId], $this->paymentSuccessUrl($this->order)))
-            // ->setErrorUrl(add_query_arg(['gateway_return_result' => 'error'], $this->order->get_checkout_payment_url(false)));
 			->setErrorUrl  (add_query_arg(['astrxId' => $merchantTransactionId], wc_get_checkout_url($this->order)));
 
         /**
@@ -285,7 +286,13 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 
         $callbackResult = $client->readCallback(file_get_contents('php://input'));
         $this->order = new WC_Order($this->decodeOrderId($callbackResult->getTransactionId()));
-        if ($callbackResult->getResult() == \AllsecureExchange\Client\Callback\Result::RESULT_OK) {
+        
+		 // check if callback data is coming from the last (=newest+relevant) tx attempt, otherwise ignore it
+        if ($this->order->get_meta('merchantTransactionId') !== $callbackResult->getTransactionId()) {
+            die("OK");
+        }
+		
+		if ($callbackResult->getResult() == \AllsecureExchange\Client\Callback\Result::RESULT_OK) {
             switch ($callbackResult->getTransactionType()) {
                 case \AllsecureExchange\Client\Callback\Result::TYPE_DEBIT:
                 case \AllsecureExchange\Client\Callback\Result::TYPE_CAPTURE:

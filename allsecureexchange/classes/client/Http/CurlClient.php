@@ -2,6 +2,7 @@
 
 namespace AllsecureExchange\Client\Http;
 
+use AllsecureExchange\Client\Client;
 use AllsecureExchange\Client\Http\Exception\ClientException;
 
 /**
@@ -234,8 +235,13 @@ class CurlClient implements ClientInterface {
             'X-Authorization' => $authHeader,
             'Content-Type' => $contentType,
             'X-Source-Platform' => 'woocommerce',
+			'X-SDK-Type' => 'EXCHANGE PHP Client',
+            'X-SDK-Version' => Client::VERSION,
         );
-
+		if (phpversion()) {
+            $this->additionalHeaders['X-SDK-PlatformVersion'] = phpversion();
+        }
+		
         return $this;
     }
 
@@ -271,9 +277,14 @@ class CurlClient implements ClientInterface {
             'X-Signature' => $signature,
             'Content-Type' => $contentType,
             'X-Source-Platform' => 'woocommerce',
+			'X-SDK-Type' => 'EXCHANGE PHP Client',
+            'X-SDK-Version' => Client::VERSION,
         );
-
-        return $this;
+		if (phpversion()) {
+            $this->additionalHeaders['X-SDK-PlatformVersion'] = phpversion();
+        }
+        
+		return $this;
     }
 
     /**
