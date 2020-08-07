@@ -85,12 +85,19 @@
             $seamlessCvvInput.height($seamlessFirstNameInput.css('height'));
 			$seamlessExpiryYearInput.height($seamlessFirstNameInput.css('height'));
 			$seamlessExpiryMonthInput.height($seamlessFirstNameInput.css('height'));
+
             
             var style = {
 				'border': 'none',
+				'border-radius': $seamlessFirstNameInput.css('border-radius'),
                 'height': '100%',
+				'width': '100%',
                 'padding': $seamlessFirstNameInput.css('padding'),
                 'font-size': $seamlessFirstNameInput.css('font-size'),
+				'font-weight': $seamlessFirstNameInput.css('font-weight'),
+				'font-family': $seamlessFirstNameInput.css('font-family'),
+                'letter-spacing': '0.1px',
+                'word-spacing': '1.7px',
                 'color': $seamlessFirstNameInput.css('color'),
                 'background': $seamlessFirstNameInput.css('background'),
             };

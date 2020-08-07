@@ -558,7 +558,11 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			window.errorExpiry="' . __('Expiry date not valid', 'allsecureexchange') . '";
 			</script>
 		<script type="text/javascript" src="' . plugins_url(). '/allsecureexchange/assets/js/allsecure-exchange.js?ver=' . ALLSECURE_EXCHANGE_EXTENSION_VERSION . '"></script>
-        <div id="allsecure_exchange_payee"><b>'.__('Payee', 'allsecureexchange') . '</b>: ' . $this->get_option('merchant_name').'</div>
+        <style>.payment_box{iframe{width:100%}}</style>
+		<div class="payment_box" style="padding: 25px; background-color: #fff; border-radius: 3px; min-height: 230px">
+		
+		<div id="allsecure_exchange_payee"><b>'.__('Payee', 'allsecureexchange') . '</b>: ' . $this->get_option('merchant_name').'</div>
+		
 		<div id="allsecure_exchange_seamless">
         <input type="hidden" id="allsecure_exchange_token" name="token">
         <div class="form-row form-row-wide">
@@ -572,7 +576,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 				<label for="allsecure_exchange_seamless_expiry_month">'.
 				__('Month', 'allsecureexchange').'</label>
 				<div class="woocommerce-input-wrapper" >
-					<select type="text" class="input-text " id="allsecure_exchange_seamless_expiry_month">
+					<select type="text" class="input-text " id="allsecure_exchange_seamless_expiry_month" style="width: 100%">
 						<option>01</option>
 						<option>02</option>
 						<option>03</option>
@@ -592,7 +596,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 				<label for="allsecure_exchange_seamless_expiry_year">'.
 				__('Year', 'allsecureexchange').'</label>
 				<div class="woocommerce-input-wrapper">
-					<select type="text" class="input-text " id="allsecure_exchange_seamless_expiry_year">' . $yearSelect . '</select>
+					<select type="text" class="input-text " id="allsecure_exchange_seamless_expiry_year" style="width: 100%">' . $yearSelect . '</select>
 				</div>
 			</div>
 			<div class="form-row form-row-wide " style="margin: 0 0 0 2%; width: 32%; float: left; clear: none;">
@@ -612,6 +616,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			<div id="allsecure_exchange_errors" tabindex="-1">
 				
 			</div>
+		</div>
 		</div>';
     }
 
