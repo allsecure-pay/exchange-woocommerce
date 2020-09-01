@@ -1,5 +1,5 @@
 <?php
-
+include_once( dirname( __FILE__ ) . '/allsecure-exchange-creditcard-additional.php' );
 class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 {
     public $id = 'creditcard';
@@ -40,7 +40,10 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 		}
         $this->callbackUrl = add_query_arg('wc-api', 'wc_' . $this->id, home_url('/'));
 		$this->version_tracker	= $this->settings['version_tracker'];													  
-
+		
+		add_action( 'woocommerce_order_action_allsecure_capture', array( $this, 'allsecure_exchange_capture_payment' ) );
+		add_action( 'woocommerce_order_action_allsecure_reverse', array( $this, 'allsecure_exchange_reverse_payment' ) );
+		
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, [$this, 'process_admin_options']);
         add_action('wp_enqueue_scripts', function () {
             wp_register_script('payment_js', $this->get_option('apiHost') . 'js/integrated/payment.min.js', [], ALLSECURE_EXCHANGE_EXTENSION_VERSION, false);
@@ -217,7 +220,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
         }
 
         if ($result->isSuccess()) {
-            // $gatewayReferenceId = $result->getReferenceId();
+            $gatewayReferenceId = $result->getReferenceId();
             if ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_ERROR) {
                 // $errors = $result->getErrors();
                 return $this->paymentFailedResponse();
@@ -230,14 +233,13 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
             } elseif ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_PENDING) {
                 // payment is pending, wait for callback to complete
             } elseif ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_FINISHED) {
-
                 //seamless will finish here ONLY FOR NON-3DS SEAMLESS
             }
-            $woocommerce->cart->empty_cart();
-
-            return [
+			$woocommerce->cart->empty_cart();
+		    return [
                 'result' => 'success',
-                'redirect' => $this->paymentSuccessUrl($this->order),
+                // 'redirect' => $this->paymentSuccessUrl($this->order),
+				'redirect' => add_query_arg(['astrxId' => $merchantTransactionId], $this->paymentSuccessUrl($this->order))
             ];
         }
 
@@ -246,6 +248,115 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
          */
         return $this->paymentFailedResponse();
     }
+	
+	/** 
+	 * Capture the payment
+	 * and return the result 
+	 *
+     * @return string|null
+	 */
+	public function allsecure_exchange_capture_payment( $order_id ) {
+		global $woocommerce;
+        /**
+         * order data
+         */
+		$order = wc_get_order( $order_id );
+		$ExchangeUuid = $order->get_meta('ExchangeUuid');
+		$amount 	= $order->get_total();
+		$currency 	= get_woocommerce_currency();
+		$merchantTransactionId = 'capture-'. $this->encodeOrderId($order->get_id());
+		/* $merchantTransactionId =  'capture-'.$order->get_id(). '-' . date('YmdHis') . substr(sha1(uniqid()), 0, 10); */
+		/**
+         * gateway client
+         */
+        WC_AllsecureExchange_Provider::autoloadClient();
+        AllsecureExchange\Client\Client::setApiUrl($this->get_option('apiHost'));
+        $client = new AllsecureExchange\Client\Client(
+            $this->get_option('apiUser'),
+            htmlspecialchars_decode($this->get_option('apiPassword')),
+            $this->get_option('apiKey'),
+            $this->get_option('sharedSecret'),
+			strtolower(substr(get_bloginfo('language'), 0, 2 ))
+        );
+		/**
+         * transaction
+         */
+		$capture = new \AllsecureExchange\Client\Transaction\Capture();
+		$capture->setTransactionId($merchantTransactionId)
+			->setAmount($amount)
+			->setCurrency($currency)
+			->setReferenceTransactionId($ExchangeUuid);
+		$result = $client->Capture($capture);
+		if ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_ERROR) {
+			//error handling example
+			$error = $result->getFirstError();
+			$outError = array();
+			$outError ["message"] = $error->getMessage();
+			$outError ["code"] = $error->getCode();
+			$outError ["adapterCode"] = $error->getAdapterCode();
+			$outError ["adapterMessage"] = $error->getAdapterMessage();
+			$order->add_order_note(sprintf(__('AllSecure Capture Request Failed. %s', 'allsecureexchange'), implode('. ',$outError) ));
+			return true;
+		} elseif ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_FINISHED) {
+			//payment is captured, update your order status
+			$gatewayReferenceId = $result->getReferenceId();
+			$order->add_order_note(sprintf(__('AllSecure Capture Processed Successful. The Capture ID is %s ', 'allsecureexchange'), $gatewayReferenceId ));
+			$order->update_status('wc-accepted');
+			return true;
+		} 
+	}
+	/** 
+	 * Void the payment
+	 * and return the result 
+	 *
+     * @return string|null
+	 */
+	public function allsecure_exchange_reverse_payment( $order_id ) {
+		global $woocommerce;
+        /**
+         * order data
+         */
+		$order = wc_get_order( $order_id );
+		$ExchangeUuid = $order->get_meta('ExchangeUuid');
+		$merchantTransactionId = 'void-'. $this->encodeOrderId($order->get_id());
+		/* $merchantTransactionId =  'void-'.$order->get_id(). '-' . date('YmdHis') . substr(sha1(uniqid()), 0, 10); */
+		/**
+         * gateway client
+         */
+        WC_AllsecureExchange_Provider::autoloadClient();
+        AllsecureExchange\Client\Client::setApiUrl($this->get_option('apiHost'));
+        $client = new AllsecureExchange\Client\Client(
+            $this->get_option('apiUser'),
+            htmlspecialchars_decode($this->get_option('apiPassword')),
+            $this->get_option('apiKey'),
+            $this->get_option('sharedSecret'),
+			strtolower(substr(get_bloginfo('language'), 0, 2 ))
+        );
+		/**
+         * transaction
+         */
+		$void = new \AllsecureExchange\Client\Transaction\VoidTransaction();
+		$void->setTransactionId($merchantTransactionId)
+			->setReferenceTransactionId($ExchangeUuid);
+		$result = $client->void($void);
+		if ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_ERROR) {
+			//error handling example
+			$error = $result->getFirstError();
+			$outError = array();
+			$outError ["message"] = $error->getMessage();
+			$outError ["code"] = $error->getCode();
+			$outError ["adapterCode"] = $error->getAdapterCode();
+			$outError ["adapterMessage"] = $error->getAdapterMessage();
+			$order->add_order_note(sprintf(__('AllSecure Reversal Request Failed. %s', 'allsecureexchange'), implode('. ',$outError) ));
+			return true;
+		} elseif ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_FINISHED) {
+			//payment is voided, update your order status
+			$gatewayReferenceId = $result->getReferenceId();
+			$order->add_order_note(sprintf(__('AllSecure Reversal Processed Successful. The Reversal ID is %s ', 'allsecureexchange'), $gatewayReferenceId ));
+			$order->update_status('wc-reversed');
+			return true;
+		} 
+	}
 
     private function paymentSuccessUrl($order)
     {
@@ -259,7 +370,6 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
         wc_add_notice(__('Payment failed or was declined', 'woocommerce'), 'error');
         return [
             'result' => 'error',
-            // 'redirect' => $this->get_return_url($this->order),
 			'redirect' => wc_get_checkout_url($this->order),
         ];
     }
@@ -286,23 +396,31 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 
         $callbackResult = $client->readCallback(file_get_contents('php://input'));
         $this->order = new WC_Order($this->decodeOrderId($callbackResult->getTransactionId()));
-        
-		 // check if callback data is coming from the last (=newest+relevant) tx attempt, otherwise ignore it
+		
+		// check if callback data is coming from the last (=newest+relevant) tx attempt, otherwise ignore it
         if ($this->order->get_meta('merchantTransactionId') !== $callbackResult->getTransactionId()) {
-            die("OK");
+			die("OK");
         }
 		
 		if ($callbackResult->getResult() == \AllsecureExchange\Client\Callback\Result::RESULT_OK) {
             switch ($callbackResult->getTransactionType()) {
                 case \AllsecureExchange\Client\Callback\Result::TYPE_DEBIT:
-                case \AllsecureExchange\Client\Callback\Result::TYPE_CAPTURE:
-                    $this->order->payment_complete();
+               		$this->order->add_meta_data('ExchangeUuid', $callbackResult->getReferenceId(), true); 
+					$this->order->save_meta_data();
+					$this->order->payment_complete();
+					$this->order->update_status('wc-accepted');
+                    break;
+				case \AllsecureExchange\Client\Callback\Result::TYPE_CAPTURE:
+					$this->order->payment_complete();
+					$this->order->update_status('wc-accepted');
                     break;
                 case \AllsecureExchange\Client\Callback\Result::TYPE_VOID:
-                    $this->order->update_status('cancelled', __('Void', 'woocommerce'));
+					$this->order->update_status('wc-reversed');
                     break;
                 case \AllsecureExchange\Client\Callback\Result::TYPE_PREAUTHORIZE:
-                    $this->order->update_status('on-hold', __('Awaiting capture/void', 'woocommerce'));
+					$this->order->add_meta_data('ExchangeUuid', $callbackResult->getReferenceId(), true); 
+					$this->order->save_meta_data();
+                    $this->order->update_status('wc-preauth'); 
                     break;
             }
         } elseif ($callbackResult->getResult() == \AllsecureExchange\Client\Callback\Result::RESULT_ERROR) {
@@ -542,9 +660,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
             $yearSelect .= '<option>' . $year . '</option>';
         }
 		$selectedCards = $this->settings['card_supported'];
-		foreach ($selectedCards as $selectedCard) {
-			$allowedCards .= $selectedCard .' ';
-		}
+		$allowedCards = implode(' ',$selectedCards);
 		
 		if ($this->get_option('apiHost') !== ALLSECURE_EXCHANGE_EXTENSION_URL) {
 			echo '<div id="allsecure_exchange_sandbox" >'.__('THIS IS THE TEST MODE', 'allsecureexchange').'</div>';
@@ -558,8 +674,8 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			window.errorExpiry="' . __('Expiry date not valid', 'allsecureexchange') . '";
 			</script>
 		<script type="text/javascript" src="' . plugins_url(). '/allsecureexchange/assets/js/allsecure-exchange.js?ver=' . ALLSECURE_EXCHANGE_EXTENSION_VERSION . '"></script>
-        <style>.payment_box{iframe{width:100%}}</style>
-		<div class="payment_box" style="padding: 25px; background-color: #fff; border-radius: 3px; min-height: 230px">
+        
+		
 		
 		<div id="allsecure_exchange_payee"><b>'.__('Payee', 'allsecureexchange') . '</b>: ' . $this->get_option('merchant_name').'</div>
 		
@@ -616,7 +732,6 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			<div id="allsecure_exchange_errors" tabindex="-1">
 				
 			</div>
-		</div>
 		</div>';
     }
 
@@ -1399,7 +1514,13 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
     {
         return null;
     }
-	// gateway transaction details on declined trx
+	
+	/** 
+	 * Get status and show details 
+	 * on Declined Transactions 
+	 *
+     * @return string|null
+	 */
 	function parse_value_allsecureexchange_error($order_id){
 		if ( isset($_REQUEST['astrxId']) ) {
 			$astrxId = $_REQUEST['astrxId'];
@@ -1413,8 +1534,12 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			</div>";
 		}
 	}
-	
-	// gateway transaction details on a thankyou page
+	/** 
+	 * Get status and show details 
+	 * on Thankyou Page 
+	 *
+     * @return string|null
+	 */
 	function parse_value_allsecureexchange_success($order_id){
 		if ( isset($_REQUEST['astrxId']) ) {
 			$astrxId = $_REQUEST['astrxId'];
@@ -1436,8 +1561,9 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			<h2>". __('Transaction details', 'allsecure_woo').": </h2>
 			<ul class='woocommerce-order-overview woocommerce-thankyou-order-details order_details'>
 				<li class='woocommerce-order-overview__email email'>" . __('Transaction Codes', 'allsecureexchange' );
-					echo('<strong>'. $extraData['authCode'] .'</strong>');
-
+					if ( isset($extraData['authCode']) ) {
+						echo('<strong>'. $extraData['authCode'] .'</strong>');
+					}
 				echo "</li>
 					<li class='woocommerce-order-overview__email email'>". __('Card Type', 'allsecureexchange' ) .
 					"<strong>". $binBrand ." *** ".$lastFourDigits."</strong>
@@ -1460,7 +1586,6 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			wp_remote_post( $tracking_url, array( 'body' => $merchant_info,'timeout' => 100,));
 		}
 	}
-	
 	function report_payment($order_id) {
 		/**
 		 * gateway client
@@ -1479,7 +1604,6 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 		$statusResult = $client->sendStatusRequest($statusRequestData);
 		return $statusResult;
 	}
-	
 	/**
 	 * Get relevant data for footer display
 	 */
@@ -1493,7 +1617,8 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 		return $this->get_option('merchant_bank');
 	}
 	/**
-	 * Get general merchants info for version tracker
+	 * Get general merchants info 
+	 * for version tracker
 	 ** @return array
 	 */
 	protected function allsecure_exchange_get_general_merchant_info() {

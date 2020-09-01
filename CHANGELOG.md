@@ -1,5 +1,12 @@
 # Release Notes
 
+## v1.7.8 (2020-09-01)
+### Added
+- Backoffice Capture Function (Beta Testing)
+- Backoffice Reversal Function (Beta Testing)
+## Fixed
+- Seamless form display
+
 ## v1.7.7 (2020-05-08)
 ## Fixed
 - AuthCode display
