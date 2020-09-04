@@ -674,13 +674,9 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			window.errorExpiry="' . __('Expiry date not valid', 'allsecureexchange') . '";
 			</script>
 		<script type="text/javascript" src="' . plugins_url(). '/allsecureexchange/assets/js/allsecure-exchange.js?ver=' . ALLSECURE_EXCHANGE_EXTENSION_VERSION . '"></script>
-<<<<<<< HEAD
         
 		
 		
-=======
-        		
->>>>>>> 6a28f23b1319407771e2c976ad74dbcf0d9da5dc
 		<div id="allsecure_exchange_payee"><b>'.__('Payee', 'allsecureexchange') . '</b>: ' . $this->get_option('merchant_name').'</div>
 		
 		<div id="allsecure_exchange_seamless">
