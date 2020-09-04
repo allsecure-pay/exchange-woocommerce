@@ -5,9 +5,10 @@
 	var $allsecureExchangeErrors = $('#allsecure_exchange_errors');
     var integrationKey = window.integrationKey;
     var initialized = false;
+	
     var init = function() {
         if (integrationKey && !initialized) {
-            $paymentFormSubmitButton.prop("disabled", true);
+            $paymentFormSubmitButton.prop("disabled", false);
             allsecureExchangeSeamless.init(
                 integrationKey,
                 function () {
@@ -18,6 +19,7 @@
                 });
         }
     };
+	
     $paymentFormSubmitButton.on('click', function (e) {
 		allsecureExchangeSeamless.submit(			
             function (token) {
@@ -88,7 +90,7 @@
 
             
             var style = {
-				'border': 'none',
+				'border': $seamlessFirstNameInput.css('border'),
 				'border-radius': $seamlessFirstNameInput.css('border-radius'),
                 'height': '100%',
 				'width': '100%',
