@@ -4,7 +4,7 @@ Tags: Credit Card, e-commerce, payment, checkout
 Requires at least: 4.9
 Tested up to: 5.2.3
 Requires PHP: 7.1
-Stable tag: 1.7.8
+Stable tag: 1.8.0
 WC requires at least: 3.6.0
 WC tested up to: 4.4.0
 

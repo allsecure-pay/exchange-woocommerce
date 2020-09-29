@@ -1,5 +1,9 @@
 # Release Notes
 
+## v1.8.0 (2020-09-21)
+### Added
+- Backoffice Capture Function 
+- Backoffice Reversal Function 
 ## v1.7.8 (2020-09-01)
 ### Added
 - Backoffice Capture Function (Beta Testing)

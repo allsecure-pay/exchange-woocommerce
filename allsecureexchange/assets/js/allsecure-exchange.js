@@ -21,6 +21,8 @@
     };
 	
     $paymentFormSubmitButton.on('click', function (e) {
+		if(jQuery("form[name='checkout'] input[name='payment_method']:checked").val() == 'allsecure_exchange_creditcard'){
+    
 		allsecureExchangeSeamless.submit(			
             function (token) {
 				$allsecureExchangeErrors.html('');
@@ -28,30 +30,32 @@
                 $paymentForm.submit();
             },
             function (errors) {
+
 				$allsecureExchangeErrors.html('');
 				$allsecureExchangeErrors.append('<ul class="woocommerce-error" style="margin: 0px;">');
-                errors.forEach(function (error) {
-					if (error.attribute == 'number') {
-						// $allsecureExchangeErrors.append('<li>'+window.errorNumber+'</li>');
+				$.each(errors, function(key, value) {
+					console.log(value.attribute);
+					var fieldname = value.attribute;
+					if (fieldname == 'number') {
 						$('.woocommerce-error').append('<li><b>!</b> '+window.errorNumber+'</li>');
-					}
-					if (error.attribute == 'month' || 'year') {
-						// $allsecureExchangeErrors.append('<li>'+window.errorExpiry+'</li>');
+					} 
+					if (fieldname ==  'year') {
 						$('.woocommerce-error').append('<li><b>!</b> '+window.errorExpiry+'</li>');
-					}
-					if (error.attribute == 'cvv' ) {
-						// $allsecureExchangeErrors.append('<li>'+window.errorCvv+'</li>');
-						$('.woocommerce-error').append('<li><b>!</b> '+window.errorExpiry+'</li>');
-					}
-					if (error.attribute == 'card_holder') {		
-						// $allsecureExchangeErrors.append('<li>'+window.errorName+'</li>');
-						$('.woocommerce-error').append('<li><b>!</b> '+window.errorExpiry+'</li>');
+						// $seamlessExpiryYearInput.closest('.woocommerce-input-wrapper').addClass('has-error');
+					} 
+					if (fieldname ==  'cvv' ) {
+						$('.woocommerce-error').append('<li><b>!</b> '+window.errorCvv+'</li>');
+						// $seamlessExpiryMonthInput.closest('.woocommerce-input-wrapper').addClass('has-error');
+					} 
+					if (fieldname == 'card_holder') {		
+						$('.woocommerce-error').append('<li><b>!</b> '+window.errorName+'</li>');
 					}
 					$allsecureExchangeErrors.attr("tabindex",-1).focus();
                 });
 				$allsecureExchangeErrors.append('</ul>');
             });
 			return false;
+		}
     });
 
     var allsecureExchangeSeamless = function () {
@@ -90,7 +94,8 @@
 
             
             var style = {
-				'border': $seamlessFirstNameInput.css('border'),
+				/* 'border': $seamlessFirstNameInput.css('border'), */
+				'border': 'none',
 				'border-radius': $seamlessFirstNameInput.css('border-radius'),
                 'height': '100%',
 				'width': '100%',
@@ -137,10 +142,10 @@
                 validDetails = false;
             }
 			if ($allowedCards.includes(cardBrand) === false) {
-				$seamlessCardNumberInput.closest('.woocommerce-input-wrapper').addClass('has-error');
-                validDetails = false;
+				validDetails = false;
             }
 			if (!$seamlessCardHolderInput.val().length) {
+				$seamlessCardHolderInput.closest('.woocommerce-input-wrapper').addClass('has-error');
                 validDetails = false;
             }
             if (validNumber && validCvv && validDetails) {
@@ -158,8 +163,6 @@
             payment.tokenize(
                 {
                     card_holder: $seamlessCardHolderInput.val(),
-					// first_name: $seamlessFirstNameInput.val(),
-					// last_name: $seamlessFirstNameInput.val(),
                     month: $seamlessExpiryMonthInput.val(),
                     year: $seamlessExpiryYearInput.val(),
                     email: $seamlessEmailInput.val()
