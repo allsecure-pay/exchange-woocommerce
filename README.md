@@ -8,7 +8,7 @@ Stable tag: 1.8.0
 WC requires at least: 3.6.0  
 WC tested up to: 4.4.0  
 
-Accept payments in your WooCommerce store using AllSecure **EXCHANGE** Platform. See a fully functional WooCommerce <a href="http://demo.allsecpay.xyz/cart/exchange/woo" target="_new">demo store</a> with AllSecure **EXCHANGE** as a payment gateway.
+Accept payments in your WooCommerce store using AllSecure **EXCHANGE** Platform. See a fully functional WooCommerce <a href="http://demo.allsecure.xyz/cart/exchange/woo" target="_new">demo store</a> with AllSecure **EXCHANGE** as a payment gateway.
 
 ## Installation
 - Upload the plugin files to the `/wp-content/plugins/allsecureexchange` directory, or install the plugin through the WordPress plugins screen directly.
