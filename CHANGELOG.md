@@ -1,5 +1,10 @@
 # Release Notes
 
+## v1.9.0 (2021-01-21)
+### Added
+- Additional Banking Partners 
+- Upgraded Seamless form display 
+
 ## v1.8.0 (2020-09-21)
 ### Added
 - Backoffice Capture Function 
