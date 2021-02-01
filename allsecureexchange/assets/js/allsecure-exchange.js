@@ -41,11 +41,9 @@
 					} 
 					if (fieldname ==  'year') {
 						$('.woocommerce-error').append('<li><b>!</b> '+window.errorExpiry+'</li>');
-						// $seamlessExpiryYearInput.closest('.woocommerce-input-wrapper').addClass('has-error');
 					} 
 					if (fieldname ==  'cvv' ) {
 						$('.woocommerce-error').append('<li><b>!</b> '+window.errorCvv+'</li>');
-						// $seamlessExpiryMonthInput.closest('.woocommerce-input-wrapper').addClass('has-error');
 					} 
 					if (fieldname == 'card_holder') {		
 						$('.woocommerce-error').append('<li><b>!</b> '+window.errorName+'</li>');
@@ -70,6 +68,7 @@
         var $seamlessFirstNameInput = $('#billing_first_name');
 		var $seamlessLastNameInput = $('#billing_last_name');
         var $seamlessEmailInput = $('#allsecure_exchange_seamless_email', $seamlessForm);
+		var $seamlessExpiryInput = $('#allsecure_exchange_seamless_expiry', $seamlessForm);
         var $seamlessExpiryMonthInput = $('#allsecure_exchange_seamless_expiry_month', $seamlessForm);
         var $seamlessExpiryYearInput = $('#allsecure_exchange_seamless_expiry_year', $seamlessForm);
         var $seamlessCardNumberInput = $('#allsecure_exchange_seamless_card_number', $seamlessForm);
@@ -89,13 +88,9 @@
             
             $seamlessCardNumberInput.height($seamlessFirstNameInput.css('height'));
             $seamlessCvvInput.height($seamlessFirstNameInput.css('height'));
-			$seamlessExpiryYearInput.height($seamlessFirstNameInput.css('height'));
-			$seamlessExpiryMonthInput.height($seamlessFirstNameInput.css('height'));
-
-            
+			
             var style = {
-				/* 'border': $seamlessFirstNameInput.css('border'), */
-				'border': 'none',
+				'border': $seamlessFirstNameInput.css('border'),
 				'border-radius': $seamlessFirstNameInput.css('border-radius'),
                 'height': '100%',
 				'width': '100%',
@@ -107,22 +102,69 @@
                 'word-spacing': '1.7px',
                 'color': $seamlessFirstNameInput.css('color'),
                 'background': $seamlessFirstNameInput.css('background'),
+				'box-shadow': $seamlessFirstNameInput.css('box-shadow'),
+            };
+			var hoverStyle = {
+				'border': $seamlessFirstNameInput.css('border'),
+                'color': $seamlessFirstNameInput.css('color'),
+                'background': $seamlessFirstNameInput.css('background'),
+			};
+			var focusStyle = {
+				'border': $seamlessFirstNameInput.css('border'),
+				'color': $seamlessFirstNameInput.css('color'),
+                'background': $seamlessFirstNameInput.css('background'),
             };
             payment = new PaymentJs("1.2");
             payment.init(integrationKey, $seamlessCardNumberInput.prop('id'), $seamlessCvvInput.prop('id'), function (payment) {
+				var numberFocused = false;
+				var cvvFocused = false;
                 payment.setNumberStyle(style);
                 payment.setCvvStyle(style);
+				// Focus Event
+				payment.numberOn('focus', function (data) {
+					numberFocused = false;
+					payment.setNumberStyle(focusStyle);
+					console.log (focusStyle);
+                });
+				payment.cvvOn('focus', function (data) {
+					cvvFocused = false;
+                })
+				// Blur events
                 payment.numberOn('input', function (data) {
                     validNumber = data.validNumber;
-					console.log(data.cardType);
-					cardBrand = data.cardType;
-                    validate();
+					validBrand = $allowedCards.includes(data.cardType);
+					validate();
                 });
                 payment.cvvOn('input', function (data) {
                     validCvv = data.validCvv;
                     validate();
                 });
-            });
+				// Hover events
+				payment.numberOn('mouseover', function() {
+					// Don't override style if element is already focused
+					if(! numberFocused) {
+					  payment.setNumberStyle(hoverStyle);
+					}
+				});
+				payment.numberOn('mouseout', function() {
+					// Don't override style if element is already focused
+					if(! numberFocused) {
+					  payment.setNumberStyle(style);
+					}
+				});
+				payment.cvvOn('mouseover', function() {
+					// Don't override style if element is already focused
+					if(! cvvFocused) {
+					  payment.setCvvStyle(hoverStyle);
+					}
+				});
+				payment.cvvOn('mouseout', function() {
+					// Don't override style if element is already focused
+					if(! cvvFocused) {
+					  payment.setCvvStyle(style);
+					}
+				});
+			});
 			$seamlessForm.show();
             $('input, select', $seamlessForm).on('input', validate);
         };
@@ -134,21 +176,18 @@
             validDetails = true;
             
             if (!$seamlessExpiryMonthInput.val().length) {
-                $seamlessExpiryMonthInput.closest('.woocommerce-input-wrapper').addClass('has-error');
+                $seamlessExpiryInput.closest('.woocommerce-input-wrapper').addClass('has-error');
                 validDetails = false;
             }
             if (!$seamlessExpiryYearInput.val().length) {
-                $seamlessExpiryYearInput.closest('.woocommerce-input-wrapper').addClass('has-error');
+                $seamlessExpiryInput.closest('.woocommerce-input-wrapper').addClass('has-error');
                 validDetails = false;
-            }
-			if ($allowedCards.includes(cardBrand) === false) {
-				validDetails = false;
             }
 			if (!$seamlessCardHolderInput.val().length) {
 				$seamlessCardHolderInput.closest('.woocommerce-input-wrapper').addClass('has-error');
                 validDetails = false;
             }
-            if (validNumber && validCvv && validDetails) {
+            if (validNumber && validCvv && validBrand && validDetails) {
                 _validCallback.call();
                 return;
             }
@@ -184,4 +223,16 @@
     }();
 
     init();
+	
+	function expiryField(e) {
+	  String.fromCharCode(event.keyCode);
+	  var a = event.keyCode; - 1 === [8].indexOf(a) && (event.target.value = event.target.value.replace(/^([1-9]\/|[2-9])$/g, "0$1/").replace(/^(0[1-9]|1[0-2])$/g, "$1/").replace(/^([0-1])([3-9])$/g, "0$1/$2").replace(/^(0?[1-9]|1[0-2])([0-9]{2})$/g, "$1/$2").replace(/^([0]+)\/|[0]+$/g, "0").replace(/[^\d\/]|^[\/]*$/g, "").replace(/\/\//g, "/"))
+	}
+
+	function ValidateExpiry(e) {
+	  var a = document.getElementById("allsecure_exchange_seamless_expiry").value.split("/"),
+		l = a[0],
+		r = a[1];
+	  document.getElementById("allsecure_exchange_seamless_expiry_month").value = l, document.getElementById("allsecure_exchange_seamless_expiry_year").value = 20 + r
+	}
 })(jQuery);

@@ -1,5 +1,5 @@
 <?php
-include_once( dirname( __FILE__ ) . '/allsecure-exchange-creditcard-additional.php' );
+include_once( dirname( __FILE__ ) . '/allsecure-exchange-additional.php' );
 class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 {
     public $id = 'creditcard';
@@ -455,6 +455,13 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
     public function init_form_fields()
     {
         $this->form_fields = [
+			'enabled' => [
+				'title' => __('Enable/Disable', 'allsecureexchange'),
+				'type' => 'checkbox',
+				'label' => __('Enable AllSecure Exchange', 'allsecureexchange'),
+				'default' => 'yes',
+			],
+		
             'title' => [
                 'title' => __('Description', 'allsecureexchange'),
                 'type' => 'text',
@@ -557,20 +564,22 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 					'AMEX' => __('AMEX', 'allsecureexchange'),
 					'DINERS' => __('DINERS', 'allsecureexchange'),
 					'JCB'  => __('JCB', 'allsecureexchange'),
+					'DINA'  => __('DINA', 'allsecureexchange'),
 				],
 			],
 			
 			'merchant_bank' => [
 				'title' => __('Acquiring Partner', 'allsecureexchange'),
-				'default' => 'null',
+				'default' => 'none',
 				'description' => __('Acquirer where holding Merchant Account', 'allsecureexchange'),
 				'type' => 'select',
 				'options' => [
-					'null' => __('Select', 'allsecureexchange'),
+					'none' => __('Select', 'allsecureexchange'),
 					'hbm' => __('Hipotekarna Banka', 'allsecureexchange'),
 					'aik' => __('AIK Banka', 'allsecureexchange'),
-					'pxp' => __('PXP', 'allsecureexchange'),
-					'wcd' => __('WireCard', 'allsecureexchange'),
+					'bib' => __('Banca Intesa', 'allsecureexchange'),
+					'nlb-mne' => __('NLB Banka Montenegro', 'allsecureexchange'),
+					'ckb' => __('CKB Banka', 'allsecureexchange'),
 				],
 				'desc_tip'    => true,
 			],
@@ -690,8 +699,9 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			window.errorExpiry="' . __('Expiry date not valid', 'allsecureexchange') . '";
 			</script>
 		<script type="text/javascript" src="' . plugins_url(). '/allsecureexchange/assets/js/allsecure-exchange.js?ver=' . ALLSECURE_EXCHANGE_EXTENSION_VERSION . '"></script>
+		<script type="text/javascript" src="' . plugins_url(). '/allsecureexchange/assets/js/allsecure-exchange-validator.js?ver=' . ALLSECURE_EXCHANGE_EXTENSION_VERSION . '"></script>
 		
-		<div id="allsecure_exchange_payee"><b>'.__('Payee', 'allsecureexchange') . '</b>: ' . $this->get_option('merchant_name').'</div>
+		<div id="allsecure_exchange_payee"><p><b>'.__('Payee', 'allsecureexchange') . '</b>: ' . $this->get_option('merchant_name').'</p></div>
 		
 		<div id="allsecure_exchange_seamless">
         <input type="hidden" id="allsecure_exchange_token" name="token">
@@ -699,41 +709,23 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 				<label for="allsecure_exchange_seamless_card_number">'.
 				__('Card number', 'allsecureexchange').'</label>
 				<div class="woocommerce-input-wrapper" style="">
-					<div id="allsecure_exchange_seamless_card_number" class="input-text" style="padding: 0; width: 100%;"></div>
+					<div id="allsecure_exchange_seamless_card_number" style="padding: 0; width: 100%;"></div>
 				</div>
 			</div>
-			<div class="form-row form-row-wide" style="margin: 0 2% 0 0; width: 32%; float: left; clear: none;"> 
-				<label for="allsecure_exchange_seamless_expiry_month">'.
-				__('Month', 'allsecureexchange').'</label>
-				<div class="woocommerce-input-wrapper" >
-					<select type="text" class="input-text " id="allsecure_exchange_seamless_expiry_month" style="width: 100%">
-						<option>01</option>
-						<option>02</option>
-						<option>03</option>
-						<option>04</option>
-						<option>05</option>
-						<option>06</option>
-						<option>07</option>
-						<option>08</option>
-						<option>09</option>
-						<option>10</option>
-						<option>11</option>
-						<option>12</option>
-					</select>
+			<div class="form-row form-row-wide" style="margin: 0 2% 0 0; width: 48%; float: left; clear: none;"> 
+				<label for="allsecure_exchange_seamless_expiry_date">'.
+				__('Expiration', 'allsecureexchange').'</label>
+				<div class="woocommerce-input-wrapper" style="">
+					<input type="hidden" class="input-text " id="allsecure_exchange_seamless_expiry_month">
+					<input type="hidden" class="input-text " id="allsecure_exchange_seamless_expiry_year">
+					<input type="text" id="allsecure_exchange_seamless_expiry" onkeyup="expiryField(event);" onblur="ValidateExpiry();" maxlength = "5" inputmode="tel" placeholder="--/--"autocomplete="off">
 				</div>
 			</div>
-			<div class="form-row form-row-wide" style="margin: 0; width: 32%; float: left; clear: none;">
-				<label for="allsecure_exchange_seamless_expiry_year">'.
-				__('Year', 'allsecureexchange').'</label>
-				<div class="woocommerce-input-wrapper">
-					<select type="text" class="input-text " id="allsecure_exchange_seamless_expiry_year" style="width: 100%">' . $yearSelect . '</select>
-				</div>
-			</div>
-			<div class="form-row form-row-wide " style="margin: 0 0 0 2%; width: 32%; float: left; clear: none;">
+			<div class="form-row form-row-wide " style="margin: 0 0 0 2%; width: 48%; float: left; clear: none;">
 				<label for="allsecure_exchange_seamless_cvv">'.
 				__('CVV', 'allsecureexchange').'</label>
 				<div class="woocommerce-input-wrapper" style="">
-					<div id="allsecure_exchange_seamless_cvv" class="input-text " style="padding: 0; width: 100%;"></div>
+					<div id="allsecure_exchange_seamless_cvv" style="padding: 0; width: 100%;"></div>
 				</div>
 			</div>
 			<div class="form-row form-row-wide">
