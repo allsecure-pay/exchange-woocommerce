@@ -224,15 +224,5 @@
 
     init();
 	
-	function expiryField(e) {
-	  String.fromCharCode(event.keyCode);
-	  var a = event.keyCode; - 1 === [8].indexOf(a) && (event.target.value = event.target.value.replace(/^([1-9]\/|[2-9])$/g, "0$1/").replace(/^(0[1-9]|1[0-2])$/g, "$1/").replace(/^([0-1])([3-9])$/g, "0$1/$2").replace(/^(0?[1-9]|1[0-2])([0-9]{2})$/g, "$1/$2").replace(/^([0]+)\/|[0]+$/g, "0").replace(/[^\d\/]|^[\/]*$/g, "").replace(/\/\//g, "/"))
-	}
-
-	function ValidateExpiry(e) {
-	  var a = document.getElementById("allsecure_exchange_seamless_expiry").value.split("/"),
-		l = a[0],
-		r = a[1];
-	  document.getElementById("allsecure_exchange_seamless_expiry_month").value = l, document.getElementById("allsecure_exchange_seamless_expiry_year").value = 20 + r
-	}
+	
 })(jQuery);

@@ -712,27 +712,27 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 					<div id="allsecure_exchange_seamless_card_number" style="padding: 0; width: 100%;"></div>
 				</div>
 			</div>
-			<div class="form-row form-row-wide" style="margin: 0 2% 0 0; width: 48%; float: left; clear: none;"> 
+			<div class="form-row form-row-first" data-priority="100" style="margin: 0 2% 0 0; width: 48%; float: left; clear: none;"> 
 				<label for="allsecure_exchange_seamless_expiry_date">'.
 				__('Expiration', 'allsecureexchange').'</label>
 				<div class="woocommerce-input-wrapper" style="">
 					<input type="hidden" class="input-text " id="allsecure_exchange_seamless_expiry_month">
 					<input type="hidden" class="input-text " id="allsecure_exchange_seamless_expiry_year">
-					<input type="text" id="allsecure_exchange_seamless_expiry" onkeyup="expiryField(event);" onblur="ValidateExpiry();" maxlength = "5" inputmode="tel" placeholder="--/--"autocomplete="off">
+					<input type="text" id="allsecure_exchange_seamless_expiry" onkeyup="expiryField(event);" onblur="ValidateExpiry();" maxlength = "5" inputmode="tel" class="input-text " placeholder="--/--"autocomplete="off">
 				</div>
 			</div>
-			<div class="form-row form-row-wide " style="margin: 0 0 0 2%; width: 48%; float: left; clear: none;">
+			<div class="form-row form-row-last " style="margin: 0 0 0 2%; width: 48%; float: left; clear: none;">
 				<label for="allsecure_exchange_seamless_cvv">'.
 				__('CVV', 'allsecureexchange').'</label>
 				<div class="woocommerce-input-wrapper" style="">
 					<div id="allsecure_exchange_seamless_cvv" style="padding: 0; width: 100%;"></div>
 				</div>
 			</div>
-			<div class="form-row form-row-wide">
+			<div class="form-row form-row-wide" style="clear: both;">
 				<label for="allsecure_exchange_seamless_card_holder">'.
 				__('Card holder', 'allsecureexchange').'</label>
 				<div class="woocommerce-input-wrapper" style="">
-					<input type="text" id="allsecure_exchange_seamless_card_holder" autocomplete="off">
+					<input type="text" id="allsecure_exchange_seamless_card_holder" class="input-text" autocomplete="off">
 				</div>
 			</div>
 			<div id="allsecure_exchange_errors" tabindex="-1">
