@@ -701,9 +701,9 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 		<script type="text/javascript" src="' . plugins_url(). '/allsecureexchange/assets/js/allsecure-exchange.js?ver=' . ALLSECURE_EXCHANGE_EXTENSION_VERSION . '"></script>
 		<script type="text/javascript" src="' . plugins_url(). '/allsecureexchange/assets/js/allsecure-exchange-validator.js?ver=' . ALLSECURE_EXCHANGE_EXTENSION_VERSION . '"></script>
 		
-		<div id="allsecure_exchange_payee"><p><b>'.__('Payee', 'allsecureexchange') . '</b>: ' . $this->get_option('merchant_name').'</p></div>
-		
-		<div id="allsecure_exchange_seamless">
+		<div id="allsecure_exchange_payee"><p><b>'.__('Payee', 'allsecureexchange') . '</b>: ' . $this->get_option('merchant_name').'</p></div>';
+		do_action( 'woocommerce_credit_card_form_start', $this->id );
+		echo '<div id="allsecure_exchange_seamless">
         <input type="hidden" id="allsecure_exchange_token" name="token">
 			<div class="form-row form-row-wide">
 				<label for="allsecure_exchange_seamless_card_number">'.
@@ -737,7 +737,10 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			</div>
 			<div id="allsecure_exchange_errors" tabindex="-1">
 			</div>
-		</div>';
+			<div class="clear"></div>';
+			do_action( 'woocommerce_credit_card_form_end', $this->id );
+		echo '</div>';
+		
     }
 
     /**
