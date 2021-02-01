@@ -34,7 +34,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 		$this->icon			= $icon_html;											
         $this->init_form_fields();
         $this->init_settings();
-        $this->title = __('Cards (AllSecure)', 'allsecureexchange');
+        $this->title = __('Cards', 'allsecureexchange');
 		if ($this->get_option('card_supported') !== NULL) {
 			$this->cards = implode(' ', $this->get_option('card_supported'));
 		}
