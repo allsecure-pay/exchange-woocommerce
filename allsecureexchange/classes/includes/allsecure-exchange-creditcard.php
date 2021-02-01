@@ -474,7 +474,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			'apiCredentials' => [
 					'title'       => __('API Credentials', 'allsecureexchange' ),
 					'type'        => 'title',
-					'description' => __('Enter your Exchange API Credentials to process transactions via AllSecure. You can get your Exchange Credentials via <a href="mailto:support@allsecpay.com">AllSecure Support</a>', 'allsecureexchange' ),
+					'description' => __('Enter your Exchange API Credentials to process transactions via AllSecure. You can get your Exchange Credentials via <a href="mailto:support@allsecure.eu">AllSecure Support</a>', 'allsecureexchange' ),
 			],
 			
             'apiHost' => [
@@ -554,7 +554,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 					'MASTER',
 					'MAESTRO'
 				],
-				'description' => __( 'Contact support at <a href="support@allsecpay.com">support@allsecpay.com</a> if you want to accept AMEX transactions', 'allsecureexchange' ),
+				'description' => __( 'Contact support at <a href="support@allsecure.eu">support@allsecure.eu</a> if you want to accept AMEX transactions', 'allsecureexchange' ),
 				'css'   => 'height: 100%;',
 				'type' => 'multiselect',
 				'options' => [

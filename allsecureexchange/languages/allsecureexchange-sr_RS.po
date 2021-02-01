@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-02-01 11:10+0100\n"
-"PO-Revision-Date: 2021-02-01 11:11+0100\n"
+"POT-Creation-Date: 2021-02-01 11:17+0100\n"
+"PO-Revision-Date: 2021-02-01 11:19+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sr\n"
@@ -71,10 +71,15 @@ msgid "API Credentials"
 msgstr "Parametri za povezivanje"
 
 #: allsecure-exchange-creditcard.php:477
+#, fuzzy
+#| msgid ""
+#| "Enter your Exchange API Credentials to process transactions via "
+#| "AllSecure. You can get your Exchange Credentials via <a href=\"mailto:"
+#| "support@allsecpay.com\">AllSecure Support</a>"
 msgid ""
 "Enter your Exchange API Credentials to process transactions via AllSecure. "
-"You can get your Exchange Credentials via <a href=\"mailto:support@allsecpay."
-"com\">AllSecure Support</a>"
+"You can get your Exchange Credentials via <a href=\"mailto:support@allsecure."
+"eu\">AllSecure Support</a>"
 msgstr ""
 "Unesite Exchange API parametre kako bi mogli procesirati transakcije kroz "
 "AllSecure. Ukoliko ste već korisnik, kontaktirajte našu službu podrške. "
@@ -177,8 +182,8 @@ msgstr "Kartice koje prihvatate"
 
 #: allsecure-exchange-creditcard.php:557
 msgid ""
-"Contact support at <a href=\"support@allsecpay.com\">support@allsecpay.com</"
-"a> if you want to accept AMEX transactions"
+"Contact support at <a href=\"support@allsecure.eu\">support@allsecure.eu</a> "
+"if you want to accept AMEX transactions"
 msgstr ""
 
 #: allsecure-exchange-creditcard.php:561
@@ -306,8 +311,8 @@ msgstr ""
 #: allsecure-exchange-creditcard.php:638
 msgid "Please enter your ID as displayed on your invoice from AllSecure"
 msgstr ""
-"Molimo unesite ID koji vam je dodeljen prilikom potpisa ugovora sa AllSecure "
-"(samo za produkciju)"
+"Prva tri broja iz broja fakture koju redovno primate od AllSecure  (samo za "
+"produkciju)"
 
 #: allsecure-exchange-creditcard.php:644
 msgid "Version Tracker"

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-02-01 11:12+0100\n"
-"PO-Revision-Date: 2021-02-01 11:12+0100\n"
+"POT-Creation-Date: 2021-02-01 11:19+0100\n"
+"PO-Revision-Date: 2021-02-01 11:19+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_GB\n"
@@ -72,8 +72,8 @@ msgstr ""
 #: allsecure-exchange-creditcard.php:477
 msgid ""
 "Enter your Exchange API Credentials to process transactions via AllSecure. "
-"You can get your Exchange Credentials via <a href=\"mailto:support@allsecpay."
-"com\">AllSecure Support</a>"
+"You can get your Exchange Credentials via <a href=\"mailto:support@allsecure."
+"eu\">AllSecure Support</a>"
 msgstr ""
 
 #: allsecure-exchange-creditcard.php:481 allsecure-exchange-creditcard.php:483
@@ -160,8 +160,8 @@ msgstr ""
 
 #: allsecure-exchange-creditcard.php:557
 msgid ""
-"Contact support at <a href=\"support@allsecpay.com\">support@allsecpay.com</"
-"a> if you want to accept AMEX transactions"
+"Contact support at <a href=\"support@allsecure.eu\">support@allsecure.eu</a> "
+"if you want to accept AMEX transactions"
 msgstr ""
 
 #: allsecure-exchange-creditcard.php:561
