@@ -1,6 +1,4 @@
-=== 
-WooCommerce AllSecure Exchange Extension 
-===
+=== WooCommerce AllSecure Exchange Extension ===
 - Contributors: AllSecure Exchange
 - Tags: Credit Card, e-commerce, payment, checkout
 - Requires at least: 4.9
