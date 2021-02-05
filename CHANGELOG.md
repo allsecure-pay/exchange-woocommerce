@@ -1,5 +1,9 @@
 # Release Notes
 
+## v1.9.1 (2021-02-05)
+## Fixed
+- Seamless form compatibility tested with a number of templates
+
 ## v1.9.0 (2021-01-21)
 ### Added
 - Additional Banking Partners 

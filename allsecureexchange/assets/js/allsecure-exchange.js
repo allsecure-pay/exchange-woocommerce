@@ -85,51 +85,47 @@
 				$seamlessForm.hide();
                 return;
             }
-            
-            $seamlessCardNumberInput.height($seamlessFirstNameInput.css('height'));
-            $seamlessCvvInput.height($seamlessFirstNameInput.css('height'));
+			
+			$seamlessCardNumberInput.height($seamlessFirstNameInput.css('height'));
+			$seamlessCvvInput.height($seamlessFirstNameInput.css('height'));
 			
             var style = {
-				'border': $seamlessFirstNameInput.css('border'),
-				'border-radius': $seamlessFirstNameInput.css('border-radius'),
-                'height': '100%',
+				'border': $seamlessCardHolderInput.css('border'),
+				'background' : $seamlessCardHolderInput.css('background'),
+				'border-radius': $seamlessCardHolderInput.css('border-radius'),
+				'height': '100%',
 				'width': '100%',
-                'padding': $seamlessFirstNameInput.css('padding'),
-                'font-size': $seamlessFirstNameInput.css('font-size'),
-				'font-weight': $seamlessFirstNameInput.css('font-weight'),
-				'font-family': $seamlessFirstNameInput.css('font-family'),
-                'letter-spacing': '0.1px',
-                'word-spacing': '1.7px',
-                'color': $seamlessFirstNameInput.css('color'),
-                'background': $seamlessFirstNameInput.css('background'),
-				'box-shadow': $seamlessFirstNameInput.css('box-shadow'),
-            };
-			var hoverStyle = {
-				'border': $seamlessFirstNameInput.css('border'),
-                'color': $seamlessFirstNameInput.css('color'),
-                'background': $seamlessFirstNameInput.css('background'),
+				'padding': $seamlessCardHolderInput.css('padding'),
+				'font-size': $seamlessCardHolderInput.css('font-size'),
+				'font-weight': $seamlessCardHolderInput.css('font-weight'),
+				'font-family': $seamlessCardHolderInput.css('font-family'),
+				'letter-spacing': '0.1px',
+				'word-spacing': '1.7px',
+				'color': $seamlessCardHolderInput.css('color'),
+				'box-shadow': $seamlessCardHolderInput.css('box-shadow'),
+				'position': $seamlessCardHolderInput.css('position'),
 			};
-			var focusStyle = {
-				'border': $seamlessFirstNameInput.css('border'),
-				'color': $seamlessFirstNameInput.css('color'),
-                'background': $seamlessFirstNameInput.css('background'),
-            };
+			var nostyle = {
+				'border': 'none',
+				'border-style': 'none',
+				'border-width': '0px',
+				'box-shadow': 'none',
+			};
+			
             payment = new PaymentJs("1.2");
             payment.init(integrationKey, $seamlessCardNumberInput.prop('id'), $seamlessCvvInput.prop('id'), function (payment) {
 				var numberFocused = false;
 				var cvvFocused = false;
                 payment.setNumberStyle(style);
                 payment.setCvvStyle(style);
-				// Focus Event
 				payment.numberOn('focus', function (data) {
 					numberFocused = false;
-					payment.setNumberStyle(focusStyle);
-					console.log (focusStyle);
+					payment.setNumberStyle(nostyle);
                 });
 				payment.cvvOn('focus', function (data) {
 					cvvFocused = false;
-                })
-				// Blur events
+					payment.setCvvStyle(nostyle);
+                });
                 payment.numberOn('input', function (data) {
                     validNumber = data.validNumber;
 					validBrand = $allowedCards.includes(data.cardType);
@@ -139,31 +135,14 @@
                     validCvv = data.validCvv;
                     validate();
                 });
-				// Hover events
-				payment.numberOn('mouseover', function() {
-					// Don't override style if element is already focused
-					if(! numberFocused) {
-					  payment.setNumberStyle(hoverStyle);
-					}
-				});
-				payment.numberOn('mouseout', function() {
-					// Don't override style if element is already focused
-					if(! numberFocused) {
-					  payment.setNumberStyle(style);
-					}
-				});
-				payment.cvvOn('mouseover', function() {
-					// Don't override style if element is already focused
-					if(! cvvFocused) {
-					  payment.setCvvStyle(hoverStyle);
-					}
-				});
-				payment.cvvOn('mouseout', function() {
-					// Don't override style if element is already focused
-					if(! cvvFocused) {
-					  payment.setCvvStyle(style);
-					}
-				});
+				payment.numberOn('blur', function (data) {
+					cvvFocused = false;
+					payment.setNumberStyle(style);
+                });
+				payment.cvvOn('blur', function (data) {
+					cvvFocused = false;
+					payment.setCvvStyle(style);
+                });
 			});
 			$seamlessForm.show();
             $('input, select', $seamlessForm).on('input', validate);

@@ -702,44 +702,50 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 		<script type="text/javascript" src="' . plugins_url(). '/allsecureexchange/assets/js/allsecure-exchange-validator.js?ver=' . ALLSECURE_EXCHANGE_EXTENSION_VERSION . '"></script>
 		
 		<div id="allsecure_exchange_payee"><p><b>'.__('Payee', 'allsecureexchange') . '</b>: ' . $this->get_option('merchant_name').'</p></div>';
+		
+		// echo '<div id="allsecure_exchange_seamless">
+		echo '<fieldset id="allsecure_exchange_seamless" class="wc-credit-card-form wc-payment-form" style="background:transparent;">';
+		
 		do_action( 'woocommerce_credit_card_form_start', $this->id );
-		echo '<div id="allsecure_exchange_seamless">
-        <input type="hidden" id="allsecure_exchange_token" name="token">
-			<div class="form-row form-row-wide">
+		
+        echo '<input type="hidden" id="allsecure_exchange_token" name="token">
+			<div class="form-row form-row-wide" style="max-width: 100%; padding-left: 0px; padding-right: 0px;" >
 				<label for="allsecure_exchange_seamless_card_number">'.
 				__('Card number', 'allsecureexchange').'</label>
-				<div class="woocommerce-input-wrapper" style="">
-					<div id="allsecure_exchange_seamless_card_number" style="padding: 0; width: 100%;"></div>
-				</div>
+				<span class="woocommerce-input-wrapper" style="width:100%; ">
+					<span id="allsecure_exchange_seamless_card_number" style="padding: 0; width: 100%; display: flex;" ></span>
+				</span>
 			</div>
-			<div class="form-row form-row-first" data-priority="100" style="margin: 0 2% 0 0; width: 48%; float: left; clear: none;"> 
-				<label for="allsecure_exchange_seamless_expiry_date">'.
+			<div class="form-row form-row-first" style=" padding-left: 0px; padding-right: 0px;"> 
+				<label for="allsecure_exchange_seamless_expiry">'.
 				__('Expiration', 'allsecureexchange').'</label>
-				<div class="woocommerce-input-wrapper" style="">
+				<span class="woocommerce-input-wrapper" style="width:100%; ">
 					<input type="hidden" class="input-text " id="allsecure_exchange_seamless_expiry_month">
 					<input type="hidden" class="input-text " id="allsecure_exchange_seamless_expiry_year">
-					<input type="text" id="allsecure_exchange_seamless_expiry" onkeyup="expiryField(event);" onblur="ValidateExpiry();" maxlength = "5" inputmode="tel" class="input-text " placeholder="--/--"autocomplete="off">
-				</div>
+					<input type="text" id="allsecure_exchange_seamless_expiry" onkeyup="expiryField(event);" onblur="ValidateExpiry();" maxlength = "5" inputmode="tel" class="input-text " 
+					style="width: 100%; box-shadow: none; border: #ccc solid;border-width: 1px; background: #fff; " placeholder="--/--" autocomplete="off">
+				</span>
 			</div>
-			<div class="form-row form-row-last " style="margin: 0 0 0 2%; width: 48%; float: left; clear: none;">
+			<div class="form-row form-row-last " style=" padding-left: 0px; padding-right: 0px;">
 				<label for="allsecure_exchange_seamless_cvv">'.
 				__('CVV', 'allsecureexchange').'</label>
-				<div class="woocommerce-input-wrapper" style="">
-					<div id="allsecure_exchange_seamless_cvv" style="padding: 0; width: 100%;"></div>
-				</div>
+				<span class="woocommerce-input-wrapper" style="width:100%; ">
+					<span id="allsecure_exchange_seamless_cvv" style="padding: 0; width: 100%; display: flex;"></span>
+				</span>
 			</div>
-			<div class="form-row form-row-wide" style="clear: both;">
+			<div class="form-row form-row-wide" style="max-width: 100%; padding-left: 0px; padding-right: 0px;">
 				<label for="allsecure_exchange_seamless_card_holder">'.
 				__('Card holder', 'allsecureexchange').'</label>
-				<div class="woocommerce-input-wrapper" style="">
-					<input type="text" id="allsecure_exchange_seamless_card_holder" class="input-text" autocomplete="off">
-				</div>
+				<span class="woocommerce-input-wrapper" style="width:100%; ">
+					<input type="text" id="allsecure_exchange_seamless_card_holder" class="input-text" 
+					style="width: 100%; box-shadow: none; border: #ccc solid;border-width: 1px; background: #fff; " autocomplete="off" >
+				</span>
 			</div>
 			<div id="allsecure_exchange_errors" tabindex="-1">
-			</div>
-			<div class="clear"></div>';
+			</div>';
 			do_action( 'woocommerce_credit_card_form_end', $this->id );
-		echo '</div>';
+			echo '<div class="clear"></div>';
+		echo '</fieldset>';
 		
     }
 
