@@ -1,3 +1,7 @@
+img.allsecure_exchange_creditcard_method {
+    max-height: 24px;
+}
+
 #allsecure_exchange_sandbox {
 	margin: 0 auto 10px auto!important;
 	padding: 3px 0 3px 0;
@@ -62,7 +66,7 @@
 #allsecure_exchange_banner .allsecure_cards {
 	width: 45%;
 	display: flex;
-	border-right: solid #ccc 2px
+	border-left: solid #ccc 2px
 }
 
 #allsecure_exchange_banner .allsecure_bank {

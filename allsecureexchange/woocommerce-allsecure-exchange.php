@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce AllSecure Exchange Extension
  * Plugin URI: https://help.allsecure.xyz
  * Description: AllSecure Exchange for WooCommerce
- * Version: 1.9.1
+ * Version: 1.9.2
  * Tested up to: 5.6
  * Author: AllSecure Exchange Team
  * WC requires at least: 3.6.0

@@ -657,7 +657,9 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 	**/
 	public function get_icon() {
 		$icon_html = $this->allsecure_get_icon();
-		return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id );
+		if ($this->settings['merchant_bank'] !== 'bib') { 
+			return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id );
+		}
 	}
 		
 	function allsecure_get_icon() {
@@ -667,7 +669,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 		if ( isset( $selectedcards ) && '' !== $selectedcards ) {
 			foreach ( $selectedcards as $card ) {
 				$icons = plugins_url(). '/allsecureexchange/assets/images/light/' .strtolower( $card ) . '.svg';
-				$icon_html .= '<img src="' . $icons . '" alt="' . strtolower( $card ) . '" title="' . strtolower( $card ) . '" style="" />';
+				$icon_html .= '<img src="' . $icons . '" alt="' . strtolower( $card ) . '" title="' . strtolower( $card ) . '" class="allsecure_exchange_creditcard_method" style="" />';
 			}
 		}
 		return $icon_html;

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2021-02-01 11:17+0100\n"
-"PO-Revision-Date: 2021-02-01 11:19+0100\n"
+"PO-Revision-Date: 2021-02-24 13:32+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sr\n"
@@ -462,8 +462,7 @@ msgstr "Vaša transakcija nije odobrena. Pokušajte ponovo ili promenite karticu
 
 #: allsecure-exchange-error-list.php:19
 msgid "Quota regulation. Card limit reached"
-msgstr ""
-"Kartica koju ste uneli je premašila limit. Molimo izaberite drugu karticu"
+msgstr "Vaša transakcija nije odobrena. Pokušajte ponovo ili promenite karticu"
 
 #: allsecure-exchange-error-list.php:20
 msgid "Transaction expired. Customer took to long to submit his payment info"
@@ -471,8 +470,7 @@ msgstr "Korisnik nije u predviđenom roku završio transakciju"
 
 #: allsecure-exchange-error-list.php:21
 msgid "Insufficient funds. Card limit reached"
-msgstr ""
-"Kartica koju ste uneli je premašila limit. Molimo izaberite drugu karticu"
+msgstr "Vaša transakcija nije odobrena. Pokušajte ponovo ili promenite karticu"
 
 #: allsecure-exchange-error-list.php:22
 msgid "Incorrect payment info. Double check and try again"
