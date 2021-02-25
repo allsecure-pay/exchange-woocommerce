@@ -1,5 +1,9 @@
 # Release Notes
 
+## v1.9.2 (2021-02-25)
+## Fixed
+- Fixed compliance issues with individual banks
+
 ## v1.9.1 (2021-02-05)
 ## Fixed
 - Seamless form compatibility tested with a number of templates
