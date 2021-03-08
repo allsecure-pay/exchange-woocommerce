@@ -127,6 +127,7 @@
 					payment.setCvvStyle(nostyle);
                 });
                 payment.numberOn('input', function (data) {
+					console.log(data.cardType);
                     validNumber = data.validNumber;
 					validBrand = $allowedCards.includes(data.cardType);
 					validate();

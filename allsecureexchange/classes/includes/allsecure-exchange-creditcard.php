@@ -564,7 +564,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 					'AMEX' => __('AMEX', 'allsecureexchange'),
 					'DINERS' => __('DINERS', 'allsecureexchange'),
 					'JCB'  => __('JCB', 'allsecureexchange'),
-					'DINA'  => __('DINA', 'allsecureexchange'),
+					'DINACARD'  => __('DINA', 'allsecureexchange'),
 				],
 			],
 			
