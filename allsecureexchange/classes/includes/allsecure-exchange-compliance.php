@@ -12,6 +12,7 @@
 		if (strpos($selectedCards, 'DINERS') !== false) {$diners = '<img src="' . plugins_url(). '/allsecureexchange/assets/images/'.$selectedBanner.'/diners.svg">';} else $diners = '';
 		if (strpos($selectedCards, 'JCB') !== false) {$jcb = '<img src="' . plugins_url(). '/allsecureexchange/assets/images/'.$selectedBanner.'/jcb.svg">';} else $jcb = '';
 		if (strpos($selectedCards, 'DINACARD') !== false) {$dinacard = '<img src="' . plugins_url(). '/allsecureexchange/assets/images/'.$selectedBanner.'/dinacard.svg">';} else $dinacard = '';
+		if (strpos($selectedCards, 'DISCOVER') !== false) {$discover = '<img src="' . plugins_url(). '/allsecureexchange/assets/images/'.$selectedBanner.'/discover.svg">';} else $discover = '';
 		$allsecure  = '<a href="https://www.allsecure.rs" target="_new"><img src="' . plugins_url(). '/allsecureexchange/assets/images/'.$selectedBanner.'/allsecure.svg"></a>'; 
 		if ($selectedBank == 'hbm') {
 			$bankUrl = 'https://www.hipotekarnabanka.com/'; 
@@ -30,7 +31,7 @@
 		$vbv = '<img src="' . plugins_url(). '/allsecureexchange/assets/images/'.$selectedBanner.'/visa_secure.svg">';
 		$mcsc = '<img src="' . plugins_url(). '/allsecureexchange/assets/images/'.$selectedBanner.'/mc_idcheck.svg">';
 		$allsecure_cards = $visa.''.$mastercard.''.$maestro.''.$diners.''.$amex.''.$jcb.''.$dinacard ;
-		$allsecure_cards = $visa.''.$mastercard.''.$maestro.''.$diners.''.$amex.''.$jcb.''.$dinacard ;
+		/* $allsecure_cards = $visa.''.$mastercard.''.$maestro.''.$diners.''.$amex.''.$jcb.''.$dinacard ; */
 		if ($selectedBanner !== 'none') {
 			if ($selectedBank == 'none')  {
 				$allsecure_banner = '<div id="allsecure_exchange_banner"><div class="allsecure">'.$allsecure.'</div><div class="allsecure_threeds">'.$vbv.' '.$mcsc.'</div><div class="allsecure_cards">'.$allsecure_cards.'</div></div>';

@@ -86,6 +86,7 @@ function change_statuses_order( $wc_statuses_arr ){
 	return $new_statuses_arr;
 }
 
+
 /* This function hides Refund button */
 add_action('admin_head', 'hide_wc_refund_button');
 function hide_wc_refund_button() {
