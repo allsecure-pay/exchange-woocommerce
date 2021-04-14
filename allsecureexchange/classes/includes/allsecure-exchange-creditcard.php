@@ -50,10 +50,15 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
             wp_register_script('allsecure_exchange_js_' . $this->id, plugins_url('/allsecureexchange/assets/js/allsecure-exchange.js'), [], ALLSECURE_EXCHANGE_EXTENSION_VERSION, false);
         }, 999);
         add_action('woocommerce_api_wc_' . $this->id, [$this, 'process_callback']);
+		/* add_action to parse transactino details in the order confirmation eamil when success */
+		if ($this->get_option('transaction_email') == "yes") {
+			add_action( 'woocommerce_email_after_order_table', [$this,'allsecureexchange_email_after_order_table'], 10, 1);
+		}
 		/* add_action to parse values when success */
 		add_action( 'woocommerce_thankyou', array( $this,'parse_value_allsecureexchange_success') );
 		/* add_action to parse values when error */
 		add_action( 'woocommerce_before_checkout_form', array( $this,'parse_value_allsecureexchange_error'), 10 );
+
         add_filter('script_loader_tag', function ($tag, $handle) {
             if ($handle !== 'payment_js') {
                 return $tag;
@@ -408,12 +413,15 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 		if ($callbackResult->getResult() == \AllsecureExchange\Client\Callback\Result::RESULT_OK) {
             switch ($callbackResult->getTransactionType()) {
                 case \AllsecureExchange\Client\Callback\Result::TYPE_DEBIT:
-               		$this->order->add_meta_data('ExchangeUuid', $callbackResult->getReferenceId(), true); 
+					if ( isset($callbackResult->getextraData()['authCode']) ) {
+						$this->order->add_meta_data('AuthCode', $callbackResult->getextraData()['authCode'], true); 
+						$this->order->add_order_note(sprintf('Auth code: %s', $callbackResult->getextraData()['authCode'])); 
+					}
+					$this->order->add_meta_data('ExchangeUuid', $callbackResult->getReferenceId(), true); 
+					$this->order->add_meta_data('CardData', $callbackResult->getreturnData()->getType().' '. $callbackResult->getreturnData()->getfirstSixDigits() .'****'.$callbackResult->getreturnData()->getlastFourDigits() , true); 
+					$this->order->add_meta_data('TransactionType', $callbackResult->getTransactionType() , true); 
 					$this->order->save_meta_data();
 					$this->order->payment_complete();
-					if ( isset($callbackResult->getextraData()['authCode']) ) {
-						$this->order->add_order_note(sprintf('Auth code: %s', $callbackResult->getextraData()['authCode'] )); 
-					}
 					$this->order->update_status('wc-accepted');
                     break;
 				case \AllsecureExchange\Client\Callback\Result::TYPE_CAPTURE:
@@ -424,12 +432,15 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 					$this->order->update_status('wc-reversed');
                     break;
                 case \AllsecureExchange\Client\Callback\Result::TYPE_PREAUTHORIZE:
+					if ( isset($callbackResult->getextraData()['authCode']) ) {
+						$this->order->add_meta_data('AuthCode', $callbackResult->getextraData()['authCode'], true); 
+						$this->order->add_order_note(sprintf('Auth code: %s', $callbackResult->getextraData()['authCode'])); 
+					}
 					$this->order->add_meta_data('ExchangeUuid', $callbackResult->getReferenceId(), true); 
+					$this->order->add_meta_data('CardData', $callbackResult->getreturnData()->getType().' '. $callbackResult->getreturnData()->getfirstSixDigits() .'****'.$callbackResult->getreturnData()->getlastFourDigits() , true); 
+					$this->order->add_meta_data('TransactionType', $callbackResult->getTransactionType() , true); 
 					$this->order->save_meta_data();
 					$this->order->payment_complete();
-					if ( isset($callbackResult->getextraData()['authCode']) ) {
-						$this->order->add_order_note(sprintf('Auth code: %s', $callbackResult->getextraData()['authCode'] )); 
-					}
                     $this->order->update_status('wc-preauth'); 
                     break;
             }
@@ -565,6 +576,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 					'DINERS' => __('DINERS', 'allsecureexchange'),
 					'JCB'  => __('JCB', 'allsecureexchange'),
 					'DINACARD'  => __('DINA', 'allsecureexchange'),
+					'DISCOVER'  => __('DISCOVER', 'allsecureexchange'),
 				],
 			],
 			
@@ -594,6 +606,15 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 					'light' => __('Light Background', 'allsecureexchange'),
 					'dark' => __('Dark Background', 'allsecureexchange'),
 				],
+				'desc_tip'    => true,
+			],
+			
+			'transaction_email' => [
+				'title'	=> __( 'Transaction Details', 'allsecureexchange' ),
+				'type' 	=> 'checkbox',
+				'label' => __( 'Enable transaction details in the confirmation email', 'allsecureexchange' ),
+				'description' => __( 'When enabled, plugin will add transaction details in the order confirmation email', 'allsecureexchange' ),
+				'default' => 'yes',
 				'desc_tip'    => true,
 			],
 			
@@ -1566,31 +1587,24 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			$currency = $statusResult -> getCurrency();
 			$cardData = $statusResult -> getreturnData();
 			$cardHolder = $cardData -> getcardHolder();
-			$binBrand = $cardData -> getbinBrand();
+			$binBrand = strtoupper($cardData -> getType());
 			$expiryMonth = $cardData -> getexpiryMonth();
 			$expiryYear = $cardData -> getexpiryYear();
 			$firstSixDigits = $cardData -> getfirstSixDigits();
 			$lastFourDigits = $cardData -> getlastFourDigits();
+			$transactionId = $statusResult -> getTransactionUuid() ?? NULL;
 			$extraData = $statusResult -> getextraData();
+			$authCode = $extraData['authCode'] ?? NULL;
 			$timestamp = date("Y-m-d H:i:s");
 			echo "<div class='woocommerce-order'>
-			<h2>". __('Transaction details', 'allsecure_woo').": </h2>
+			<h2>". __('Transaction details', 'allsecureexchange').": </h2>
 			<ul class='woocommerce-order-overview woocommerce-thankyou-order-details order_details'>
-				<li class='woocommerce-order-overview__email email'>" . __('Transaction Codes', 'allsecureexchange' );
-					if ( isset($extraData['authCode']) ) {
-						echo('<strong>'. $extraData['authCode'] .'</strong>');
-					}
-				echo "</li>
-					<li class='woocommerce-order-overview__email email'>". __('Card Type', 'allsecureexchange' ) .
-					"<strong>". $binBrand ." *** ".$lastFourDigits."</strong>
-					</li>
-					<li class='woocommerce-order-overview__email email'>" . __('Payment Type', 'allsecureexchange' ) .
-					"<strong>".$transactionType."</strong>
-					</li>
-					<li class='woocommerce-order-overview__email email'>".  __('Transaction Time', 'allsecureexchange' ) .
-					"<strong>".$timestamp."</strong>
-					</li>
-				</ul>
+				<li class='woocommerce-order-overview__email email'>". __('Transaction Codes', 'allsecureexchange' ). "<strong>". $authCode ."</strong></li>
+				<li class='woocommerce-order-overview__email email'>". __('Transaction ID', 'allsecureexchange' ) . "<strong>". $transactionId ."</strong></li>
+				<li class='woocommerce-order-overview__email email'>". __('Card Type', 'allsecureexchange' ) . 	"<strong>". $binBrand ." *** ".$lastFourDigits."</strong></li>
+				<li class='woocommerce-order-overview__email email'>" . __('Payment Type', 'allsecureexchange' ) .	"<strong>".$transactionType."</strong></li>
+				<li class='woocommerce-order-overview__email email'>".  __('Transaction Time', 'allsecureexchange' ) .	"<strong>".$timestamp."</strong></li>
+			</ul>
 			</div>";
 		}
 		/**
@@ -1602,6 +1616,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			wp_remote_post( $tracking_url, array( 'body' => $merchant_info,'timeout' => 100,));
 		}
 	}
+	
 	function report_payment($order_id) {
 		/**
 		 * gateway client
@@ -1620,6 +1635,24 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 		$statusResult = $client->sendStatusRequest($statusRequestData);
 		return $statusResult;
 	}
+	
+	/* Customize order completed email */
+	function allsecureexchange_email_after_order_table( $order) { 
+		$displayAuthCode = get_post_meta($order->get_id(), 'AuthCode', true ) ?? NULL;
+		$displayTransactionId = get_post_meta($order->get_id(), 'ExchangeUuid', true ) ?? NULL;
+		$displayCardData = strtoupper(get_post_meta($order->get_id(), 'CardData', true )) ?? NULL;
+		$displayTransactionType = strtoupper(get_post_meta($order->get_id(), 'TransactionType', true )) ?? NULL;
+		$displayTimestamp = $order->get_date_created()->date('Y-m-d H:i:s') ?? NULL;
+		echo '<p><h2>'.__('Transaction details', 'allsecureexchange') .'</h2>
+				<address class="address">
+				<b>' . __('Transaction Codes', 'allsecureexchange' ) .':</b> '. $displayAuthCode .'<br>
+				<b>' . __('Transaction ID', 'allsecureexchange' ) .':</b> '. $displayTransactionId .'<br>
+				<b>' . __('Card Type', 'allsecureexchange' ) .':</b> '. $displayCardData .'<br>
+				<b>' . __('Payment Type', 'allsecureexchange' ) .':</b> '. $displayTransactionType .'<br>
+				<b>' .  __('Transaction Time', 'allsecureexchange' ).':</b> '. $displayTimestamp.'
+				</address></p>';
+	} 
+	
 	/**
 	 * Get relevant data for footer display
 	 */
@@ -1632,6 +1665,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 	public function get_merchant_bank (){
 		return $this->get_option('merchant_bank');
 	}
+	
 	/**
 	 * Get general merchants info 
 	 * for version tracker
