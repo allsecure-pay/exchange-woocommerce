@@ -45,106 +45,116 @@ img.allsecure_exchange_creditcard_method {
 .has-error {
 }
 
-#allsecure_exchange_banner {
-	max-width: 1074px;
-	display: flex;
-	margin: 10px auto;
-	padding-bottom: 20px
+div#allsecureexchange_footer{
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-bottom: 20px;
+	padding-top: 20px;
+    max-width: 1074px;
+}
+#allsecureexchange_footer div{
+    height: 50px;
 }
 
-#allsecure_exchange_banner .allsecure {
-	width: 20%;
-	border-right: solid #ccc 2px
+#allsecureexchange_box1{
+    width: 20%;
+    border-right: 1px solid #ccc;
+    margin: 0 auto;
+    text-align: center;
+}
+#allsecureexchange_box2{
+    border-right: 1px solid #ccc;
+    width: 20%;
+    align-items: center; 
+    display: flex; 
+    flex-direction: row; 
+    justify-content: space-between;
+    margin: 0 auto;
+}
+#allsecureexchange_box3{
+    width: 20%;
+    margin: 0 auto;
+    text-align: center;
+}
+#allsecureexchange_box4{
+    border-left: 1px solid #ccc;
+    width: 40%;
+     align-items: center; 
+    display: flex; 
+    flex-direction: row; 
+    justify-content: space-between;
+    margin: 0 auto;
 }
 
-#allsecure_exchange_banner .allsecure_threeds {
-	width: 15%;
-	display: flex;
-	border-right: solid #ccc 2px
+#allsecureexchange_box1 img, #allsecureexchange_box3 img, #allsecureexchange_box2 img , #allsecureexchange_box4 img {
+    height: 30px;
+    border: 0px;
+    display: inline;
+    max-width: 90%;
+	max-height: 90%;
+    margin: 10px auto;
+}
+#allsecureexchange_box1 a, #allsecureexchange_box2 a, #allsecureexchange_box3 a, #allsecureexchange_box4 a {
+  margin: 0px auto;
+  max-height: 100%;
 }
 
-#allsecure_exchange_banner .allsecure_cards {
-	width: 45%;
-	display: flex;
-	border-left: solid #ccc 2px
+@media only screen and (min-width: 601px) {
 }
-
-#allsecure_exchange_banner .allsecure_bank {
-	width: 20%
+	
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 481px) {
+	#allsecureexchange_footer {
+		flex-flow: row wrap;
+	}
+	#allsecureexchange_box1 {
+		order: 3;
+		width: 50%;
+	}
+	#allsecureexchange_box2 {
+		order: 4;
+		width: 50%;
+		border: none;
+	}
+	#allsecureexchange_box3 {
+		order: 2;
+		width: 20%;
+		border: none;
+	}
+	#allsecureexchange_box4 {
+		order: 1;
+		width: 80%;
+		border: none;
+	}
 }
-
-.allsecure img {
-	height: 30px!important;
-	display: block;
-	margin: auto
-}
-
-.allsecure_threeds img {
-	width: 40%;
-	height: 25px!important;
-	display: block;
-	margin: auto;
-	margin-top: 3px
-}
-
-.allsecure_cards img {
-	height: 30px!important;
-	display: block;
-	margin: auto
-}
-
-.allsecure_bank img {
-	height: 30px!important;
-	display: block;
-	margin: auto;
-	max-width: 80%
-}
-
-@media (max-width:480px) {
-	#allsecure_exchange_banner {
+/* Extra small devices (phones, 480px and down) */
+@media only screen and (max-width: 480px) {
+	#allsecureexchange_footer {
 		flex-flow: row wrap;
 		display: flex
 	}
-	#allsecure_exchange_banner .allsecure {
-		order: 2;
-		width: 35%;
-		padding-left: 10px;
-		border: none
-	}
-	#allsecure_exchange_banner .allsecure_threeds {
+	#allsecureexchange_box1 {
 		order: 3;
-		width: 30%;
-		padding-left: 5px;
-		padding-right: 5px;
-		display: inline-flex;
-		border: none
+		width: 50%;
+		border: none;
 	}
-	#allsecure_exchange_banner .allsecure_cards {
+	#allsecureexchange_box2 {
+		order: 4;
+		width: 50%;
+		border: none;
+	}
+	#allsecureexchange_box4 {
 		order: 1;
 		width: 100%;
 		border: none;
-		padding: 0 5px 10px 5px
 	}
-	#allsecure_exchange_banner .allsecure_bank {
-		order: 4;
-		width: 35%;
-		display: block
-	}
-	.allsecure img {
-		width: unset;
-		height: 20px!important;
-		display: block
-	}
-	.allsecure_cards img {
-		height: 25px!important
-	}
-	.allsecure_threeds img {
-		width: 40%;
-		height: 20px!important
-	}
-	.allsecure_bank img {
-		width: unset;
-		height: 20px!important;
-		display: block
+	#allsecureexchange_box3 {
+		order: 2;
+		width: 100%;
+		border: none;
 	}
 }

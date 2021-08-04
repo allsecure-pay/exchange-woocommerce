@@ -1,5 +1,13 @@
 # Release Notes
 
+## v1.9.4 (2021-08-02)
+## Fixed
+- Footer banner display
+
+## v1.9.3 (2021-06-08)
+## Fixed
+- Approval code for NLB bank
+
 ## v1.9.2 (2021-02-25)
 ## Fixed
 - Fixed compliance issues with individual banks

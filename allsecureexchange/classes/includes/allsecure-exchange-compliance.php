@@ -24,21 +24,68 @@
 			$bankUrl = 'https://www.nlb.me/'; 
 		} else if ($selectedBank == 'ckb') {
 			$bankUrl = 'https://www.ckb.me/'; 
-		} else {
+		} else if ($selectedBank == 'rfb-bih') {
+			$bankUrl = 'https://raiffeisenbank.ba/'; 
+		}
+		else {
 			$bankUrl = '#';
 		}
 		$bank = '<a href="'.$bankUrl.'" target="_new" ><img src="' . plugins_url(). '/allsecureexchange/assets/images/'.$selectedBanner.'/'.$selectedBank.'.svg"></a>';
 		$vbv = '<img src="' . plugins_url(). '/allsecureexchange/assets/images/'.$selectedBanner.'/visa_secure.svg">';
 		$mcsc = '<img src="' . plugins_url(). '/allsecureexchange/assets/images/'.$selectedBanner.'/mc_idcheck.svg">';
 		$allsecure_cards = $visa.''.$mastercard.''.$maestro.''.$diners.''.$amex.''.$jcb.''.$dinacard ;
-		/* $allsecure_cards = $visa.''.$mastercard.''.$maestro.''.$diners.''.$amex.''.$jcb.''.$dinacard ; */
+		$blank = '<img src="' . plugins_url(). '/allsecureexchange/assets/images/'.$selectedBanner.'/blank.png">';
 		if ($selectedBanner !== 'none') {
 			if ($selectedBank == 'none')  {
-				$allsecure_banner = '<div id="allsecure_exchange_banner"><div class="allsecure">'.$allsecure.'</div><div class="allsecure_threeds">'.$vbv.' '.$mcsc.'</div><div class="allsecure_cards">'.$allsecure_cards.'</div></div>';
+				$allsecure_banner = '
+				<div id="allsecureexchange_footer">
+					<div id="allsecureexchange_box1">
+						'.$allsecure.'
+					</div>
+					
+					<div id="allsecureexchange_box2">
+						'.$vbv.' '.$mcsc.'
+					</div>
+					<div id="allsecureexchange_box3" style="width:1%;">
+						'.$blank.'
+					</div>
+					<div id="allsecureexchange_box4">
+						'.$allsecure_cards.'
+					</div>
+				</div>';
 			} else if ($selectedBank == 'bib') {	
-				$allsecure_banner = '<div id="allsecure_exchange_banner"><div class="allsecure">'.$allsecure.'</div><div class="allsecure_threeds"><a href="https://rs.visa.com/pay-with-visa/security-and-assistance/protected-everywhere.html" target="_blank">'.$vbv.'</a> <a href="http://www.mastercard.com/rs/consumer/credit-cards.html" target="_blank">'.$mcsc.'</a></div><div class="allsecure_bank">'.$bank.'</div><div class="allsecure_cards">'.$allsecure_cards.'</div></div>';
+				$allsecure_banner = '
+				<div id="allsecureexchange_footer">
+					<div id="allsecureexchange_box1">
+						'.$allsecure.'
+					</div>
+					<div id="allsecureexchange_box2">
+						<a href="https://rs.visa.com/pay-with-visa/security-and-assistance/protected-everywhere.html" target="_blank">'.$vbv.'</a>
+						<a href="http://www.mastercard.com/rs/consumer/credit-cards.html" target="_blank">'.$mcsc.'</a>
+					</div>
+					<div id="allsecureexchange_box3">
+						'.$bank.'
+					</div>
+					<div id="allsecureexchange_box4">
+						'.$allsecure_cards.'
+					</div>
+				</div>';
 			} else {
-				$allsecure_banner = '<div id="allsecure_exchange_banner"><div class="allsecure">'.$allsecure.'</div><div class="allsecure_threeds">'.$vbv.' '.$mcsc.'</div><div class="allsecure_bank">'.$bank.'</div><div class="allsecure_cards">'.$allsecure_cards.'</div></div>';
+				$allsecure_banner = '
+				<div id="allsecureexchange_footer">
+					<div id="allsecureexchange_box1">
+						'.$allsecure.'
+					</div>
+					<div id="allsecureexchange_box2">
+						'.$vbv.' '.$mcsc.'
+					</div>
+					<div id="allsecureexchange_box3">
+						'.$bank.'
+					</div>
+					<div id="allsecureexchange_box4">
+						'.$allsecure_cards.'
+					</div>
+				</div>';
 			}	
 			wp_enqueue_style( 'allsecure_style', plugins_url(). '/allsecureexchange/assets/css/allsecure-exchange-style.css', array(), null );
 			echo  $allsecure_banner;

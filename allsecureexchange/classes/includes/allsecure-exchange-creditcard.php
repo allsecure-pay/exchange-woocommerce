@@ -416,6 +416,9 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 					if ( isset($callbackResult->getextraData()['authCode']) ) {
 						$this->order->add_meta_data('AuthCode', $callbackResult->getextraData()['authCode'], true); 
 						$this->order->add_order_note(sprintf('Auth code: %s', $callbackResult->getextraData()['authCode'])); 
+					} elseif (isset($callbackResult->getextraData()['adapterReferenceId']) ) {
+						$this->order->add_meta_data('AuthCode', $callbackResult->getextraData()['adapterReferenceId'], true); 
+						$this->order->add_order_note(sprintf('Auth code: %s', $callbackResult->getextraData()['adapterReferenceId'])); 
 					}
 					$this->order->add_meta_data('ExchangeUuid', $callbackResult->getReferenceId(), true); 
 					$this->order->add_meta_data('CardData', $callbackResult->getreturnData()->getType().' '. $callbackResult->getreturnData()->getfirstSixDigits() .'****'.$callbackResult->getreturnData()->getlastFourDigits() , true); 
@@ -435,7 +438,10 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 					if ( isset($callbackResult->getextraData()['authCode']) ) {
 						$this->order->add_meta_data('AuthCode', $callbackResult->getextraData()['authCode'], true); 
 						$this->order->add_order_note(sprintf('Auth code: %s', $callbackResult->getextraData()['authCode'])); 
-					}
+					} elseif (isset($callbackResult->getextraData()['adapterReferenceId']) ) {
+						$this->order->add_meta_data('AuthCode', $callbackResult->getextraData()['adapterReferenceId'], true); 
+						$this->order->add_order_note(sprintf('Auth code: %s', $callbackResult->getextraData()['adapterReferenceId'])); 
+					} 
 					$this->order->add_meta_data('ExchangeUuid', $callbackResult->getReferenceId(), true); 
 					$this->order->add_meta_data('CardData', $callbackResult->getreturnData()->getType().' '. $callbackResult->getreturnData()->getfirstSixDigits() .'****'.$callbackResult->getreturnData()->getlastFourDigits() , true); 
 					$this->order->add_meta_data('TransactionType', $callbackResult->getTransactionType() , true); 
@@ -592,6 +598,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 					'bib' => __('Banca Intesa', 'allsecureexchange'),
 					'nlb-mne' => __('NLB Banka Montenegro', 'allsecureexchange'),
 					'ckb' => __('CKB Banka', 'allsecureexchange'),
+					'rfb-bih' => __('Raiffeisen Bank', 'allsecureexchange'),
 				],
 				'desc_tip'    => true,
 			],
@@ -1594,7 +1601,14 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 			$lastFourDigits = $cardData -> getlastFourDigits();
 			$transactionId = $statusResult -> getTransactionUuid() ?? NULL;
 			$extraData = $statusResult -> getextraData();
-			$authCode = $extraData['authCode'] ?? NULL;
+			
+			if ( isset($extraData['authCode']) ) {
+				$authCode = $extraData['authCode'];		
+			} elseif (isset($extraData['adapterReferenceId']) ) {
+				$authCode = $extraData['adapterReferenceId'];	
+			} else {
+				$authCode = NULL;	
+			}
 			$timestamp = date("Y-m-d H:i:s");
 			echo "<div class='woocommerce-order'>
 			<h2>". __('Transaction details', 'allsecureexchange').": </h2>
