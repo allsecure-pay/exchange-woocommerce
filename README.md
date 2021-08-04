@@ -18,9 +18,9 @@ Accept payments in your WooCommerce store using AllSecure **EXCHANGE** Platform.
 
 1. Go to `WooCommerce` > `Settings` > `Payments` in your shop's admin area.
 2. Click on `Set up` on a `AllSecure Exchange` payment method.
-    a. Enter your API and payment method credentials.
-    b. Click on `Save changes`.
-    c. Go back to `Payments` overview.
+  - a. Enter your API and payment method credentials.
+  - b. Click on `Save changes`.
+  - c. Go back to `Payments` overview.
 3. Enable configured `AllSecure Exchange` payment methods.
 
 The active payment methods will be provided to your customers during checkout.
