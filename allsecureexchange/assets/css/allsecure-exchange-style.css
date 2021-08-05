@@ -55,6 +55,7 @@ div#allsecureexchange_footer{
     padding-bottom: 20px;
 	padding-top: 20px;
     max-width: 1074px;
+	margin: 0px auto;
 }
 #allsecureexchange_footer div{
     height: 50px;
@@ -103,11 +104,7 @@ div#allsecureexchange_footer{
   max-height: 100%;
 }
 
-@media only screen and (min-width: 601px) {
-}
-	
-/* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 481px) {
+@media only screen and (max-width: 768px) {
 	#allsecureexchange_footer {
 		flex-flow: row wrap;
 	}
