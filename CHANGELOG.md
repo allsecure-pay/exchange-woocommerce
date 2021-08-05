@@ -1,5 +1,9 @@
 # Release Notes
 
+## v1.9.5 (2021-08-05)
+## Fixed
+- Responsive CSS display
+
 ## v1.9.4 (2021-08-02)
 ## Fixed
 - Footer banner display
