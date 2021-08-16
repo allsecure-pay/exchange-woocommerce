@@ -370,12 +370,13 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
     private function paymentFailedResponse($errors)
     {
 		if ($errors == '000') {
-			$this->order->add_order_note(__('Error in communication', 'allsecureexchange')); 
-			wc_add_notice( __('Error in communication', 'allsecureexchange'), 'error');
+			$this->order->add_order_note(__('Error in communication', 'allsecureexchange').' - '.$errors); 
+			wc_add_notice( __('Error in communication', 'allsecureexchange').' - '.$errors, 'error');
 		} else  {	
+			$this->order->add_order_note(__('Error in communication', 'allsecureexchange').' - '.$errors);
 			include_once( dirname( __FILE__ ) . '/allsecure-exchange-error-list.php' );
 			$error_translated = array_key_exists($errors, $errormsgtranslate) ? $errormsgtranslate[$errors] :  $errors->getMessage();
-			wc_add_notice( $error_translated, 'error'); 
+			wc_add_notice( $error_translated.' - '.$errors, 'error'); 
 		}
 		return [
 				'result' => 'error',

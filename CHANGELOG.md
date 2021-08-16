@@ -1,5 +1,9 @@
 # Release Notes
 
+## v1.9.6 (2021-08-15)
+### Added
+- Show response code when config error
+
 ## v1.9.5 (2021-08-05)
 ## Fixed
 - Responsive CSS display
