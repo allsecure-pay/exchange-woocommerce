@@ -92,7 +92,7 @@ div#allsecureexchange_footer{
 }
 
 #allsecureexchange_box1 img, #allsecureexchange_box3 img, #allsecureexchange_box2 img , #allsecureexchange_box4 img {
-    height: 30px;
+    height: 40px;
     border: 0px;
     display: inline;
     max-width: 90%;
@@ -135,13 +135,13 @@ div#allsecureexchange_footer{
 		display: flex
 	}
 	#allsecureexchange_box1 {
-		order: 3;
-		width: 50%;
+		order: 2;
+		width: 33%;
 		border: none;
 	}
 	#allsecureexchange_box2 {
-		order: 4;
-		width: 50%;
+		order: 3;
+		width: 33%;
 		border: none;
 	}
 	#allsecureexchange_box4 {
@@ -150,8 +150,8 @@ div#allsecureexchange_footer{
 		border: none;
 	}
 	#allsecureexchange_box3 {
-		order: 2;
-		width: 100%;
+		order: 4;
+		width: 33%;
 		border: none;
 	}
 }

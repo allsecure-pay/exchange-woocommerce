@@ -1,27 +1,32 @@
 # Release Notes
 
+## v1.9.7 (2021-10-15)
+### Fixed
+- Amex Logo (small scale) added
+- VISA Logo updated
+
 ## v1.9.6 (2021-08-15)
 ### Added
 - Show response code when config error
 
 ## v1.9.5 (2021-08-05)
-## Fixed
+### Fixed
 - Responsive CSS display
 
 ## v1.9.4 (2021-08-02)
-## Fixed
+### Fixed
 - Footer banner display
 
 ## v1.9.3 (2021-06-08)
-## Fixed
+### Fixed
 - Approval code for NLB bank
 
 ## v1.9.2 (2021-02-25)
-## Fixed
+### Fixed
 - Fixed compliance issues with individual banks
 
 ## v1.9.1 (2021-02-05)
-## Fixed
+### Fixed
 - Seamless form compatibility tested with a number of templates
 
 ## v1.9.0 (2021-01-21)
