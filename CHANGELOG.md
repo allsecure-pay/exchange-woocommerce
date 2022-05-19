@@ -1,5 +1,12 @@
 # Release Notes
 
+## v1.9.8 (2022-04-01)
+### Fixed
+- DinaCard Logo updated
+- VISA Logo updated
+- Payment.js v 1.3 implemented
+- Responsive screen improved
+
 ## v1.9.7 (2021-10-15)
 ### Fixed
 - Amex Logo (small scale) added

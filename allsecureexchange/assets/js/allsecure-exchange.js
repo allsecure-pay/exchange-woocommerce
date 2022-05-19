@@ -112,7 +112,7 @@
 				'box-shadow': 'none',
 			};
 			
-            payment = new PaymentJs("1.2");
+            payment = new PaymentJs("1.3");
             payment.init(integrationKey, $seamlessCardNumberInput.prop('id'), $seamlessCvvInput.prop('id'), function (payment) {
 				var numberFocused = false;
 				var cvvFocused = false;

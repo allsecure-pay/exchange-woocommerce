@@ -56,9 +56,11 @@ div#allsecureexchange_footer{
 	padding-top: 20px;
     max-width: 1074px;
 	margin: 0px auto;
+	
 }
 #allsecureexchange_footer div{
     height: 50px;
+	display:inline-flex;
 }
 
 #allsecureexchange_box1{
@@ -84,20 +86,33 @@ div#allsecureexchange_footer{
 #allsecureexchange_box4{
     border-left: 1px solid #ccc;
     width: 40%;
-     align-items: center; 
+    align-items: center; 
     display: flex; 
     flex-direction: row; 
     justify-content: space-between;
     margin: 0 auto;
+	padding: 1%;
+	
+	
 }
 
-#allsecureexchange_box1 img, #allsecureexchange_box3 img, #allsecureexchange_box2 img , #allsecureexchange_box4 img {
+#allsecureexchange_box4 img {
+	width:10%;
+	height:100%;
+	border: 0px;
+	margin: 10px auto;
+	flex:1;
+
+}
+
+#allsecureexchange_box1 img, #allsecureexchange_box3 img, #allsecureexchange_box2 img  {
     height: 40px;
     border: 0px;
     display: inline;
     max-width: 90%;
 	max-height: 90%;
     margin: 10px auto;
+	flex:1;
 }
 #allsecureexchange_box1 a, #allsecureexchange_box2 a, #allsecureexchange_box3 a, #allsecureexchange_box4 a {
   margin: 0px auto;
@@ -126,32 +141,38 @@ div#allsecureexchange_footer{
 		order: 1;
 		width: 80%;
 		border: none;
+		
 	}
 }
+
 /* Extra small devices (phones, 480px and down) */
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width:768px) and (min-width:10px) {
+
 	#allsecureexchange_footer {
 		flex-flow: row wrap;
-		display: flex
+		display: inline;
 	}
-	#allsecureexchange_box1 {
+	#allsecureexchange_box1, {
 		order: 2;
-		width: 33%;
+		width: 50%;
 		border: none;
 	}
 	#allsecureexchange_box2 {
-		order: 3;
-		width: 33%;
+		order:3;
+		width:50%;
+		border:none;
+	}
+	#allsecureexchange_box3 {
+		order: 4;
+		width: 100%;
 		border: none;
 	}
 	#allsecureexchange_box4 {
 		order: 1;
 		width: 100%;
 		border: none;
+		flex-wrap:wrap;
+		
 	}
-	#allsecureexchange_box3 {
-		order: 4;
-		width: 33%;
-		border: none;
-	}
+	
 }
