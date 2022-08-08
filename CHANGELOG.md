@@ -1,5 +1,10 @@
 # Release Notes
 
+## v1.9.9 (2022-08-08)
+### Fixed
+- Minor translation changes
+- Added success message to email receipt
+
 ## v1.9.8 (2022-04-01)
 ### Fixed
 - DinaCard Logo updated

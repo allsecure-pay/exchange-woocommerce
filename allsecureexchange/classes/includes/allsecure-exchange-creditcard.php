@@ -1660,6 +1660,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 		$displayTimestamp = $order->get_date_created()->date('Y-m-d H:i:s') ?? NULL;
 		echo '<p><h2>'.__('Transaction details', 'allsecureexchange') .'</h2>
 				<address class="address">
+				<b>' . __('Your payment has been successfully received', 'allsecureexchange' ) .':</b> <br>
 				<b>' . __('Transaction Codes', 'allsecureexchange' ) .':</b> '. $displayAuthCode .'<br>
 				<b>' . __('Transaction ID', 'allsecureexchange' ) .':</b> '. $displayTransactionId .'<br>
 				<b>' . __('Card Type', 'allsecureexchange' ) .':</b> '. $displayCardData .'<br>
