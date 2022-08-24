@@ -4,7 +4,7 @@
 - Requires at least: 4.9
 - Tested up to: 5.8.4
 - Requires PHP: 7.1
-- Stable tag: 1.9.9
+- Stable tag: 1.9.10
 - WC requires at least: 3.6.0
 - WC tested up to: 6.1.2
 

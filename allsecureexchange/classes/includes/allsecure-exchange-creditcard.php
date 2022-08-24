@@ -223,11 +223,14 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
                 $result = $client->debit($transaction);
                 break;
         }
-		
 		if ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_ERROR) {
+			
 			$error = $result->getFirstError();
 			$errors = $error->getCode();
-			return $this->paymentFailedResponse($errors);
+			$transactionId = $result->getReferenceId() ?? NULL;
+			$displayAdapterCode = $error->getAdapterCode()?? NULL;
+			$timestamp = date("Y-m-d");  
+			return $this->paymentFailedResponse($errors, $transactionId, $displayAdapterCode);
 		} elseif ($result->getReturnType() == AllsecureExchange\Client\Transaction\Result::RETURN_TYPE_REDIRECT) {
 			// Hosted Page or Seamless+3DS
 			return [
@@ -367,16 +370,18 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 		return $url . '&empty-cart';
 	}
 
-    private function paymentFailedResponse($errors)
+    private function paymentFailedResponse($errors, $transactionId, $displayAdapterCode)
     {
 		if ($errors == '000') {
 			$this->order->add_order_note(__('Error in communication', 'allsecureexchange').' - '.$errors); 
 			wc_add_notice( __('Error in communication', 'allsecureexchange').' - '.$errors, 'error');
 		} else  {	
 			$this->order->add_order_note(__('Error in communication', 'allsecureexchange').' - '.$errors);
+			$timestamp = date("Y-m-d");
 			include_once( dirname( __FILE__ ) . '/allsecure-exchange-error-list.php' );
 			$error_translated = array_key_exists($errors, $errormsgtranslate) ? $errormsgtranslate[$errors] :  $errors->getMessage();
-			wc_add_notice( $error_translated.' - '.$errors, 'error'); 
+			$displayFullError = '<ul><li>'.$error_translated.' - '.$errors.'</li><li><small>OrderId: <b>'.$transactionId.'</b> | Response: <b>'.$displayAdapterCode.'</b> | Date: <b>'.$timestamp.'</b></small></li>';
+			wc_add_notice( $displayFullError , 'error'); 	
 		}
 		return [
 				'result' => 'error',
@@ -1568,14 +1573,21 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 	 */
 	function parse_value_allsecureexchange_error($order_id){
 		if ( isset($_REQUEST['astrxId']) ) {
+			$displayBank = $this->get_option('merchant_bank') ?? NULL;
 			$astrxId = $_REQUEST['astrxId'];
 			$statusResult = $this->report_payment($order_id);
 			$errors = $statusResult->getFirstError();
+			$transactionId = $statusResult -> getTransactionUuid() ?? NULL;
 			include_once( dirname( __FILE__ ) . '/allsecure-exchange-error-list.php' );
 			$resp_code_translated = array_key_exists($errors->getCode(), $errormsgtranslate) ? $errormsgtranslate[$errors->getCode()] :  $errors->getMessage() ;
+			$displayAdapterCode = $errors->getAdapterCode();
+			$timestamp = date("Y-m-d");
 			echo "<div class='woocommerce'><ul class='woocommerce-error' role='alert'>
-			<li>" . sprintf(__('Transaction Unsuccessful. The status message <b>%s</b>', 'allsecureexchange'), $resp_code_translated ) ." * </li>
-			</ul>
+			<li>" . sprintf(__('Transaction Unsuccessful. The status message <b>%s</b>', 'allsecureexchange'), $resp_code_translated ) ." * </li>" ;
+			if ($displayBank == 'bib') {
+				echo "<li><small>OrderId: <b>".$transactionId."</b> | Response: <b>".$displayAdapterCode."</b> | Date: <b>".$timestamp."</b></small></li>";
+			}
+			echo "</ul>
 			</div>";
 		}
 	}
@@ -1626,7 +1638,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 		 * version tracker
 		 */
 		$merchant_info = $this->allsecure_exchange_get_general_merchant_info();
-		$tracking_url = 'https://api.allsecpay.xyz/tracker';
+		$tracking_url = 'https://api.allsecure.xyz/tracker';
 		if($this->get_option('version_tracker') == "yes") {
 			wp_remote_post( $tracking_url, array( 'body' => $merchant_info,'timeout' => 100,));
 		}
@@ -1658,7 +1670,10 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 		$displayCardData = strtoupper(get_post_meta($order->get_id(), 'CardData', true )) ?? NULL;
 		$displayTransactionType = strtoupper(get_post_meta($order->get_id(), 'TransactionType', true )) ?? NULL;
 		$displayTimestamp = $order->get_date_created()->date('Y-m-d H:i:s') ?? NULL;
-		echo '<p><h2>'.__('Transaction details', 'allsecureexchange') .'</h2>
+		$displayPaymentMethod = $order->get_payment_method();
+		// display only if 'allsecure_exchange_creditcard' method
+		if ($displayPaymentMethod == 'allsecure_exchange_creditcard'){ 
+			echo '<p><h2>'.__('Transaction details', 'allsecureexchange') .'</h2>
 				<address class="address">
 				<b>' . __('Your payment has been successfully received', 'allsecureexchange' ) .':</b> <br>
 				<b>' . __('Transaction Codes', 'allsecureexchange' ) .':</b> '. $displayAuthCode .'<br>
@@ -1667,6 +1682,7 @@ class WC_AllsecureExchange_CreditCard extends WC_Payment_Gateway
 				<b>' . __('Payment Type', 'allsecureexchange' ) .':</b> '. $displayTransactionType .'<br>
 				<b>' .  __('Transaction Time', 'allsecureexchange' ).':</b> '. $displayTimestamp.'
 				</address></p>';
+		}		
 	} 
 	
 	/**

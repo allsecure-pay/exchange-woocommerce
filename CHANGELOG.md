@@ -1,16 +1,26 @@
 # Release Notes
 
+## v1.9.10 (2022-08-24)
+### Fixed
+- Success message to email receipt only when allsecure method
+- Display of decline message when syncronous transaction
+- Minor translation changes
+###Added 
+- Additional details when transaction declined
+
 ## v1.9.9 (2022-08-08)
 ### Fixed
 - Minor translation changes
-- Added success message to email receipt
+###Added 
+- success message to email receipt
 
 ## v1.9.8 (2022-04-01)
 ### Fixed
 - DinaCard Logo updated
 - VISA Logo updated
-- Payment.js v 1.3 implemented
 - Responsive screen improved
+### Added
+- Payment.js v 1.3 implemented
 
 ## v1.9.7 (2021-10-15)
 ### Fixed
