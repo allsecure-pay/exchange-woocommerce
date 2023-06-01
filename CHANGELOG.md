@@ -1,5 +1,9 @@
 # Release Notes
 
+## v2.0.0 (2023-06-01)
+### Fixed
+- Upgraded version to support most recent WooCommerce functionalities
+
 ## v1.9.10 (2022-08-24)
 ### Fixed
 - Success message to email receipt only when allsecure method

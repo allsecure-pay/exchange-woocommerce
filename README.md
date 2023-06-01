@@ -1,12 +1,14 @@
 === WooCommerce AllSecure Exchange Extension ===
+- Plugin Name: AllSecure Exchange
+- Description: AllSecure Exchange for WooCommerce
 - Contributors: AllSecure Exchange
 - Tags: Credit Card, e-commerce, payment, checkout
-- Requires at least: 4.9
-- Tested up to: 5.8.4
-- Requires PHP: 7.1
-- Stable tag: 1.9.10
-- WC requires at least: 3.6.0
-- WC tested up to: 6.1.2
+- Requires at least: 4.0
+- Tested up to: 6.2.1
+- Requires PHP: 5.5
+- Stable tag: 2.0.0
+- WC requires at least: 2.4
+- WC tested up to: 7.5.1
 
 Accept payments in your WooCommerce store using AllSecure **EXCHANGE** Platform. See a fully functional WooCommerce <a href="http://demo.allsecure.xyz/cart/exchange/woo" target="_new">demo store</a> with AllSecure **EXCHANGE** as a payment gateway.
 
