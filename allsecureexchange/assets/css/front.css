@@ -1,0 +1,13 @@
+#allsecure-payment-form .invalid-feedback{
+    display: none;
+    font-size: 15px;
+    color: darkred;
+}
+#allsecurepay_cc_number {
+    display:block !important; 
+    max-height: 50px !important;   
+}
+#allsecurepay_cc_cvv {
+    display:block !important; 
+    max-height: 50px !important; 
+}

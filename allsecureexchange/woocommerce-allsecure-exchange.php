@@ -2,7 +2,7 @@
 /*
 Plugin Name: AllSecure Exchange
 Description: AllSecure Exchange for WooCommerce
-Version: 2.0.0
+Version: 2.0.1
 Requires at least: 4.0
 Tested up to: 6.2.1
 WC requires at least: 2.4
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-define('ALLSECUREEXCHANGE_VERSION', '2.0.0');
+define('ALLSECUREEXCHANGE_VERSION', '2.0.1');
 define('ALLSECUREEXCHANGE_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('ALLSECUREEXCHANGE_PLUGIN_PATH', plugin_dir_path(__FILE__));
 
@@ -110,7 +110,7 @@ function woocommerce_allsecureexchange_init() {
             $this->transaction_confirmation_page = $this->get_option('transaction_confirmation_page');
             $this->success_order_status = 'processing';
             $this->debug = $this->get_option('debug');
-            
+            $this->logo_style = $this->get_option('logo_style');
             $this->has_fields = true;
             
 	    // Load the settings.
@@ -263,6 +263,17 @@ function woocommerce_allsecureexchange_init() {
                     'label' => __(' ', $this->domain),
                     'default' => 'no'
                 ),
+               'design_details' => array(
+                    'title' => __('Style Details', 'allsecureexchange' ),
+                    'type' => 'title',
+                ),
+                'logo_style' => array(
+                    'title' => __('Logo Style', $this->domain),
+                    'type' => 'textarea',
+                    'description' => __('If payment logos are not displayed properly on your site theme, please add styles here to fix that or contact the developer they may write matching styles to your theme and paste it here.', $this->domain),
+                    'default' => $this->logo_style,
+                    'desc_tip' => false,
+                ), 
             );
 
             $this->form_fields = $field_arr;
@@ -332,7 +343,7 @@ function woocommerce_allsecureexchange_init() {
                             $extn = 'png';
                         }
                         ?>
-                        <img src="<?php echo ALLSECUREEXCHANGE_PLUGIN_URL. '/assets/images/'.$card.'.'.$extn; ?>" alt="<?php echo esc_attr( $card )?>">
+                        <img src="<?php echo ALLSECUREEXCHANGE_PLUGIN_URL. '/assets/images/'.$card.'.'.$extn; ?>" alt="<?php echo esc_attr( $card )?>" style="<?php echo $this->logo_style?>">
                         <?php
                     }
                 ?>
@@ -752,6 +763,9 @@ function woocommerce_allsecureexchange_init() {
          * @return void
          */
         function payment_fields() { 
+            wp_enqueue_script('allsecure_paymentjs');
+            wp_enqueue_script('allsecure_exchange_js');
+            
             if (isset($_REQUEST['egassemrorre']) && !empty($_REQUEST['egassemrorre']) )  {
                 $egassemrorre = sanitize_text_field($_REQUEST['egassemrorre']);
                 $message = base64_decode($egassemrorre);
@@ -776,19 +790,17 @@ function woocommerce_allsecureexchange_init() {
             
             if ($display) {
             ?>
+            <script>
+                window.public_integration_key = '<?php echo $this->integration_key?>';
+                window.card_supported = '<?php echo strtolower(implode(',',$this->card_supported))?>';
+            </script>
+            <script type="text/javascript" src="<?php echo ALLSECUREEXCHANGE_PLUGIN_URL.'/assets/js/allsecure-exchange.js?ver=' . ALLSECUREEXCHANGE_VERSION?>"></script>
+            <script type="text/javascript" src="<?php echo ALLSECUREEXCHANGE_PLUGIN_URL.'/assets/js/allsecure-exchange-validator.js?ver=' . ALLSECUREEXCHANGE_VERSION?>"></script>
             <div class="form-row form-row-wide">
                 <?php if (!empty($this->description)) {?>
                 <p><?php echo $this->description; ?></p>
                 <?php } ?>
-                
-                <style>
-                    #allsecure-payment-form .invalid-feedback{
-                        display: none;
-                        font-size: 15px;
-                        color: darkred;
-                    }
-                 </style>
-                
+
                 <div id="allsecure-payment-form">
                     <input type="hidden" id="allsecurepay_transaction_token" name="allsecurepay_transaction_token" />
                     <p><strong><?php echo __('Credit Card Information', $this->domain)?></strong></p>
@@ -806,7 +818,7 @@ function woocommerce_allsecureexchange_init() {
                     </p>
                     <p class="form-row form-row-wide">
                         <label for="allsecurepay_cc_number" class=""><?php echo __('Card Number', $this->domain)?>&nbsp;<abbr class="required" title="required">*</abbr></label>
-                        <span class="woocommerce-input-wrapper" id="allsecurepay_cc_number" style="display:block; height: 50px;">
+                        <span class="woocommerce-input-wrapper" id="allsecurepay_cc_number" style="">
                             <img src="<?php echo ALLSECUREEXCHANGE_PLUGIN_URL?>/assets/images/loadingAnimation.gif" class="allsecurepay-field-loader" />
                         </span>
                         <span id="allsecurepay_cc_number-error" class="invalid-feedback">
@@ -826,7 +838,8 @@ function woocommerce_allsecureexchange_init() {
                                 maxlength = "5"
                                 inputmode="tel"
                                 placeholder="--/--"
-                                autocomplete="off" />
+                                autocomplete="off"
+                             />
                         </span>
                         <span id="allsecurepay_expiration-required-error" class="invalid-feedback">
                             <?php echo __('This is a required field.', $this->domain)?>
@@ -836,8 +849,8 @@ function woocommerce_allsecureexchange_init() {
                         </span>
                     </p>
                     <p class="form-row form-row-last">
-                        <label for="allsecurepay_cc_name" class=""><?php echo __('CVV', $this->domain)?>&nbsp;<abbr class="required" title="required">*</abbr></label>
-                        <span class="woocommerce-input-wrapper" id="allsecurepay_cc_cvv" style="display:block; height: 50px;">
+                        <label for="allsecurepay_cc_cvv" class=""><?php echo __('CVV', $this->domain)?>&nbsp;<abbr class="required" title="required">*</abbr></label>
+                        <span class="woocommerce-input-wrapper" id="allsecurepay_cc_cvv">
                             <img src="<?php echo ALLSECUREEXCHANGE_PLUGIN_URL?>/assets/images/loadingAnimation.gif" class="allsecurepay-field-loader" />
                         </span>
                         <span id="allsecurepay_cc_cvv-error" class="invalid-feedback">
@@ -845,315 +858,6 @@ function woocommerce_allsecureexchange_init() {
                         </span>
                     </p>
                 </div>
-                 
-                <script type="text/javascript">
-                var allsecurepayPayment;    
-                var public_integration_key = '<?php echo $this->integration_key?>';
-                var isCardNumberValid = false;
-                var isCardCvvValid = false;
-                var isCardTypesAllowedValid = false;
-                var isValidBrand = false;
-                var isPaymentJsEnabled = false;
-                
-                var card_supported = '<?php echo strtolower(implode(',',$this->card_supported))?>';
-                var allsecurePaymentForm = jQuery('#allsecure-payment-form').closest('form');
-
-                var isPaymentjsAvailable = false;
-
-                jQuery(document).ready(function() {
-                    checkPaymentjsAvailable();
-                    function checkPaymentjsAvailable() {
-                        if (isPaymentjsAvailable) {
-                            return;
-                        }
-
-                        if (typeof(PaymentJs) !== "undefined") {
-                            isPaymentjsAvailable = true;
-                            
-                            allsecurepayPayment = new PaymentJs();
-
-                            allsecurepayPayment.init(public_integration_key, 'allsecurepay_cc_number', 'allsecurepay_cc_cvv', function(payment) {
-                                var numberStyle = {
-                                    'display':'block',
-                                    'color': '#000',
-                                    'width': '99.5%',
-                                    'background': '#ffffff',
-                                    'border-color': '#dcd7ca',
-                                    'border-radius': '0',
-                                    'border-style': 'solid',
-                                    'border-width': '1px',
-                                    'font-size': '16px',
-                                    'letter-spacing': '-0.015em',
-                                    'margin': '0',
-                                    'max-width': '100%',
-                                    'padding': '0.95rem 0.75rem',
-                                    'box-shadow': 'none',
-                                    'box-sizing': 'border-box',
-                                };
-                                var cvvStyle = {
-                                    'display':'block',
-                                    'color': '#000',
-                                    'width': '100%',
-                                    'background': '#ffffff',
-                                    'border-color': '#dcd7ca',
-                                    'border-radius': '0',
-                                    'border-style': 'solid',
-                                    'border-width': '1px',
-                                    'font-size': '16px',
-                                    'letter-spacing': '-0.015em',
-                                    'margin': '0',
-                                    'max-width': '100%',
-                                    'padding': '0.95rem 0.75rem',
-                                    'box-shadow': 'none',
-                                    'box-sizing': 'border-box',
-                                };
-
-                                // Set the initial style
-                                allsecurepayPayment.setNumberStyle(numberStyle);
-                                allsecurepayPayment.setCvvStyle(cvvStyle);
-
-                                allsecurepayPayment.numberOn('input', function(data) {
-                                    if (data.validNumber) {
-                                        isCardNumberValid = true;
-                                    } else {
-                                        isCardNumberValid = false;
-                                    }
-
-                                    if (card_supported.includes(data.cardType)) {
-                                        isValidBrand = true;
-                                    } else {
-                                        isValidBrand = false;
-                                    }
-                                })
-
-                                allsecurepayPayment.cvvOn('input', function(data) {
-                                    if (data.validCvv) {
-                                        isCardCvvValid = true;
-                                    } else {
-                                        isCardCvvValid = false;
-                                    }
-                                })
-                            });
-
-                        } else {
-                            setTimeout(checkPaymentjsAvailable, 500);
-                        }
-                    }
-
-                    jQuery(document).keyup('#allsecurepay_expiration_date', function () {
-                        allsecurepayExpiryField();
-                    });
-
-                    jQuery(document).blur('#allsecurepay_expiration_date', function () {
-                        allsecurepayValidateExpiry();
-                    });
-                });
-
-                function allsecurepayExpiryField() 
-                {
-                    if (event.target.id == 'allsecurepay_expiration_date') {
-                        String.fromCharCode(event.keyCode);
-                        var a = event.keyCode; - 1 === [8].indexOf(a) && (event.target.value = event.target.value.replace(/^([1-9]\/|[2-9])$/g, "0$1/").replace(/^(0[1-9]|1[0-2])$/g, "$1/").replace(/^([0-1])([3-9])$/g, "0$1/$2").replace(/^(0?[1-9]|1[0-2])([0-9]{2})$/g, "$1/$2").replace(/^([0]+)\/|[0]+$/g, "0").replace(/[^\d\/]|^[\/]*$/g, "").replace(/\/\//g, "/"));
-                    }
-                }
-                function allsecurepayValidateExpiry()
-                {
-                    var expiryDate = jQuery("#allsecurepay_expiration_date").val();
-                    expiryDate = expiryDate.split("/");
-                    var month = expiryDate[0];
-                    var year = expiryDate[1];
-                    jQuery("#allsecurepay_expiration_month").val(month);
-                    jQuery("#allsecurepay_expiration_year").val(20 + year);
-                }
-                function validateCardData()
-                {
-                    var valid = true;
-
-                    var isCardHolderNameValid = validateCardHolderName();
-                    var isCardExpirationDateValid = validateCardExpirationDate();
-                    var isCardSecureDataValid = validateCardSecureData(); 
-
-                    if (!(isCardHolderNameValid && isCardExpirationDateValid && isCardSecureDataValid)) {
-                        valid = false;
-                    }
-
-                    return valid;
-                }
-                function validateCardHolderName()
-                {
-                    var valid = true;
-                    var cardHolderNameRegex = /^[a-z ,.'-]+$/i;
-
-                    jQuery('#allsecurepay_cc_name-required-error').hide();
-                    jQuery('#allsecurepay_cc_name-invalid-error').hide();
-
-                    jQuery('#allsecurepay_expiration-required-error').hide();
-                    jQuery('#allsecurepay_expiration-invalid-error').hide();
-                    jQuery('#allsecurepay_expiration_year-error').hide();
-
-                    jQuery('#allsecurepay_cc_number-error').hide();
-                    jQuery('#allsecurepay_cc_cvv-error').hide();
-                    jQuery('#allsecurepay_cc_number-not-supported-error').hide();
-
-                    var cardHolderName = jQuery("#allsecurepay_cc_name").val();
-                    if(cardHolderName == "") {
-                        jQuery('#allsecurepay_cc_name-required-error').show()
-                        valid = false;
-                    } else if(!cardHolderNameRegex.test(cardHolderName)) {
-                        jQuery('#allsecurepay_cc_name-invalid-error').show()
-                        valid = false;
-                    }
-
-                    return valid;
-                }
-                function validateCardExpirationDate()
-                {
-                    var valid = true;
-
-                    allsecurepayValidateExpiry();
-
-                    jQuery('#allsecurepay_expiration-required-error').hide();
-                    jQuery('#allsecurepay_expiration-invalid-error').hide();
-                    jQuery('#allsecurepay_expiration_year-error').hide();
-
-                    var cardExpiryDate = jQuery("#allsecurepay_expiration_date").val();
-                    var cardExpiryMonth = jQuery("#allsecurepay_expiration_month").val();
-                    var cardExpiryYear = jQuery("#allsecurepay_expiration_year").val();
-
-                    if(cardExpiryDate === "") {
-                        jQuery('#allsecurepay_expiration-required-error').show();
-                        valid = false;
-                    } else {
-                        if(cardExpiryMonth === "") {
-                            jQuery('#allsecurepay_expiration-invalid-error').show();
-                            valid = false;
-                        } else if(cardExpiryYear === "") {
-                            jQuery('#allsecurepay_expiration-invalid-error').show();
-                            valid = false;
-                        }
-                    }
-
-                    if (valid) {
-                        var minMonth = new Date().getMonth() + 1;
-                        var minYear = new Date().getFullYear();
-                        var month = parseInt(cardExpiryMonth, 10);
-                        var year = parseInt(cardExpiryYear, 10);
-
-                        if ( !( 
-                                (year > minYear) || 
-                                ((year === minYear) && (month >= minMonth)) 
-                              )
-                        ) {
-                            jQuery('#allsecurepay_expiration-invalid-error').show();
-                            valid = false;
-                        }
-                    }
-
-                    return valid;
-                }
-                function validateCardSecureData()
-                {
-                    var valid = true;
-
-                    jQuery('#allsecurepay_cc_number-error').hide();
-                    jQuery('#allsecurepay_cc_cvv-error').hide();
-                    jQuery('#allsecurepay_cc_number-not-supported-error').hide();
-
-                    if (!isCardNumberValid) {
-                        jQuery('#allsecurepay_cc_number-error').show();
-                        valid = false;
-                    } else if (!isValidBrand) {
-                        jQuery('#allsecurepay_cc_number-not-supported-error').show();
-                        valid = false;
-                    }
-                    if (!isCardCvvValid) {
-                        jQuery('#allsecurepay_cc_cvv-error').show();
-                        valid = false;
-                    }
-
-                    return valid;
-                }
-                
-                function handleErrors()
-                {
-                    jQuery.each(errors, function(key, value) {
-                        var errorattribute = value.attribute;
-                        var errorkey = value.key;
-                        var errormessage = value.message;
-
-                        if (errorattribute == 'integration_key') {
-                            let message = '<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-checkout"><div class="woocommerce-error">'+errormessage+'</div></div>';
-                            jQuery('.woocommerce-notices-wrapper:first').html(message);
-                        } else if (errorattribute == 'number') {
-                            jQuery('#allsecurepay_cc_number-error').show();
-                        } else if (errorattribute ==  'cvv' ) {
-                            jQuery('#allsecurepay_cc_cvv-error').show();
-                        } else if (errorattribute == 'card_holder') {
-                            if (errorkey == 'errors.blank') {
-                                jQuery('#allsecurepay_cc_name-required-error').show();
-                            } else {
-                                jQuery('#allsecurepay_cc_name-invalid-error').show();
-                            }
-                        } else if (errorattribute == 'month') {
-                            if (errorkey == 'errors.blank') {
-                                jQuery('#allsecurepay_expiration-required-error').show();
-                            } else {
-                                jQuery('#allsecurepay_expiration-invalid-error').show();
-                            }
-                        } else if (errorattribute == 'year') {
-                            if (errorkey == 'errors.blank') {
-                                jQuery('#allsecurepay_expiration_year-error').show();
-                            } else {
-                                jQuery('#allsecurepay_expiration-invalid-error').show();
-                            }
-                        }
-                    });  
-                }
-                
-                jQuery('#place_order').on('click', function (e) {
-                    var element = this;
-                    
-                    if (jQuery("form[name='checkout'] input[name='payment_method']:checked").val() == 'allsecureexchange') {
-                        var isValid = validateCardData();
-                        
-
-                        if (isValid) {
-                            jQuery(element).prop('disabled', true).addClass('loading');
-                            
-                            var cardHolderName = jQuery("#allsecurepay_cc_name").val();
-                            var cardExpiryMonth = jQuery("#allsecurepay_expiration_month").val();
-                            var cardExpiryYear = jQuery("#allsecurepay_expiration_year").val();
-
-                            var cardRequestData = {
-                                card_holder: cardHolderName,
-                                month: cardExpiryMonth,
-                                year: cardExpiryYear
-                            };
-                            
-                            try {
-                                allsecurepayPayment.tokenize(
-                                    cardRequestData,
-                                    function (token, cardData) {
-                                        jQuery('#allsecurepay_transaction_token').val(token);
-                                        allsecurePaymentForm.submit();
-                                        return true;
-                                    },
-                                    function (errors) {
-                                        handleErrors(errors);
-                                        jQuery(element).prop('disabled', false).removeClass('loading');
-                                     }
-                                );
-                            } catch (err) {
-                                //alert(err);
-                            }
-                        } else {
-                            jQuery(element).prop('disabled', false).removeClass('loading');
-                        }
-                    }
-                    return false;
-                });
-                </script>
-   
             </div>
             <?php
             }
@@ -1688,13 +1392,15 @@ function woocommerce_allsecureexchange_init() {
         * Add JS files to the frontend
         */
         public function load_front_assets() {
-            if ( is_checkout() ) {         
-                 if ($this->checkout_mode == 'paymentjs') {
+            if ( is_checkout() ) {
+                wp_enqueue_style( 'hitpay-css', ALLSECUREEXCHANGE_PLUGIN_URL.'/assets/css/front.css', array(), ALLSECUREEXCHANGE_VERSION, 'all' );
+                if ($this->checkout_mode == 'paymentjs') {
                     $payment_js = 'https://asxgw.com/js/integrated/payment.1.3.min.js';
                     if ($this->operation_mode == 'test') {
                         $payment_js = 'https://asxgw.paymentsandbox.cloud/js/integrated/payment.1.3.min.js';
                     }
-                    wp_enqueue_script( 'allsecure_paymentjs', $payment_js );
+                    wp_register_script('allsecure_paymentjs', $payment_js, [], ALLSECUREEXCHANGE_VERSION, false);
+                    wp_register_script('allsecure_exchange_js', ALLSECUREEXCHANGE_PLUGIN_URL.'/assets/js/allsecure-exchange.js', [], ALLSECUREEXCHANGE_VERSION, false);
                 }
             }  
         }
