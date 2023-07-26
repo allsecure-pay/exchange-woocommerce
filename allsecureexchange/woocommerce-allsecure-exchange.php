@@ -2,7 +2,7 @@
 /*
 Plugin Name: AllSecure Exchange
 Description: AllSecure Exchange for WooCommerce
-Version: 2.0.1
+Version: 2.0.2
 Requires at least: 4.0
 Tested up to: 6.2.1
 WC requires at least: 2.4
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-define('ALLSECUREEXCHANGE_VERSION', '2.0.1');
+define('ALLSECUREEXCHANGE_VERSION', '2.0.2');
 define('ALLSECUREEXCHANGE_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('ALLSECUREEXCHANGE_PLUGIN_PATH', plugin_dir_path(__FILE__));
 

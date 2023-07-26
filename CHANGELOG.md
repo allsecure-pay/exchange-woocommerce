@@ -1,9 +1,12 @@
 # Release Notes
 
-## v2.0.1 (2023-07-15)
+## v2.0.2 (2023-07-15)
+### Fixed
+- Result page when sync transaction
+
+## v2.0.1 (2023-06-15)
 ### Fixed
 - Seamless form compatibility tested with a number of templates
-- Result page when sync transaction
 
 ## v2.0.0 (2023-06-01)
 ### Fixed
