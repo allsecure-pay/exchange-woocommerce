@@ -40,7 +40,7 @@ use Exchange\Client\Transaction\VoidTransaction as AllsecureVoidTransaction;
 */
 add_action('init', 'load_textdomain_and_add_custom_order_status');
 function load_textdomain_and_add_custom_order_status() {
-    load_plugin_textdomain( 'allsecureexchange', FALSE, ALLSECUREEXCHANGE_PLUGIN_PATH."languages");
+    load_plugin_textdomain( 'allsecureexchange', FALSE, dirname(plugin_basename(__FILE__))."/languages");
     register_post_status( 'wc-authorised', 
         array(
             'label'                     => __( 'Authorised', 'allsecureexchange'),
@@ -440,7 +440,7 @@ function woocommerce_allsecureexchange_init() {
                         
                         return [
                             'result' => 'success',
-                            'redirect' => $this->get_return_url($order)
+                            'redirect' => add_query_arg( 'order_id', $order_id, $this->get_return_url( $order ))
 			];
                     } elseif ($result->getReturnType() == AllsecureResult::RETURN_TYPE_FINISHED) {
                         //payment is finished, update your cart/payment transaction
@@ -458,7 +458,7 @@ function woocommerce_allsecureexchange_init() {
                         
                             return [
                                 'result' => 'success',
-                                'redirect' => $this->get_return_url($order)
+                                'redirect' => add_query_arg( 'order_id', $order_id, $this->get_return_url( $order ))
                             ];
                         } else {
                             $order->add_meta_data($this->prefix.'status', 'preauthorized', true);
@@ -474,13 +474,17 @@ function woocommerce_allsecureexchange_init() {
                         
                             return [
                                 'result' => 'success',
-                                'redirect' => $this->get_return_url($order)
+                                'redirect' => add_query_arg( 'order_id', $order_id, $this->get_return_url( $order ))
                             ];
                         }
                     }
                 } else {
                     // handle error
-                    $errorCode = $result->getErrorCode();
+                    $error = $result->getFirstError();
+                    $errorCode = $error->getCode();
+                    if (empty($errorCode)) {
+                        $errorCode = $error->getAdapterCode();
+                    }
                     $errorMessage = $this->getErrorMessageByCode($errorCode);
                     throw new \Exception($errorMessage);
                 }

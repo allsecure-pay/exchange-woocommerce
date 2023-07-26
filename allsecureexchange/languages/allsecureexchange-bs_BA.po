@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2023-06-15 14:02+0200\n"
-"PO-Revision-Date: 2023-06-15 14:04+0200\n"
+"PO-Revision-Date: 2023-06-29 14:55+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: bs\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.3.2\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
 "_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_ex:1,2c;"
@@ -57,7 +57,7 @@ msgstr "Opis metoda plaćanja"
 
 #: woocommerce-allsecure-exchange.php:148
 msgid "Credit Card"
-msgstr ""
+msgstr "Kreditna Kartica"
 
 #: woocommerce-allsecure-exchange.php:152
 msgid "Description"
@@ -233,7 +233,7 @@ msgstr "Kartice koje prihvatate"
 
 #: woocommerce-allsecure-exchange.php:233
 msgid "Select the cards which you would like to accept"
-msgstr ""
+msgstr "Izaberite kartice koje želite da prihvatate"
 
 #: woocommerce-allsecure-exchange.php:235
 msgid "VISA"
@@ -275,23 +275,24 @@ msgstr "Detalji transakcije"
 
 #: woocommerce-allsecure-exchange.php:249
 msgid "Enable transaction details in the confirmation email"
-msgstr ""
+msgstr "Omogućite detalje transakcije u email-u potvrde"
 
 #: woocommerce-allsecure-exchange.php:251
 msgid ""
 "When enabled, plugin will add transaction details in the order confirmation "
 "email."
-msgstr ""
+msgstr "Kada aktivirate, plugin će dodati detalje transakcije u email potvrde."
 
 #: woocommerce-allsecure-exchange.php:256
 msgid "Enable transaction details in the confirmation page"
-msgstr ""
+msgstr "Omogućite detalje transakcije na stranici za potvrdu."
 
 #: woocommerce-allsecure-exchange.php:258
 msgid ""
 "When enabled, plugin will add transaction details in the order confirmation "
 "page."
 msgstr ""
+"Kada aktivirate, plugin će dodati detalje transakcije na stranici za potvrdu."
 
 #: woocommerce-allsecure-exchange.php:261
 msgid "Debug"
@@ -312,34 +313,42 @@ msgid ""
 "styles to your theme and paste it here. (as an example, enter display:none; "
 "for hidding the icons."
 msgstr ""
+"Ukoliko ikonice platnih kartica nisu prikazane na odgovarajući način kada "
+"koristite svoju izabranu temu, možete na ovom mjestu primijeniti stilizaciju "
+"koja će ispraviti prikaz. (kao primer, ukoliko ne želite da prikažete "
+"ikonice, možete uneti display:none; )."
 
 #: woocommerce-allsecure-exchange.php:290
 msgid "Please enter Allsecure Exchange API User"
-msgstr ""
+msgstr "Molimo unesite API User, koji ste dobili od AllSecure."
 
 #: woocommerce-allsecure-exchange.php:292
 msgid "Please enter Allsecure Exchange API Password"
-msgstr ""
+msgstr "Molimo unesite API Password, koji ste dobili do AllSecure."
 
 #: woocommerce-allsecure-exchange.php:294
 msgid "Please enter Allsecure Exchange API Key"
-msgstr ""
+msgstr "Molimo unesite API Key, koji ste dobili od AllSecure."
 
 #: woocommerce-allsecure-exchange.php:296
 msgid "Please enter allsecureexchange API Shared Secret"
-msgstr ""
+msgstr "Molimo unesite Shared Secret, koji ste dobili od Allsecure."
 
 #: woocommerce-allsecure-exchange.php:301
 msgid ""
 "Please enter Allsecure Exchange Public Integration Key since Payment.js "
 "checkout option is enabled."
 msgstr ""
+"Molimo unesite Public Integration Key, pošto je omogućena opcija plaćanja "
+"Paiment.js."
 
 #: woocommerce-allsecure-exchange.php:304
 msgid ""
 "Please select atleast one card type since Payment.js checkout option is "
 "enabled."
 msgstr ""
+"Izaberite najmanje jedan tip kartice pošto je omogućena opcija plaćanja "
+"Paiment.js."
 
 #: woocommerce-allsecure-exchange.php:385
 #, fuzzy
@@ -352,12 +361,16 @@ msgid ""
 "Allsecure Exchange payment request is created successfully and but payment "
 "debt status received as pending."
 msgstr ""
+"Izaberite najmanje jedan tip kartice pošto je omogućena opcija plaćanja "
+"Paiment.js."
 
 #: woocommerce-allsecure-exchange.php:432
 msgid ""
 "Allsecure Exchange payment request is created successfully and but payment "
 "preauthorize status received as pending."
 msgstr ""
+"Zahtev za plaćanje je uspešno kreiran, status preautorizacije plaćanja je "
+"primljen na čekanju."
 
 #: woocommerce-allsecure-exchange.php:435
 #: woocommerce-allsecure-exchange.php:451
@@ -399,24 +412,24 @@ msgstr "Plaćanje neuspješno"
 #: woocommerce-allsecure-exchange.php:1295
 #: woocommerce-allsecure-exchange.php:1374
 msgid "No order data received"
-msgstr ""
+msgstr "Nisu primljeni podaci o porudžbini"
 
 #: woocommerce-allsecure-exchange.php:591
 #: woocommerce-allsecure-exchange.php:736
 msgid "Error from gateway."
-msgstr ""
+msgstr "Greška na mreži."
 
 #: woocommerce-allsecure-exchange.php:618
 msgid "Your order is cancelled."
-msgstr ""
+msgstr "Vaša porudžbina je otkazana"
 
 #: woocommerce-allsecure-exchange.php:643
 msgid "Callback validation failed."
-msgstr ""
+msgstr "Validacija callback poziva nije uspjela."
 
 #: woocommerce-allsecure-exchange.php:657
 msgid "Merchant transaction id validation failed."
-msgstr ""
+msgstr "Provjera ID transakcije trgovca nije uspjela."
 
 #: woocommerce-allsecure-exchange.php:688
 #: woocommerce-allsecure-exchange.php:1274
@@ -434,11 +447,11 @@ msgstr "Preautorizacija uspješno otkazana"
 #: woocommerce-allsecure-exchange.php:1371
 #: woocommerce-allsecure-exchange.php:1734
 msgid "Unknown error"
-msgstr ""
+msgstr "Nepoznata greška"
 
 #: woocommerce-allsecure-exchange.php:806
 msgid "Credit Card Information"
-msgstr ""
+msgstr "Informacije o kreditnoj kartici"
 
 #: woocommerce-allsecure-exchange.php:808
 msgid "Card holder"
@@ -447,11 +460,11 @@ msgstr "Korisnik kartice"
 #: woocommerce-allsecure-exchange.php:813
 #: woocommerce-allsecure-exchange.php:845
 msgid "This is a required field."
-msgstr ""
+msgstr "Ovo je obavezno polje."
 
 #: woocommerce-allsecure-exchange.php:816
 msgid "Please enter a valid card holder name in this field."
-msgstr ""
+msgstr "Unesite važeće ime vlasnika kartice u ovo polje."
 
 #: woocommerce-allsecure-exchange.php:820
 #, fuzzy
@@ -462,11 +475,11 @@ msgstr "Broj kartice"
 #: woocommerce-allsecure-exchange.php:825
 #: woocommerce-allsecure-exchange.php:857
 msgid "Please enter a valid number in this field."
-msgstr ""
+msgstr "Unesite važeći broj u ovo polje."
 
 #: woocommerce-allsecure-exchange.php:828
 msgid "This card type is not supported."
-msgstr ""
+msgstr "Ovaj tip kartice nije podržan."
 
 #: woocommerce-allsecure-exchange.php:832
 msgid "Expiration Date"
@@ -474,11 +487,11 @@ msgstr "Datum istjeka"
 
 #: woocommerce-allsecure-exchange.php:848
 msgid "Incorrect credit card expiration date."
-msgstr ""
+msgstr "Netačan datum isteka kartice."
 
 #: woocommerce-allsecure-exchange.php:852
 msgid "CVV"
-msgstr ""
+msgstr "CVV"
 
 #: woocommerce-allsecure-exchange.php:924
 #: woocommerce-allsecure-exchange.php:1012
@@ -503,12 +516,12 @@ msgstr "Vrsta plaćanja"
 #: woocommerce-allsecure-exchange.php:941
 #: woocommerce-allsecure-exchange.php:1029
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #: woocommerce-allsecure-exchange.php:944
 #: woocommerce-allsecure-exchange.php:1032
 msgid "Amount Paid"
-msgstr ""
+msgstr "Plaćeni iznos"
 
 #: woocommerce-allsecure-exchange.php:947
 #: woocommerce-allsecure-exchange.php:1035
@@ -517,7 +530,7 @@ msgstr "Vrijeme transakcije"
 
 #: woocommerce-allsecure-exchange.php:1098
 msgid "Capture"
-msgstr ""
+msgstr "Kompletiranje"
 
 #: woocommerce-allsecure-exchange.php:1101
 msgid "Void"
@@ -525,20 +538,22 @@ msgstr "Otkazivanje"
 
 #: woocommerce-allsecure-exchange.php:1108
 msgid "Processing..."
-msgstr ""
+msgstr "Obrada"
 
 #: woocommerce-allsecure-exchange.php:1109
 msgid ""
 "Are you sure you wish to process this void? This action cannot be undone"
 msgstr ""
+"Da li ste sigurni da želite da izvršite otkazivanje? Ova radnja se ne može "
+"opozvati."
 
 #: woocommerce-allsecure-exchange.php:1174
 msgid "Refund amount shoule be greater than 0."
-msgstr ""
+msgstr "Iznos povraćaja mora da bude veći od 0 (nula)."
 
 #: woocommerce-allsecure-exchange.php:1178
 msgid "Amount shoule be equal to order paid total."
-msgstr ""
+msgstr "Iznos treba da bude jednak ukupno uplaćenoj narudžbini."
 
 #: woocommerce-allsecure-exchange.php:1205
 msgid "Allsecure Exchange payment is successfully refunded. "
@@ -546,61 +561,54 @@ msgstr "Transakcija uspješno refundirana"
 
 #: woocommerce-allsecure-exchange.php:1736
 msgid "CONFIG ERROR. Some fundamental error in your request"
-msgstr "KONFIGURACIONA GREŠKA. Some fundamental error in your request"
+msgstr "Tehnički problem prilikom slanja zahteva. Molimo pozovite trgovca."
 
 #: woocommerce-allsecure-exchange.php:1737
 msgid "CONFIG ERROR. The upstream system responded with an unknown response"
-msgstr ""
-"KONFIGURACIONA GREŠKA. The upstream system responded with an unknown response"
+msgstr "Tehnički problem prilikom slanja zahteva. Molimo pozovite trgovca."
 
 #: woocommerce-allsecure-exchange.php:1738
 msgid "CONFIG ERROR. Request data are malformed or missing"
-msgstr "KONFIGURACIONA GREŠKA. Request data are malformed or missing"
+msgstr "Tehnički problem prilikom slanja zahteva. Molimo pozovite trgovca."
 
 #: woocommerce-allsecure-exchange.php:1739
 msgid "CONFIG ERROR. Transaction could not be processed"
-msgstr "KONFIGURACIONA GREŠKA. Transaction could not be processed"
+msgstr "Tehnički problem prilikom slanja zahteva. Molimo pozovite trgovca."
 
 #: woocommerce-allsecure-exchange.php:1740
 msgid "CONFIG ERROR. The request signature you provided was wrong"
-msgstr "KONFIGURACIONA GREŠKA. The request signature you provided was wrong"
+msgstr "Tehnički problem prilikom slanja zahteva. Molimo pozovite trgovca."
 
 #: woocommerce-allsecure-exchange.php:1741
 msgid "CONFIG ERROR. The XML you provided was malformed or invalid"
-msgstr "KONFIGURACIONA GREŠKA. The XML you provided was malformed or invalid"
+msgstr "Tehnički problem prilikom slanja zahteva. Molimo pozovite trgovca."
 
 #: woocommerce-allsecure-exchange.php:1742
 msgid "CONFIG ERROR. Preconditions failed, e.g. capture on a failed authorize"
-msgstr ""
-"KONFIGURACIONA GREŠKA. Preconditions failed, e.g. capture on a failed "
-"authorize"
+msgstr "Tehnički problem prilikom slanja zahteva. Molimo pozovite trgovca."
 
 #: woocommerce-allsecure-exchange.php:1743
 msgid ""
 "CONFIG ERROR. Something is wrong your configuration, please contact your "
 "integration engineer"
-msgstr ""
-"KONFIGURACIONA GREŠKA. Something is wrong your configuration, please contact "
-"your integration engineer"
+msgstr "Tehnički problem prilikom slanja zahteva. Molimo pozovite trgovca."
 
 #: woocommerce-allsecure-exchange.php:1744
 msgid "CONFIG ERROR. Unexpected system error"
-msgstr "KONFIGURACIONA GREŠKA. Unexpected system error"
+msgstr "Tehnički problem prilikom slanja zahteva. Molimo pozovite trgovca."
 
 #: woocommerce-allsecure-exchange.php:1745
 msgid ""
 "CONFIG ERROR. We received an error which is not (yet) mapped to a better "
 "error code"
-msgstr ""
-"KONFIGURACIONA GREŠKA. We received an error which is not (yet) mapped to a "
-"better error code"
+msgstr "Tehnički problem prilikom slanja zahteva. Molimo pozovite trgovca."
 
 #: woocommerce-allsecure-exchange.php:1746
 msgid ""
 "Account closed. The customer cancelled permission for his payment instrument "
 "externally"
 msgstr ""
-"Kartica koju ste uneli ne može biti prihvacena. Molimo pokušajte drugom "
+"Kartica koju ste unjeli ne može biti prihvacena. Molimo pokušajte drugom "
 "karticom"
 
 #: woocommerce-allsecure-exchange.php:1747
@@ -614,7 +622,8 @@ msgstr ""
 
 #: woocommerce-allsecure-exchange.php:1749
 msgid "Quota regulation. Card limit reached"
-msgstr "Vaša transakcija nije odobrena. Pokušajte ponovo ili promenite karticu"
+msgstr ""
+"Vaša transakcija nije odobrena. Pokušajte ponovo ili promjenite karticu"
 
 #: woocommerce-allsecure-exchange.php:1750
 msgid "Transaction expired. Customer took to long to submit his payment info"
@@ -622,12 +631,13 @@ msgstr "Korisnik nije u predviđenom roku završio transakciju"
 
 #: woocommerce-allsecure-exchange.php:1751
 msgid "Insufficient funds. Card limit reached"
-msgstr "Vaša transakcija nije odobrena. Pokušajte ponovo ili promenite karticu"
+msgstr ""
+"Vaša transakcija nije odobrena. Pokušajte ponovo ili promjenite karticu"
 
 #: woocommerce-allsecure-exchange.php:1752
 msgid "Incorrect payment info. Double check and try again"
 msgstr ""
-"Uneti podaci o platnoj kartici nisu tačni. Provjerite podatke i pokušajte "
+"Unjeti podaci o platnoj kartici nisu tačni. Provjerite podatke i pokušajte "
 "ponovo"
 
 #: woocommerce-allsecure-exchange.php:1753
@@ -638,12 +648,12 @@ msgstr ""
 
 #: woocommerce-allsecure-exchange.php:1754
 msgid "Expired card. Try with some other card"
-msgstr "Kartica koju ste uneli je istekla. Molimo izaberite drugu karticu"
+msgstr "Kartica koju ste unjeli je istekla. Molimo izaberite drugu karticu"
 
 #: woocommerce-allsecure-exchange.php:1755
 msgid "Invalid card. Call your bank immediately"
 msgstr ""
-"Vaša transakcija nije odobrena. Molimo proverite sa bankom koja vam je "
+"Vaša transakcija nije odobrena. Molimo provjerite sa bankom koja vam je "
 "izdala karticu"
 
 #: woocommerce-allsecure-exchange.php:1756
@@ -686,26 +696,23 @@ msgid ""
 "3D-Secure Verification failed. Please call your bank or try with a non 3-D "
 "Secure card"
 msgstr ""
-"Vaša 3D Secure autentifikacija nije uspela. Molimo pozovite banku koja vam "
+"Vaša 3D Secure autentifikacija nije uspjela. Molimo pozovite banku koja vam "
 "je izdala karticu ili koristite karticu koja nije 3D-Secure"
 
 #: woocommerce-allsecure-exchange.php:1767
 msgid "COMMUNICATION PROBLEM. Timeout. Try again after a short pause"
-msgstr ""
-"KOMUNIKACIJA: Transakcija je istekla. Napravite pauzu i pokušajte nešto "
-"kasnije"
+msgstr "Transakcija je istekla. Napravite pauzu i pokušajte nešto kasnije"
 
 #: woocommerce-allsecure-exchange.php:1768
 msgid "COMMUNICATION PROBLEM. Transaction not allowed"
-msgstr "KOMUNIKACIJA: Transakcija nije dozvoljena"
+msgstr "Transakcija nije dozvoljena"
 
 #: woocommerce-allsecure-exchange.php:1769
 msgid ""
 "COMMUNICATION PROBLEM. System temporary unavailable. Try again after a short "
 "pause"
 msgstr ""
-"KOMUNIKACIJA: Sistem privremeno nedostupan. Napravite pauzu i pokušajte "
-"nešto kasnije"
+"Sistem privremeno nedostupan. Napravite pauzu i pokušajte nešto kasnije"
 
 #: woocommerce-allsecure-exchange.php:1770
 msgid "Duplicate transaction ID"
@@ -714,16 +721,15 @@ msgstr "ID Transakcije već korišćen"
 #: woocommerce-allsecure-exchange.php:1771
 msgid "COMMUNICATION PROBLEM. Try again after a short pause"
 msgstr ""
-"KOMUNIKACIJA: Problem u konekciji sa bankom. Napravite pauzu i pokušajte "
-"nešto kasnije"
+"Problem u konekciji sa bankom. Napravite pauzu i pokušajte nešto kasnije"
 
 #: woocommerce-allsecure-exchange.php:1772
 msgid "Schedule request is invalid"
-msgstr "Zahtev za planiranjem transakcije nije validan"
+msgstr "Zahtjev za planiranjem transakcije nije validan"
 
 #: woocommerce-allsecure-exchange.php:1773
 msgid "Schedule request failed"
-msgstr "Zahtev za planiranjem transakcije nije prihvaćen"
+msgstr "Zahtjev za planiranjem transakcije nije prihvaćen"
 
 #: woocommerce-allsecure-exchange.php:1774
 msgid "Schedule action is not valid"
@@ -788,11 +794,9 @@ msgstr ""
 #~ msgid "Cards"
 #~ msgstr "Platne Kartice"
 
-#, php-format
 #~ msgid "AllSecure Capture Request Failed. %s"
 #~ msgstr "Capture nije uspeo. %s"
 
-#, php-format
 #~ msgid "AllSecure Reversal Request Failed. %s"
 #~ msgstr "Reversal nije uspeo. %s"
 
@@ -896,7 +900,6 @@ msgstr ""
 #~ msgid "Payee"
 #~ msgstr "Naplaćuje"
 
-#, php-format
 #~ msgid "Transaction Unsuccessful. The status message <b>%s</b>"
 #~ msgstr "Transakcija neuspješna. Odgovor <b>%s</b>"
 
