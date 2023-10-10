@@ -2,7 +2,7 @@
 /*
 Plugin Name: AllSecure Exchange
 Description: AllSecure Exchange for WooCommerce
-Version: 2.0.2
+Version: 2.0.3
 Requires at least: 4.0
 Tested up to: 6.2.1
 WC requires at least: 2.4
@@ -51,6 +51,16 @@ function load_textdomain_and_add_custom_order_status() {
             'label_count'               => _n_noop( 'Authorised <span class="count">(%s)</span>', 'Authorised <span class="count">(%s)</span>' )
         )
     );
+    register_post_status( 'wc-allsecurepending', 
+        array(
+            'label'                     => __( 'Allsecure Pending', 'allsecureexchange'),
+            'public'                    => true,
+            'exclude_from_search'       => false,
+            'show_in_admin_all_list'    => true,
+            'show_in_admin_status_list' => true,
+            'label_count'               => _n_noop( 'Allsecure Pending <span class="count">(%s)</span>', 'Allsecure Pending <span class="count">(%s)</span>' )
+        )
+    );
 }
 
 /**
@@ -59,7 +69,37 @@ function load_textdomain_and_add_custom_order_status() {
 add_filter('wc_order_statuses', 'add_order_statuses');
 function add_order_statuses( $order_statuses ) {
     $order_statuses['wc-authorised'] = __( 'Authorised', 'allsecureexchange');
+    $order_statuses['wc-allsecurepending'] = __( 'Allsecure Pending', 'allsecureexchange');
     return $order_statuses;
+}
+
+/**
+ * Do not display payment option in the checkout if not entered the required credentials
+ */
+add_filter( 'woocommerce_available_payment_gateways', 'enable_allsecureexchange_gateway' );
+function enable_allsecureexchange_gateway( $available_gateways ) {
+    if ( is_admin() ) return $available_gateways;
+
+    if ( isset( $available_gateways['allsecureexchange'] )) {
+        $settings = get_option('woocommerce_allsecureexchange_settings');
+        
+        if (empty($settings['api_user'])) {
+            unset( $available_gateways['allsecureexchange'] );
+        } elseif (empty($settings['api_password'])) {
+            unset( $available_gateways['allsecureexchange'] );
+        } elseif (empty($settings['api_key'])) {
+            unset( $available_gateways['allsecureexchange'] );
+        } elseif (empty($settings['shared_secret'])) {
+            unset( $available_gateways['allsecureexchange'] );
+        }
+        
+        if ($settings['checkout_mode'] == 'paymentjs') {
+            if (empty($settings['integration_key'])) {
+                unset( $available_gateways['allsecureexchange'] );
+            }
+        }
+    } 
+    return $available_gateways;
 }
 
 /**
@@ -81,7 +121,7 @@ function woocommerce_allsecureexchange_init() {
         /**
          * Constructor for the gateway.
          */
-        public function __construct() {
+        public function __construct($need_instance=false) {
             $this->domain = 'allsecureexchange';
             
             $this->supports = array(
@@ -113,20 +153,47 @@ function woocommerce_allsecureexchange_init() {
             $this->logo_style = $this->get_option('logo_style');
             $this->has_fields = true;
             
-	    // Load the settings.
-            $this->init_form_fields();
-            $this->init_settings();
+            $this->enable_installment = get_option('woocommerce_allsecureexchange_enable_installment');
 
-            // Actions
-            add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
-            add_action('woocommerce_api_'. strtolower("WC_AllsecureExchange"), array( $this, 'check_api_response' ) );
-            add_filter('woocommerce_gateway_icon', array($this, 'custom_payment_gateway_icons'), 11, 3 );
-            add_filter('woocommerce_thankyou_order_received_text', array($this, 'thankyou_page'), 10, 2);
-            add_action( 'woocommerce_email_after_order_table', array($this,'email_after_order_table'), 10, 1);
-            add_action('woocommerce_admin_order_totals_after_total', array($this, 'admin_order_totals'), 10, 2);
-            add_action('woocommerce_order_item_add_action_buttons', array($this, 'admin_order_action_buttons'), 10, 1);
-            add_action('wp_enqueue_scripts',  array($this, 'load_front_assets'));
-            add_filter('script_loader_tag', array($this, 'add_paymentjs_tag'), 10, 3);
+            if (!$this->option_exists("woocommerce_allsecureexchange_installment_bins")) {
+                $this->installment_bins = array();
+            } else {
+                $this->installment_bins = get_option('woocommerce_allsecureexchange_installment_bins');
+                if (!empty($this->installment_bins)) {
+                    $this->installment_bins = json_decode($this->installment_bins, true);
+                } else {
+                    $this->installment_bins = array();
+                }
+            }
+
+            if (!$this->option_exists("woocommerce_allsecureexchange_allowed_installments")) {
+                $this->allowed_installments = array();
+            } else {
+                $this->allowed_installments = get_option('woocommerce_allsecureexchange_allowed_installments');
+                if (!empty($this->allowed_installments)) {
+                    $this->allowed_installments = json_decode($this->allowed_installments, true);
+                } else {
+                    $this->allowed_installments = array();
+                }
+            }
+            
+            if (!$need_instance) {
+                // Load the settings.
+                $this->init_form_fields();
+                $this->init_settings();
+
+                // Actions
+                add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
+                add_action('woocommerce_api_'. strtolower("WC_AllsecureExchange"), array( $this, 'check_api_response' ) );
+                add_filter('woocommerce_gateway_icon', array($this, 'custom_payment_gateway_icons'), 11, 3 );
+                add_filter('woocommerce_thankyou_order_received_text', array($this, 'thankyou_page'), 10, 2);
+                add_action( 'woocommerce_email_after_order_table', array($this,'email_after_order_table'), 10, 1);
+                add_action('woocommerce_admin_order_totals_after_total', array($this, 'admin_order_totals'), 10, 2);
+                add_action('woocommerce_order_item_add_action_buttons', array($this, 'admin_order_action_buttons'), 10, 1);
+                add_action('wp_enqueue_scripts',  array($this, 'load_front_assets'));
+                add_filter('script_loader_tag', array($this, 'add_paymentjs_tag'), 10, 3);
+                add_action('admin_footer', array( $this, 'allsecure_admin_footer'), 10, 3 );
+            }
         }
         
         /**
@@ -310,11 +377,233 @@ function woocommerce_allsecureexchange_init() {
                         $setting_value = $this->get_field_value( $key, $field, $post_data );
                         $this->settings[ $key ] = $setting_value;
                     }
+                    
+                    if (isset($post_data['woocommerce_allsecureexchange_enable_installment'])) {
+                        update_option('woocommerce_allsecureexchange_enable_installment', 1);
+                    } else {
+                        update_option('woocommerce_allsecureexchange_enable_installment', 0);
+                    }
+                    $this->enable_installment = get_option('woocommerce_allsecureexchange_enable_installment');
+
+                    if ($this->enable_installment) {
+                        if (isset($post_data['woocommerce_allsecureexchange_installment_bins'])) {
+                            $installment_bins = $post_data['woocommerce_allsecureexchange_installment_bins'];
+                            $allowed_installments = $post_data['woocommerce_allsecureexchange_allowed_installments'];
+
+                            $installment_bins_sanitized = array();
+                            $cashier_emails_sanitized = array();
+                            foreach ($installment_bins as $key => $val) {
+                                if (!empty($val)) {
+                                    $installment_bins_sanitized[] = sanitize_text_field($val);
+                                    $allowed_installments_sanitized[] = sanitize_text_field($allowed_installments[$key]);
+                                }
+                            }
+                            $this->installment_bins = $installment_bins_sanitized;
+                            $this->allowed_installments = $allowed_installments_sanitized;
+                            if (count($installment_bins_sanitized) > 0) {
+                                update_option('woocommerce_allsecureexchange_installment_bins', json_encode($installment_bins_sanitized));
+                                update_option('woocommerce_allsecureexchange_allowed_installments', json_encode($allowed_installments_sanitized));
+                            } else {
+                                delete_option('woocommerce_allsecureexchange_installment_bins');
+                                delete_option('woocommerce_allsecureexchange_allowed_installments');
+                            }
+                         } else {
+                            delete_option('woocommerce_allsecureexchange_installment_bins');
+                            delete_option('woocommerce_allsecureexchange_allowed_installments');
+                            $this->installment_bins = array();
+                            $this->allowed_installments = array();
+                        }
+                    } else {
+                        delete_option('woocommerce_allsecureexchange_installment_bins');
+                        delete_option('woocommerce_allsecureexchange_allowed_installments');
+                        $this->installment_bins = array();
+                        $this->allowed_installments = array();
+                    }
 
                     return update_option( $this->get_option_key(), apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id, $this->settings ) );
                 }
              }
 	}
+        
+        public function allsecure_admin_footer() {
+            if (isset($_GET['page']) && sanitize_text_field($_GET['page']) == 'wc-settings' && isset($_GET['section']) && sanitize_text_field($_GET['section']) == 'allsecureexchange') { 
+                $allsecuretab = 'settings';
+                if(isset($_GET['allsecuretab'])) {
+                    $allsecuretab = sanitize_text_field($_GET['allsecuretab']);
+                }
+            ?>
+            <nav id="allsecure-tabs" class="nav-tab-wrapper" style="display: none">
+                <a id="allsecure-setting-tab" href="?page=wc-settings&section=allsecureexchange&tab=checkout&allsecuretab=settings" class="nav-tab <?php echo (($allsecuretab == 'settings') ? 'nav-tab-active':'')?>"><?php echo __('Settings', $this->domain)?></a>
+                <a id="allsecure-installment-settings-tab" href="?page=wc-settings&section=allsecureexchange&allsecuretab=installment-settings&tab=checkout" class="nav-tab <?php echo (($allsecuretab == 'installment-settings') ? 'nav-tab-active':'')?>"><?php echo __('Installment Settings', $this->domain)?></a>
+            </nav>
+            <div class="tab-content" id="allsecure-tab-content-installment-settings" style="display: none">
+                <table class="form-table">
+                    <tbody>
+                        <tr valign="top">
+                            <th scope="row" class="titledesc">
+                                <label for="woocommerce_allsecureexchange_enable_installment"><?php echo __('Enable Installment Payments', $this->domain)?></label>
+                            </th>
+                            <td class="forminp">
+                                <fieldset>
+                                    <legend class="screen-reader-text"><span><?php echo __('Enable Installment Payments', $this->domain)?></span></legend>
+                                    <label for="woocommerce_allsecureexchange_enable_installment">
+                                        <input class="" type="checkbox" name="woocommerce_allsecureexchange_enable_installment" id="woocommerce_allsecureexchange_enable_installment" style="" value="1" 
+                                            <?php echo $this->enable_installment ? 'checked="checked"':''?> >
+                                    </label>
+                                </fieldset>
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <td class="forminp" colspan="2" id="bin_settings">
+                                <div><?php echo __('Enter Installation Eligible BIN Information:', $this->domain)?></div>
+                                <div class="field_wrapper">
+                                    <?php 
+                                    if (count($this->installment_bins) > 0) {
+                                        $i = 0;
+                                        foreach($this->installment_bins as $key => $val) {
+                                            $i++;
+                                    ?>
+                                    <table style="border-bottom: 1px solid #ccc; margin-bottom: 10px" <?php if ($i > 1) {?>class="dynamic-field-table"<?php } ?>>
+                                        <tr valign="top">
+                                            <th scope="row" class="titledesc">
+                                                <label><?php echo __('BIN', $this->domain)?></label>
+                                            </th>
+                                            <td class="forminp">
+                                                <input type="number" name="woocommerce_allsecureexchange_installment_bins[]" value="<?php echo $val?>"/>
+                                            </td>
+                                            <td>
+                                                <?php if ($i > 1) {?>
+                                                <a href="javascript:void(0);" class="btn button-secondary remove_button" title="Remove field"><?php echo __('Remove', $this->domain)?></a>
+                                                <?php } else { ?>
+                                                &nbsp;
+                                                <?php } ?>
+                                            </td>
+                                        </tr>
+                                        <tr valign="top">
+                                            <th scope="row" class="titledesc">
+                                                <label><?php echo __('Allowed Installments', $this->domain)?></label>
+                                            </th>
+                                            <td class="forminp">
+                                                <input name="woocommerce_allsecureexchange_allowed_installments[]" value="<?php echo (isset($this->allowed_installments[$key]) ? $this->allowed_installments[$key] : '') ?>" />
+                                                <p><?php echo __('Enter comma separated eg: 3,6,9,12', $this->domain)?></p>
+                                            </td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                    </table>
+                                    <?php 
+                                        }
+                                    } else {
+                                    ?>
+                                    <table style="border-bottom: 1px solid #ccc; margin-bottom: 10px">
+                                        <tr valign="top">
+                                            <th scope="row" class="titledesc">
+                                                <label><?php echo __('BIN', $this->domain)?></label>
+                                            </th>
+                                            <td class="forminp">
+                                                <input type="number" name="woocommerce_allsecureexchange_installment_bins[]" value=""/>
+                                            </td>
+                                            <td>
+                                                  &nbsp;
+                                             </td>
+                                        </tr>
+                                        <tr valign="top">
+                                            <th scope="row" class="titledesc">
+                                                <label><?php echo __('Allowed Installments', $this->domain)?></label>
+                                            </th>
+                                            <td class="forminp">
+                                                <input type="text" name="woocommerce_allsecureexchange_allowed_installments[]" value=""/>
+                                                <p><?php echo __('Enter comma separated eg: 3,6,9,12', $this->domain)?></p>
+                                            </td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                    </table>
+                                    <?php
+                                    }
+                                    ?>
+                                </div>
+                                <div>
+                                    <a href="javascript:void(0);" class="btn button-secondary allsecure_add_button" title="Add field"><?php echo __('Add New', $this->domain)?></a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <script type="text/javascript">
+                var allsecuretab = '<?php echo $allsecuretab?>';
+                jQuery(document).ready(function(){
+                    var maxField = 100;
+                    var addButton = jQuery('.allsecure_add_button');
+                    var wrapper = jQuery('.field_wrapper');
+                    var fieldHTML = '<table class="dynamic-field-table" style="border-bottom: 1px solid #ccc; margin-bottom: 10px"><tr valign="top"><th scope="row" class="titledesc"><label><?php echo __('BIN', $this->domain)?></label></th><td class="forminp"><input type="number" name="woocommerce_allsecureexchange_installment_bins[]" value=""/></td><td><a href="javascript:void(0);" class="btn button-secondary remove_button" title="Remove field"><?php echo __('Remove', $this->domain)?></a></td></tr><tr valign="top"><th scope="row" class="titledesc"><label><?php echo __('Allowed Installments', $this->domain)?></label></th><td class="forminp"><input type="text" name="woocommerce_allsecureexchange_allowed_installments[]" value=""/><p><?php echo __('Enter comma separated eg: 3,6,9,12', $this->domain)?></p></td></tr></table>';
+                    var x = parseInt('<?php echo (count($this->installment_bins) == 0) ? 1 : count($this->installment_bins)?>');
+
+                    jQuery('.wc-admin-breadcrumb').parent().after(jQuery('#allsecure-tabs'));
+                    jQuery('#allsecure-tabs').after(jQuery('#allsecure-tab-content-installment-settings'));
+                    jQuery('#allsecure-tabs').show();
+                    if (allsecuretab == 'settings') {
+                        jQuery('#woocommerce_allsecureexchange_enabled').closest('.form-table').show();
+                        jQuery('#woocommerce_allsecureexchange_api_user').closest('.form-table').show();
+                        jQuery('#woocommerce_allsecureexchange_payment_action').closest('.form-table').show();
+                        jQuery('#woocommerce_allsecureexchange_logo_style').closest('.form-table').show();
+                        
+                        jQuery('#woocommerce_allsecureexchange_api_credentials').show();
+                        jQuery('#woocommerce_allsecureexchange_payment_details').show();
+                        jQuery('#woocommerce_allsecureexchange_design_details').show();
+                         
+                        jQuery('#allsecure-tab-content-installment-settings').hide();
+                    } else if (allsecuretab == 'installment-settings') {
+                        jQuery('#woocommerce_allsecureexchange_enabled').closest('.form-table').hide();
+                        jQuery('#woocommerce_allsecureexchange_api_user').closest('.form-table').hide();
+                        jQuery('#woocommerce_allsecureexchange_payment_action').closest('.form-table').hide();
+                        jQuery('#woocommerce_allsecureexchange_logo_style').closest('.form-table').hide();
+                        
+                        jQuery('#woocommerce_allsecureexchange_api_credentials').hide();
+                        jQuery('#woocommerce_allsecureexchange_payment_details').hide();
+                        jQuery('#woocommerce_allsecureexchange_design_details').hide();
+                        
+                        jQuery('#allsecure-tab-content-installment-settings').show();
+                    } 
+
+                    if (jQuery('#woocommerce_allsecureexchange_enable_installment').is(':checked')) {
+                        jQuery('#bin_settings').show();
+                    } else {
+                        jQuery('#bin_settings').hide();
+                    }
+
+                    jQuery('#woocommerce_allsecureexchange_enable_installment').click(function(){
+                        if (jQuery('#woocommerce_allsecureexchange_enable_installment').is(':checked')) {
+                            jQuery('#bin_settings').show();
+                        } else {
+                            jQuery('#bin_settings').hide();
+                        }
+                    });
+
+                    jQuery(addButton).click(function(){
+                        if(x < maxField){ 
+                            x++;
+                            jQuery(wrapper).append(fieldHTML);
+                        } else {
+                            alert('Allowed to add maximum: '+maxField);
+                        }
+                    });
+
+                    jQuery(wrapper).on('click', '.remove_button', function(e){
+                        e.preventDefault();
+                        jQuery(this).parents('.dynamic-field-table').remove();
+                        x--; 
+                    });
+                });
+            </script>  
+            <?php
+            }
+        }
+
+        public function option_exists($name, $site_wide=false)
+        {
+            global $wpdb; 
+            return $wpdb->query("SELECT * FROM ". ($site_wide ? $wpdb->base_prefix : $wpdb->prefix). "options WHERE option_name ='$name' LIMIT 1");
+        }
         
         /** 
 	 * Custom Credit Card Icons on a checkout page 
@@ -369,6 +658,7 @@ function woocommerce_allsecureexchange_init() {
 
             try {
                 $transaction_token = '';
+                $installment_number = '';
 
                 $checkoutType = $this->checkout_mode;
                 $action = $this->payment_action;
@@ -384,10 +674,18 @@ function woocommerce_allsecureexchange_init() {
                     if (empty($transaction_token)) {
                         throw new \Exception(__('Invalid transaction token', $this->domain));
                     }
+                    
+                    if (isset($_POST['allsecurepay_pay_installment'])) {
+                        $installment_number = $_POST['allsecurepay_installment_number'];
+                        if (!empty($installment_number)) {
+                            $installment_number  = sanitize_text_field($installment_number);
+                            $action = 'debit';
+                        }
+                    }
                 }
                 
                 if ($action == 'debit') {
-                    $result = $this->debitTransaction($order, $transaction_token);
+                    $result = $this->debitTransaction($order, $transaction_token, $installment_number);
                 } else {
                     $result = $this->preauthorizeTransaction($order, $transaction_token);
                 }
@@ -416,7 +714,12 @@ function woocommerce_allsecureexchange_init() {
                         throw new \Exception($errorMessage);
                     } elseif ($result->getReturnType() == AllsecureResult::RETURN_TYPE_REDIRECT) {
                         //redirect the user
+                        if (!empty($installment_number)) {
+                            $order->add_meta_data($this->prefix.'installment_number', $installment_number, true);
+                        }
                         $order->add_meta_data($this->prefix.'status', 'redirected', true);
+                        $order->save_meta_data();
+                        
                         $redirectLink = $result->getRedirectUrl();
                         return [
                             'result' => 'success',
@@ -424,6 +727,9 @@ function woocommerce_allsecureexchange_init() {
 			];
                     } elseif ($result->getReturnType() == AllsecureResult::RETURN_TYPE_PENDING) {
                         //payment is pending, wait for callback to complete
+                        if (!empty($installment_number)) {
+                            $order->add_meta_data($this->prefix.'installment_number', $installment_number, true);
+                        }
                         $order->add_meta_data($this->prefix.'status', 'pending', true);
                         $order->save_meta_data();
                         if ($action == 'debit') {
@@ -445,6 +751,9 @@ function woocommerce_allsecureexchange_init() {
                     } elseif ($result->getReturnType() == AllsecureResult::RETURN_TYPE_FINISHED) {
                         //payment is finished, update your cart/payment transaction
                         if ($action == 'debit') {
+                            if (!empty($installment_number)) {
+                                $order->add_meta_data($this->prefix.'installment_number', $installment_number, true);
+                            }
                             $order->add_meta_data($this->prefix.'status', 'debited', true);
                             $order->save_meta_data();
                             $comment1 = __('Allsecure Exchange payment is successfully debited. ', $this->domain);
@@ -543,6 +852,7 @@ function woocommerce_allsecureexchange_init() {
                 }
 
                 if ($order_id) {
+                    $order = new WC_Order($order_id);
                     $woocommerce->cart->empty_cart();
                     wp_redirect(add_query_arg( 'order_id', $order_id, $this->get_return_url( $order )));exit;
                 } else {
@@ -797,6 +1107,20 @@ function woocommerce_allsecureexchange_init() {
             <script>
                 window.public_integration_key = '<?php echo $this->integration_key?>';
                 window.card_supported = '<?php echo strtolower(implode(',',$this->card_supported))?>';
+                
+                <?php if ($this->enable_installment) { ?>
+                    window.installment_bins = '<?php echo strtolower(implode(',',$this->installment_bins))?>';
+                    window.allowed_installments = new Array();
+                    <?php
+                    if (count($this->installment_bins) > 0) {
+                        foreach($this->installment_bins as $key => $val) {
+                        ?>
+                            window.allowed_installments['<?php echo $val?>'] = '<?php echo $this->allowed_installments[$key]?>';
+                        <?php
+                        }
+                    }
+                    ?>
+                <?php } ?>
             </script>
             <script type="text/javascript" src="<?php echo ALLSECUREEXCHANGE_PLUGIN_URL.'/assets/js/allsecure-exchange.js?ver=' . ALLSECUREEXCHANGE_VERSION?>"></script>
             <script type="text/javascript" src="<?php echo ALLSECUREEXCHANGE_PLUGIN_URL.'/assets/js/allsecure-exchange-validator.js?ver=' . ALLSECUREEXCHANGE_VERSION?>"></script>
@@ -861,6 +1185,24 @@ function woocommerce_allsecureexchange_init() {
                             <?php echo __('Please enter a valid number in this field.', $this->domain)?>
                         </span>
                     </p>
+                    <?php if ($this->enable_installment) { ?>
+                    <p class="form-row form-row-wide" id="allsecurepay_pay_installment_container" style="display: none">
+                        <label for="allsecurepay_pay_installment" class="">
+                            <input type="checkbox" class="input-checkbox " name="allsecurepay_pay_installment" id="allsecurepay_pay_installment" />
+                             <span class="woocommerce-input-wrapper">
+                                <?php echo __('Pay in Installments', $this->domain)?>
+                             </span>
+                        </label>
+                    </p>
+                    <p class="form-row form-row-wide" id="allsecurepay_installment_number_container" style="display: none">
+                        <label for="allsecurepay_installment_number" class=""><?php echo __('Select No. of installments', $this->domain)?></label>
+                        <span class="woocommerce-input-wrapper">
+                            <select name="allsecurepay_installment_number" id="allsecurepay_installment_number" style="width:100px;  min-height: 35px; text-align: center">
+                                
+                            </select>
+                        </span>
+                    </p>
+                    <?php } ?>
                 </div>
             </div>
             <?php
@@ -901,6 +1243,7 @@ function woocommerce_allsecureexchange_init() {
 
                             } else {
                                 $result = $statusResult->getTransactionStatus();
+
                                 $transactionType = $statusResult->getTransactionType();
                                 $amount = $statusResult->getAmount();
                                 $currency = $statusResult->getCurrency();
@@ -922,6 +1265,8 @@ function woocommerce_allsecureexchange_init() {
                                     $authCode = NULL;
                                 }
                                 $timestamp = date("Y-m-d H:i:s");
+                                
+                                $installment_number = $order->get_meta($this->prefix.'installment_number');
 
                                 ?>
                                 <div class='woocommerce-order'>
@@ -947,9 +1292,15 @@ function woocommerce_allsecureexchange_init() {
                                             <li class='woocommerce-order-overview__email email'>
                                                 <?php echo __('Amount Paid', $this->domain)?>: <strong><?php echo $amount?></strong>
                                             </li>
+                                            <?php if (!empty($installment_number)) {?>
+                                            <li class='woocommerce-order-overview__email email'>
+                                                <?php echo __('Chose to make payment in ', $this->domain)?> <strong><?php echo $installment_number?> <?php echo __('installments', $this->domain)?></strong>
+                                            </li>
+                                            <?php } ?>
                                             <li class='woocommerce-order-overview__email email'>
                                                 <?php echo __('Transaction Time', $this->domain)?>: <strong><?php echo $timestamp?></strong>
                                             </li>
+                                            
                                     </ul>
                                 </div>
                                 <?php
@@ -1011,6 +1362,8 @@ function woocommerce_allsecureexchange_init() {
                             }
                             $timestamp = date("Y-m-d H:i:s");
                             
+                            $installment_number = $order->get_meta($this->prefix.'installment_number');
+                            
                             ?>
                             <div class='woocommerce-order'>
                                 <h5><?php echo __('Transaction details', $this->domain)?>: </h5>
@@ -1035,6 +1388,11 @@ function woocommerce_allsecureexchange_init() {
                                         <li class='woocommerce-order-overview__email email'>
                                             <?php echo __('Amount Paid', $this->domain)?>: <strong><?php echo $amount?></strong>
                                         </li>
+                                        <?php if (!empty($installment_number)) {?>
+                                        <li class='woocommerce-order-overview__email email'>
+                                            <?php echo __('Chose to make payment in ', $this->domain)?> <strong><?php echo $installment_number?> <?php echo __('installments', $this->domain)?></strong>
+                                        </li>
+                                        <?php } ?>
                                         <li class='woocommerce-order-overview__email email'>
                                             <?php echo __('Transaction Time', $this->domain)?>: <strong><?php echo $timestamp?></strong>
                                         </li>
@@ -1613,7 +1971,7 @@ function woocommerce_allsecureexchange_init() {
         * 
         * @return $this
         */
-       public function processTransaction($order, $token, $action)
+       public function processTransaction($order, $token, $action, $installment_number='')
        {
            $client = $this->getClient();
            $order_data = $order->get_data();
@@ -1686,6 +2044,11 @@ function woocommerce_allsecureexchange_init() {
            if (isset($token)) {
                $transasction->setTransactionToken($token);
            }
+           
+           if (!empty($installment_number)) {
+               $extraData = ['installment' => $installment_number];
+               $transasction->setExtraData($extraData);
+           }
 
            if ($action == 'debit') {
                $this->log('Debit Transaction');
@@ -1708,9 +2071,9 @@ function woocommerce_allsecureexchange_init() {
         * 
         * @return $this
         */
-       public function debitTransaction($order, $token)
+       public function debitTransaction($order, $token, $installment_number)
        {
-           return @$this->processTransaction($order, $token, 'debit');
+           return @$this->processTransaction($order, $token, 'debit', $installment_number);
        }
 
        /**
@@ -1790,36 +2153,17 @@ function woocommerce_allsecureexchange_init() {
             return isset($errors[$code]) ? $errors[$code] : $unknownError;
         }
     }
+    
+    require_once ALLSECUREEXCHANGE_PLUGIN_PATH.'allsecure-exchange-additional-payment-method-abstract.php';
+    /* Include additional payment method handler below */
+    require_once ALLSECUREEXCHANGE_PLUGIN_PATH.'allsecure-exchange-sofort.php';
 }
 
 add_filter('woocommerce_payment_gateways', 'add_allsecureexchange_gateway_class');
 function add_allsecureexchange_gateway_class($methods) {
     $methods[] = 'WC_AllsecureExchange';
+    /* Add additional payment method to woocommerce below */
+    $methods[] = 'AllsecureExchange_sofort';
+    
     return $methods;
-}
-
-add_filter( 'woocommerce_available_payment_gateways', 'enable_allsecureexchange_gateway' );
-function enable_allsecureexchange_gateway( $available_gateways ) {
-    if ( is_admin() ) return $available_gateways;
-
-    if ( isset( $available_gateways['allsecureexchange'] )) {
-        $settings = get_option('woocommerce_allsecureexchange_settings');
-        
-        if (empty($settings['api_user'])) {
-            unset( $available_gateways['allsecureexchange'] );
-        } elseif (empty($settings['api_password'])) {
-            unset( $available_gateways['allsecureexchange'] );
-        } elseif (empty($settings['api_key'])) {
-            unset( $available_gateways['allsecureexchange'] );
-        } elseif (empty($settings['shared_secret'])) {
-            unset( $available_gateways['allsecureexchange'] );
-        }
-        
-        if ($settings['checkout_mode'] == 'paymentjs') {
-            if (empty($settings['integration_key'])) {
-                unset( $available_gateways['allsecureexchange'] );
-            }
-        }
-    } 
-    return $available_gateways;
 }
