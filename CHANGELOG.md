@@ -1,5 +1,10 @@
 # Release Notes
 
+## v2.0.3 (2023-10-10)
+### Added
+- Installment option provided.
+- Additional payment methods are added.
+
 ## v2.0.2 (2023-07-15)
 ### Fixed
 - Result page when sync transaction

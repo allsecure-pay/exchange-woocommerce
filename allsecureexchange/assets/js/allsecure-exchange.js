@@ -4,6 +4,12 @@
     var $paymentFormTokenInput = $('#allsecurepay_transaction_token');
     var integrationKey = window.public_integration_key;
     var initialized = false;
+    
+    jQuery("form[name='checkout'] input[name='payment_method']").on('click', function (e) {
+        if(jQuery("form[name='checkout'] input[name='payment_method']:checked").val() != 'allsecureexchange') {
+            $paymentFormSubmitButton.prop("disabled", false);
+        }
+    });
 	
     var init = function() {
         if (integrationKey && !initialized) {
@@ -84,7 +90,9 @@
         var $seamlessExpiryYearInput = $('#allsecurepay_expiration_year', $seamlessForm);
         var $seamlessCardNumberInput = $('#allsecurepay_cc_number', $seamlessForm);
         var $seamlessCvvInput = $('#allsecurepay_cc_cvv', $seamlessForm);
-		var $seamlessCardHolderInput = $('#allsecurepay_cc_name', $seamlessForm);	
+	var $seamlessCardHolderInput = $('#allsecurepay_cc_name', $seamlessForm);
+        
+        var $allowedBins = window.installment_bins;
 
         var init = function (integrationKey, invalidCallback, validCallback) {
             _invalidCallback = invalidCallback;
@@ -96,15 +104,21 @@
                 $seamlessForm.hide();
                 return;
             }
-			
-			$seamlessCardNumberInput.height($seamlessCardHolderInput.innerHeight());
-			$seamlessCardNumberInput.css({'border-color':$seamlessCardHolderInput.css('border-left-color'),'border-width': $seamlessCardHolderInput.css('border-width'),'border-style': $seamlessCardHolderInput.css('border-style')}); 
-            $seamlessCvvInput.height($seamlessCardHolderInput.innerHeight());
-			$seamlessCvvInput.css({'border-color':$seamlessCardHolderInput.css('border-left-color'),'border-width': $seamlessCardHolderInput.css('border-width'),'border-style': $seamlessCardHolderInput.css('border-style')}); 
-			
+            
+            $seamlessCardNumberInput.height($seamlessFirstNameInput.innerHeight());
+            $seamlessCardNumberInput.css({'border-color':$seamlessFirstNameInput.css('border-left-color'),'border-width': $seamlessFirstNameInput.css('border-width'),'border-style': $seamlessFirstNameInput.css('border-style')}); 
+            $seamlessCvvInput.height($seamlessFirstNameInput.innerHeight());
+            $seamlessCvvInput.css({'border-color':$seamlessFirstNameInput.css('border-left-color'),'border-width': $seamlessFirstNameInput.css('border-width'),'border-style': $seamlessFirstNameInput.css('border-style')}); 
+	
+            if ($('#allsecurepay_pay_installment_container').length > 0) {
+                var $seamlessInstallmentNumberSelect = $('#allsecurepay_installment_number', $seamlessForm);
+                $seamlessInstallmentNumberSelect.height($seamlessFirstNameInput.innerHeight());
+                $seamlessInstallmentNumberSelect.css({'border-color':$seamlessFirstNameInput.css('border-left-color'),'border-width': $seamlessFirstNameInput.css('border-width'),'border-style': $seamlessFirstNameInput.css('border-style')}); 
+            }
+            
             var style = {
                     'border-radius': $seamlessCardHolderInput.css('border-radius'),
-					'border-style': 'none',
+                    'border-style': 'none',
                     'height': '100%',
                     'width': '100%',
                     'padding': $seamlessCardHolderInput.css('padding'),
@@ -116,8 +130,8 @@
                     'color': $seamlessCardHolderInput.css('color'),
                     'box-shadow': $seamlessCardHolderInput.css('box-shadow'),
                     'position': $seamlessCardHolderInput.css('position'),
-					'background' : $seamlessCardHolderInput.css('background-color') + ' ' + $seamlessCardHolderInput.css('background-repeat') + ' ' + $seamlessCardHolderInput.css('background-position') ,
-			};
+                    'background' : $seamlessCardHolderInput.css('background-color') + ' ' + $seamlessCardHolderInput.css('background-repeat') + ' ' + $seamlessCardHolderInput.css('background-position') ,
+            };
             var nostyle = {
                     'border': 'none',
                     'border-style': 'none',
@@ -143,6 +157,7 @@
                 payment.numberOn('input', function (data) {
                     validNumber = data.validNumber;
                     validBrand = $allowedCards.includes(data.cardType);
+                    installmentHandler(data);
                     validate();
                 });
                 payment.cvvOn('input', function (data) {
@@ -178,6 +193,49 @@
                 
                 validate();
             });
+            
+            $('#allsecurepay_pay_installment', $seamlessForm).on('click', function(){
+                if ($(this).is(':checked')) {
+                    $('#allsecurepay_installment_number_container').show();
+                } else {
+                    $('#allsecurepay_installment_number_container').hide();
+                }
+            });
+         };
+        
+        var installmentHandler = function (data) {
+            if ($('#allsecurepay_pay_installment_container').length > 0) {
+                $allowedBins = $allowedBins.toString().split(",");
+                var isInstallmentAllowed = $allowedBins.includes(data.firstSix);
+                if (isInstallmentAllowed) {
+                    var cardBin = data.firstSix;
+                    $('#allsecurepay_pay_installment_container').show();
+                    updateInstallmentNumbers(cardBin);
+                } else {
+                    $('#allsecurepay_pay_installment_container').hide();
+                    $('#allsecurepay_installment_number_container').hide();
+                    $('#allsecurepay_pay_installment').prop('checked', false);
+                    $('#allsecurepay_installment_number').html('');
+                }
+            }
+        };
+        
+        var updateInstallmentNumbers = function (cardBin) {
+            $('#allsecurepay_installment_number').html('');
+            var installment_numbers = window.allowed_installments[cardBin];
+            if (installment_numbers.length > 0) {
+                installment_numbers = installment_numbers.toString().split(",");
+                var optionText = '';
+                for (installment_number of installment_numbers) {
+                    installment_number = installment_number.trim();
+                    if (installment_number.length == 1) {
+                        installment_number = '0'+installment_number;
+                    }
+                    var option = '<option value="'+installment_number+'">'+installment_number+'</option>';
+                    optionText += option;
+                }
+                $('#allsecurepay_installment_number').html(optionText);
+            }
         };
 
         var validate = function () {
