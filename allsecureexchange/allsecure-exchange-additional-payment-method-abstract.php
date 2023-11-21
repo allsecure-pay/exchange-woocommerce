@@ -209,6 +209,7 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
                     throw new \Exception($errorMessage);
                 } elseif ($result->getReturnType() == AllsecureResult::RETURN_TYPE_REDIRECT) {
                     //redirect the user
+                    $order->delete_meta_data($this->prefix.'status');
                     $order->add_meta_data($this->prefix.'status', 'redirected', true);
                     $redirectLink = $result->getRedirectUrl();
                     return [
@@ -217,6 +218,7 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
                     ];
                 } elseif ($result->getReturnType() == AllsecureResult::RETURN_TYPE_PENDING) {
                     //payment is pending, wait for callback to complete
+                    $order->delete_meta_data($this->prefix.'status');
                     $order->add_meta_data($this->prefix.'status', 'pending', true);
                     $order->save_meta_data();
                     if ($action == 'debit') {
@@ -238,6 +240,7 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
                 } elseif ($result->getReturnType() == AllsecureResult::RETURN_TYPE_FINISHED) {
                     //payment is finished, update your cart/payment transaction
                     if ($action == 'debit') {
+                        $order->delete_meta_data($this->prefix.'status');
                         $order->add_meta_data($this->prefix.'status', 'debited', true);
                         $order->save_meta_data();
                         $comment1 = __('Allsecure Exchange payment is successfully debited. ', $this->domain);
@@ -254,6 +257,7 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
                             'redirect' => add_query_arg( 'order_id', $order_id, $this->get_return_url( $order ))
                         ];
                     } else {
+                        $order->delete_meta_data($this->prefix.'status');
                         $order->add_meta_data($this->prefix.'status', 'preauthorized', true);
                         $order->save_meta_data();
                         $order->payment_complete();
@@ -471,7 +475,8 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
                             }
 
                             $order->add_meta_data($this->prefix.'debit_uuid', $gatewayReferenceId);
-                            $order->add_meta_data($this->prefix.'status', 'debited');
+                            $order->delete_meta_data($this->prefix.'status');
+                            $order->add_meta_data($this->prefix.'status', 'debited', true);
                             $order->save_meta_data();
 
                             $comment1 = __('Allsecure Exchange payment is successfully debited. ', $this->domain);
@@ -483,7 +488,8 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
                         } else if ($callbackResult->getTransactionType() == AllsecureCallbackResult::TYPE_CAPTURE) {
                             //result capture
                             $order->add_meta_data($this->prefix.'capture_uuid', $gatewayReferenceId);
-                            $order->add_meta_data($this->prefix.'status', 'captured');
+                            $order->delete_meta_data($this->prefix.'status');
+                            $order->add_meta_data($this->prefix.'status', 'captured', true);
                             $order->save_meta_data();
 
                             $comment1 = __('Allsecure Exchange payment is successfully captured. ', $this->domain);
@@ -495,7 +501,8 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
                         } else if ($callbackResult->getTransactionType() == AllsecureCallbackResult::TYPE_VOID) {
                             //result void
                             $order->add_meta_data($this->prefix.'void_uuid', $gatewayReferenceId);
-                            $order->add_meta_data($this->prefix.'status', 'voided');
+                            $order->delete_meta_data($this->prefix.'status');
+                            $order->add_meta_data($this->prefix.'status', 'voided', true);
                             $order->save_meta_data();
 
                             $comment1 = __('Allsecure Exchange payment is successfully voided. ', $this->domain);
@@ -513,7 +520,8 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
                             }
 
                             $order->add_meta_data($this->prefix.'preauthorize_uuid', $gatewayReferenceId);
-                            $order->add_meta_data($this->prefix.'status', 'preauthorized');
+                            $order->delete_meta_data($this->prefix.'status');
+                            $order->add_meta_data($this->prefix.'status', 'preauthorized', true);
                             $order->save_meta_data();
                             $order->payment_complete();
 
@@ -526,7 +534,8 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
                         }
                     } elseif ($callbackResult->getResult() == AllsecureCallbackResult::RESULT_ERROR) {
                         //payment error
-                        $order->add_meta_data($this->prefix.'status', 'error');
+                        $order->delete_meta_data($this->prefix.'status');
+                        $order->add_meta_data($this->prefix.'status', 'error', true);
                         $order->save_meta_data();
                         $error = $callbackResult->getFirstError();
                         $errorCode = $error->getCode();
@@ -866,7 +875,22 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
             $void = false;
             $refund = 0;
 
-            $status = $order->get_meta($this->prefix.'status');
+            if (count($statuses) > 1) {
+                $i = 0;
+                $j = count($statuses)-1;
+                foreach ($statuses as $statusObj) {
+                    if ($i == $j) {
+                        $status = $statusObj->value;
+                        $order->delete_meta_data($this->prefix.'status');
+                        $order->add_meta_data($this->prefix.'status', $status, true);
+                        $order->save_meta_data();
+                    }
+                    $i++;
+                }
+            } else {
+                $status = $order->get_meta($this->prefix.'status');
+            }
+            
             if ($status == 'debited' || $status == 'captured') {
                 $refund = 1;
             } elseif ($status == 'preauthorized' ) {
@@ -978,6 +1002,7 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
 
             if ($result->getReturnType() == AllsecureResult::RETURN_TYPE_FINISHED) {
                 $gatewayReferenceId = $result->getUuid();
+                $order->delete_meta_data($this->prefix.'status');
                 $order->add_meta_data($this->prefix.'status', 'refunded', true);
                 $order->add_meta_data($this->prefix.'transaction_id', $gatewayReferenceId, true);
                 $order->add_meta_data($this->prefix.'refund_uuid', $gatewayReferenceId, true);
@@ -1047,6 +1072,7 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
 
                 if ($result->getReturnType() == AllsecureResult::RETURN_TYPE_FINISHED) {
                     $gatewayReferenceId = $result->getUuid();
+                    $order->delete_meta_data($this->prefix.'status');
                     $order->add_meta_data($this->prefix.'status', 'captured', true);
                     $order->add_meta_data($this->prefix.'transaction_id', $gatewayReferenceId, true);
                     $order->add_meta_data($this->prefix.'capture_uuid', $gatewayReferenceId, true);
@@ -1126,6 +1152,7 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
 
                 if ($result->getReturnType() == AllsecureResult::RETURN_TYPE_FINISHED) {
                     $gatewayReferenceId = $result->getUuid();
+                    $order->delete_meta_data($this->prefix.'status');
                     $order->add_meta_data($this->prefix.'status', 'voided', true);
                     $order->add_meta_data($this->prefix.'transaction_id', $gatewayReferenceId, true);
                     $order->add_meta_data($this->prefix.'void_uuid', $gatewayReferenceId, true);

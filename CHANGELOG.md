@@ -1,5 +1,9 @@
 # Release Notes
 
+## v2.0.4 (2023-10-24)
+### Fixed
+- Display of capture, void, refund buttons
+
 ## v2.0.3 (2023-10-10)
 ### Added
 - Installment option provided.
