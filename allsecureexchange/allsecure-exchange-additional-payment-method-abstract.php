@@ -49,13 +49,13 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
         
         $settings = get_option('woocommerce_allsecureexchange_settings');
         
-        $this->operation_mode = $settings['operation_mode'];
-        $this->api_user = $settings['api_user'];
-        $this->api_password = $settings['api_password'];
-        $this->payment_action = $settings['payment_action'];
-        $this->transaction_email = $settings['transaction_email'];
-        $this->transaction_confirmation_page = $settings['transaction_confirmation_page'];
-        $this->debug = $settings['debug'];
+        $this->operation_mode = $this->get_option('operation_mode');
+        $this->api_user = $this->get_option('api_user');
+        $this->api_password = $this->get_option('api_password');
+        $this->payment_action = $this->get_option('payment_action');
+        $this->transaction_email = $this->get_option('transaction_email');
+        $this->transaction_confirmation_page = $this->get_option('transaction_confirmation_page');
+        $this->debug = $this->get_option('debug');
 
         // Load the settings.
         $this->init_form_fields();
@@ -96,6 +96,29 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
                 'default' => '',
                 'desc_tip' => false,
             ),
+            'operation_mode' => array(
+                'title' => __('Operation Mode', $this->domain),
+                'type' => 'select',
+                'label' => __('Operation Mode', $this->domain),
+                'options' =>  array('live' => __('Live', $this->domain), 'test' => __('Test', $this->domain)),
+                'default' => 'test',
+            ),
+            'api_credentials' => array(
+                'title'       => __('API Credentials', $this->domain),
+                'type'        => 'title',
+            ),
+            'api_user' => array(
+                'title' => __('API User', $this->domain),
+                'type' => 'text',
+                'description' => __('Please enter your Exchange API User. This is needed in order to take the payment.', $this->domain),
+                'default' => '',
+            ),
+            'api_password' => array(
+                'title' => __('API Password', $this->domain),
+                'type' => 'text',
+                'description' => __('Please enter your Exchange API Password. This is needed in order to take the payment.', $this->domain),
+                'default' => '',
+            ),
             'api_key' => array(
                 'title' => __('API Key', $this->domain),
                 'type' => 'text',
@@ -107,6 +130,40 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
                 'type' => 'text',
                 'description' => __('Please enter your Exchange API Shared Secret. This is needed in order to take the payment.', $this->domain),
                 'default' => '',
+            ),
+            'payment_details' => array(
+                'title' => __('Payment Details', 'allsecureexchange' ),
+                'type' => 'title',
+            ),
+            'payment_action' => array(
+                'title' => __('Transaction Type', $this->domain),
+                'type' => 'select',
+                'label' => __('Transaction Type', $this->domain),
+                'options' =>  array('debit' => __('Debit', $this->domain), 'preauthorize' => __('Preauthorize', $this->domain)),
+                'default' => 'debit',
+                'description' => __('<strong>Debit: </strong>Debits the end customer with the given amount.<br/>
+                <strong>Preauthorize: </strong>Reserves the payment amount on the customer\'s payment instrument. 
+                Preauthorization must be captured afterwards to conclude the transaction.', $this->domain),
+            ),
+            'transaction_email' => array(
+                'title' => __('Transaction Details', $this->domain),
+                'type' => 'checkbox',
+                'label' => __('Enable transaction details in the confirmation email', $this->domain),
+                'default' => 'no',
+                'description'=> __( 'When enabled, plugin will add transaction details in the order confirmation email.', $this->domain),
+            ),
+            'transaction_confirmation_page' => array(
+                'title' => __('', $this->domain),
+                'type' => 'checkbox',
+                'label' => __('Enable transaction details in the confirmation page', $this->domain),
+                'default' => 'no',
+                'description'=> __( 'When enabled, plugin will add transaction details in the order confirmation page.', $this->domain),
+            ),
+            'debug' => array(
+                'title' => __('Debug', $this->domain),
+                'type' => 'checkbox',
+                'label' => __(' ', $this->domain),
+                'default' => 'no'
             ),
         );
 
@@ -161,6 +218,7 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
         
      <?php    
     }
+	
 
     /**
      * Process the payment and return the result.
@@ -171,7 +229,7 @@ abstract class AllsecureExchange_Additional_Payment_Method_Abstract extends WC_P
     public function process_payment($order_id) {
         global $woocommerce;
 
-        $order = wc_get_order($order_id);
+		$order = $this->allsecureMain->getOrder($order_id);
 
         try {
             $transaction_token = '';

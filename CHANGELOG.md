@@ -1,5 +1,10 @@
 # Release Notes
 
+## v2.0.5 (2024-07-24)
+### Fixed
+- Upgraded version to support most recent WooCommerce functionalities (HPOS)
+- Upgraded additional payment methods (logical/physically separated)
+
 ## v2.0.4 (2023-10-24)
 ### Fixed
 - Display of capture, void, refund buttons

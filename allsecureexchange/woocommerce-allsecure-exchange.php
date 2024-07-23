@@ -2,11 +2,11 @@
 /*
 Plugin Name: AllSecure Exchange
 Description: AllSecure Exchange for WooCommerce
-Version: 2.0.4
+Version: 2.0.5
 Requires at least: 4.0
-Tested up to: 6.2.1
+Tested up to: 6.5.4
 WC requires at least: 2.4
-WC tested up to: 7.5.1
+WC tested up to: 8.9.3
 Requires PHP: 5.5
 Author: <a href="https://www.allsecure.eu/">AllSecure</a>   
 Author URI: https://www.allsecure.eu/
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-define('ALLSECUREEXCHANGE_VERSION', '2.0.4');
+define('ALLSECUREEXCHANGE_VERSION', '2.0.5');
 define('ALLSECUREEXCHANGE_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('ALLSECUREEXCHANGE_PLUGIN_PATH', plugin_dir_path(__FILE__));
 
@@ -101,6 +101,12 @@ function enable_allsecureexchange_gateway( $available_gateways ) {
     } 
     return $available_gateways;
 }
+
+add_action( 'before_woocommerce_init', function() {
+	if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+	}
+} );
 
 /**
  * Initiate AllSecure Exchange Payment once plugin is ready
@@ -344,6 +350,37 @@ function woocommerce_allsecureexchange_init() {
             );
 
             $this->form_fields = $field_arr;
+        }
+
+        public function isHPOSEnabled() {
+            $status = false;
+            
+            if ( 
+                class_exists( 'Automattic\WooCommerce\Utilities\OrderUtil' ) && 
+                Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled()
+            ) {
+                $status = true;
+            }
+            
+            return $status;
+        }
+
+        public function getOrder($order_id) {
+            if ($this->isHPOSEnabled()) {
+                $order = wc_get_order( $order_id );
+            } else {
+                $order = new WC_Order($order_id);
+            }
+            
+            return $order;
+        }
+        
+        public function getOrderMetaData($order, $order_id, $key, $single) {
+            if ($this->isHPOSEnabled()) {
+                return $order->get_meta( $key, $single );
+            } else {
+                return get_post_meta( $order_id, $key, $single );
+            }
         }
         
         /**
@@ -654,7 +691,7 @@ function woocommerce_allsecureexchange_init() {
         public function process_payment($order_id) {
             global $woocommerce;
 
-            $order = wc_get_order($order_id);
+			$order = $this->getOrder($order_id);
 
             try {
                 $transaction_token = '';

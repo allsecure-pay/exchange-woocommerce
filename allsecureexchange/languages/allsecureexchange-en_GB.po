@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2023-06-16 11:41+0200\n"
-"PO-Revision-Date: 2023-06-29 14:55+0200\n"
+"PO-Revision-Date: 2024-07-23 10:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_GB\n"
@@ -51,7 +51,7 @@ msgstr ""
 
 #: woocommerce-allsecure-exchange.php:148
 msgid "Credit Card"
-msgstr ""
+msgstr "Payment Card"
 
 #: woocommerce-allsecure-exchange.php:152
 msgid "Description"
@@ -396,7 +396,7 @@ msgstr ""
 
 #: woocommerce-allsecure-exchange.php:806
 msgid "Credit Card Information"
-msgstr ""
+msgstr "Payment Card Information"
 
 #: woocommerce-allsecure-exchange.php:808
 msgid "Card holder"
